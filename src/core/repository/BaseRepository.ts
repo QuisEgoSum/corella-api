@@ -26,7 +26,7 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
     this.Model = Model
   }
 
-  private errorHandler(error: Error | MongoServerError) {
+  static errorHandler(error: Error | MongoServerError) {
     // @ts-ignore - Because mongoose does not export the class MongoServerError
     if (error.name === 'MongoServerError' && error.code === 11000) {
       // @ts-ignore - Because mongoose does not export the class MongoServerError
@@ -41,14 +41,14 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
     return new this.Model(entity)
       .save()
       .then(entity => entity.toJSON())
-      .catch(error => this.errorHandler(error))
+      .catch(error => BaseRepository.errorHandler(error))
   }
 
   updateOne(filter?: FilterQuery<T>, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<UpdateWriteOpResult> {
     return this.Model
       .updateOne(filter, update, options)
       .exec()
-      .catch(error => this.errorHandler(error)) as unknown as Promise<UpdateWriteOpResult>
+      .catch(error => BaseRepository.errorHandler(error)) as unknown as Promise<UpdateWriteOpResult>
   }
 
   deleteOne(query: mongoose.FilterQuery<T>): Promise<boolean> {
