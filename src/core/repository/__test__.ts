@@ -1,5 +1,6 @@
-import mongoose, {Model, Schema} from 'mongoose'
+import mongoose from 'mongoose'
 import BaseRepository from './BaseRepository'
+import BaseRepositoryError from './BaseRepositoryError'
 import * as assert from 'assert'
 import {before} from 'mocha'
 
@@ -7,6 +8,7 @@ import {before} from 'mocha'
 interface IModel {
   _id: mongoose.Schema.Types.ObjectId,
   test: string,
+  test2: number,
   createdAt: number,
   updatedAt: number
 }
@@ -15,6 +17,9 @@ const ModelSchema = new mongoose.Schema<IModel>(
   {
     test: {
       type: String
+    },
+    test2: {
+      type: Number
     },
     createdAt: {
       type: Number
@@ -26,6 +31,8 @@ const ModelSchema = new mongoose.Schema<IModel>(
     versionKey: false
   }
 )
+  .index({test: 1}, {unique: true})
+  .index({test2: 1}, {unique: true})
 
 const ModelModel = mongoose.model<IModel>('Model', ModelSchema, 'models')
 
@@ -35,19 +42,38 @@ const modelRepository = new BaseRepository<IModel>(ModelModel)
 
 before(async () => {
   await mongoose.connect('mongodb://localhost/base-repository-test')
-  console.log('Connection to database')
+  await ModelModel.deleteMany()
+  console.log('Connection to database and delete models')
 })
 
-it('Create', async function() {
-  const model = await modelRepository.create({test: 'test'})
+describe('BaseRepository', function() {
+  it('Create', async function() {
+    const model = await modelRepository.create({test: 'test', test2: 1})
 
-  assert.equal('_id' in model, true, 'Exists _id in saved document')
-  assert.equal('test' in model, true, 'Exists test in saved document')
-  assert.equal('createdAt' in model, true, 'Exists createdAt in saved document')
-  assert.equal('updatedAt' in model, true, 'Exists updatedAt in saved document')
+    assert.equal('_id' in model, true, 'Exists _id in saved document')
+    assert.equal('test' in model, true, 'Exists test in saved document')
+    assert.equal('createdAt' in model, true, 'Exists createdAt in saved document')
+    assert.equal('updatedAt' in model, true, 'Exists updatedAt in saved document')
+  })
+
+  it('Create - unique error', async function() {
+    try {
+      await modelRepository.create({test: 'test', test2: 1})
+      assert.fail('Not throw error')
+    } catch (error) {
+      assert.equal(error instanceof Error, true)
+      assert.equal(error instanceof BaseRepositoryError, true)
+      assert.equal(error instanceof BaseRepositoryError.UniqueKeyError, true)
+    }
+  })
+
+  // it('Update one', async function() {
+  //   const result = await modelRepository.updateOne()
+  // })
 })
 
-it('Update one', async function() {
-  const result = await modelRepository.updateOne()
+after(async () => {
+  await mongoose.disconnect()
+  process.exit(0)
 })
 

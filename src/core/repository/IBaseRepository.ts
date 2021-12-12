@@ -1,14 +1,23 @@
-import {FilterQuery, Types} from 'mongoose'
+import {
+  FilterQuery,
+  QueryOptions,
+  Types,
+  UpdateQuery,
+  UpdateWithAggregationPipeline,
+  UpdateWriteOpResult
+} from 'mongoose'
 
 
 export default interface IBaseRepository<T> {
 
   /**
-   * @throws
+   * @throws {UniqueKeyError}
    */
   create(entity: T): Promise<T>
 
   findOne(query: FilterQuery<T>): Promise<T | null>
+
+  updateOne(filter?: FilterQuery<T>, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<UpdateWriteOpResult>
 
   find(): Promise<T[] | []>
 

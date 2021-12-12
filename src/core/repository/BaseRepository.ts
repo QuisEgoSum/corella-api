@@ -5,7 +5,9 @@ import mongoose, {
   UpdateWithAggregationPipeline,
   UpdateWriteOpResult
 } from 'mongoose'
+import BaseRepositoryError from './BaseRepositoryError'
 import IBaseRepository from './IBaseRepository'
+import type {MongoServerError} from './MongooseError'
 
 
 type Optional<T> = {
@@ -24,8 +26,14 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
     this.Model = Model
   }
 
-  private errorHandler(error: Error) {
-    throw error
+  private errorHandler(error: Error | MongoServerError) {
+    // @ts-ignore - Because mongoose does not export the class MongoServerError
+    if (error.name === 'MongoServerError' && error.code === 11000) {
+      // @ts-ignore - Because mongoose does not export the class MongoServerError
+      throw BaseRepositoryError.UniqueKeyError.fromMongooseError(error)
+    } else {
+      throw error
+    }
   }
 
   async create(entity: Optional<T>): Promise<T> {
