@@ -9,15 +9,7 @@ import type {
 import BaseRepositoryError from './BaseRepositoryError'
 import IBaseRepository from './IBaseRepository'
 import type {MongoServerError} from './MongooseError'
-
-
-type Optional<T> = {
-  [P in keyof T]?: T[P]
-}
-
-type Selected<T extends S, S> = {
-  [P in keyof S]: T[P]
-}
+import type {Optional} from './IBaseRepository'
 
 
 export default class BaseRepository<T> implements IBaseRepository<T> {
@@ -67,12 +59,15 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
   }
 
   find(): Promise<T[] | []> {
-    return Promise.resolve([])
+    return this.Model
+      .find()
+      .lean()
+      .exec() as unknown as Promise<T[] | []>
   }
 
-  findOne(query: mongoose.FilterQuery<T>) {
+  findOne(query: mongoose.FilterQuery<T>, projection?: unknown | null, options?: QueryOptions | null,) {
     return this.Model
-      .findOne(query)
+      .findOne(query, projection, options)
       .lean()
       .exec() as unknown as Promise<T | null>
   }

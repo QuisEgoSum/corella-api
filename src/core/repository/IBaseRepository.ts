@@ -8,6 +8,11 @@ import {
 } from 'mongoose'
 
 
+export type Optional<T> = {
+  [P in keyof T]?: T[P]
+}
+
+
 export default interface IBaseRepository<T> {
 
   /**
@@ -15,7 +20,7 @@ export default interface IBaseRepository<T> {
    */
   create(entity: T): Promise<T>
 
-  findOne(query: FilterQuery<T>): Promise<T | null>
+  findOne(query: FilterQuery<T>, projection?: unknown | null, options?: QueryOptions | null,): Promise<T | null>
 
   updateOne(filter?: FilterQuery<T>, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<UpdateWriteOpResult>
 
