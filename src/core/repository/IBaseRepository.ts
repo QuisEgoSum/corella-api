@@ -25,11 +25,16 @@ export default interface IBaseRepository<T> {
    */
   create(entity: T): Promise<T>
 
-  findOne(query: FilterQuery<T>, projection?: unknown | null, options?: QueryOptions | null,): Promise<T | null>
+  findById(id: string | Types.ObjectId, projection?: unknown | null, options?: QueryOptions | null): Promise<T | null>
 
+  findOne(query: FilterQuery<T>, projection?: unknown | null, options?: QueryOptions | null): Promise<T | null>
+
+  /**
+   * @throws {UniqueKeyError}
+   */
   updateOne(filter?: FilterQuery<T>, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<UpdateWriteOpResult>
 
-  findPage(page: PageOptions, filter: FilterQuery<T>, projection?: any | null, options?: QueryOptions | null): Promise<DataList<T>>
+  findPage(page: PageOptions, filter: FilterQuery<T>, projection?: unknown | null, options?: QueryOptions | null): Promise<DataList<T>>
 
   deleteOne(query: FilterQuery<T>): Promise<boolean>
 
