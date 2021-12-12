@@ -1,4 +1,4 @@
-import {
+import type {
   FilterQuery,
   QueryOptions,
   Types,
@@ -6,12 +6,17 @@ import {
   UpdateWithAggregationPipeline,
   UpdateWriteOpResult
 } from 'mongoose'
+import type DataList from './DataList'
 
 
 export type Optional<T> = {
   [P in keyof T]?: T[P]
 }
 
+export type PageOptions = {
+  limit: number,
+  page: number
+}
 
 export default interface IBaseRepository<T> {
 
@@ -24,7 +29,7 @@ export default interface IBaseRepository<T> {
 
   updateOne(filter?: FilterQuery<T>, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<UpdateWriteOpResult>
 
-  find(): Promise<T[] | []>
+  findPage(page: PageOptions, filter: FilterQuery<T>, projection?: any | null, options?: QueryOptions | null): Promise<DataList<T>>
 
   deleteOne(query: FilterQuery<T>): Promise<boolean>
 

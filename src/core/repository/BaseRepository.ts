@@ -6,10 +6,11 @@ import type {
   UpdateWithAggregationPipeline,
   UpdateWriteOpResult
 } from 'mongoose'
-import BaseRepositoryError from './BaseRepositoryError'
 import IBaseRepository from './IBaseRepository'
+import BaseRepositoryError from './BaseRepositoryError'
+import DataList from './DataList'
 import type {MongoServerError} from './MongooseError'
-import type {Optional} from './IBaseRepository'
+import type {Optional, PageOptions} from './IBaseRepository'
 
 
 export default class BaseRepository<T> implements IBaseRepository<T> {
@@ -58,11 +59,19 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
       .then(result => !!result.deletedCount)
   }
 
-  find(): Promise<T[] | []> {
-    return this.Model
-      .find()
-      .lean()
-      .exec() as unknown as Promise<T[] | []>
+  async findPage(page: PageOptions, filter: FilterQuery<T>, projection?: any | null, options?: QueryOptions | null): Promise<DataList<T>> {
+    const [data, total] = await Promise.all([
+      this.Model
+        .find(filter, projection, options)
+        .skip(page.limit * (page.page - 1))
+        .limit(page.limit)
+        .lean()
+        .exec(),
+      this.Model
+        .countDocuments(filter)
+    ]) as unknown as [Array<T>, number]
+
+    return new DataList(total, Math.ceil(total / page.limit), data)
   }
 
   findOne(query: mongoose.FilterQuery<T>, projection?: unknown | null, options?: QueryOptions | null,) {
