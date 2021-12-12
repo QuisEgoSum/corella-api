@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import BaseRepository from './BaseRepository'
 import BaseRepositoryError from './BaseRepositoryError'
 import * as assert from 'assert'
-import {before} from 'mocha'
 
 
 interface IModel {

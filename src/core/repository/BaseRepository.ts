@@ -1,4 +1,5 @@
-import mongoose, {
+import mongoose from 'mongoose'
+import type {
   FilterQuery,
   QueryOptions,
   UpdateQuery,
@@ -36,7 +37,7 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
     }
   }
 
-  async create(entity: Optional<T>): Promise<T> {
+  async create(entity?: Optional<T>): Promise<T> {
     // @ts-ignore
     return new this.Model(entity)
       .save()

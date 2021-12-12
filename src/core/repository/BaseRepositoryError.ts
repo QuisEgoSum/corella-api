@@ -21,7 +21,7 @@ export default class BaseRepositoryError extends Error {
     }
 
     message: string
-    code = 11000
+    code = 1
     key: string
     value: string
 
@@ -32,12 +32,6 @@ export default class BaseRepositoryError extends Error {
       this.key = error.key
       this.value = error.value
       this.stack = error.stack
-    }
-  }
-
-  static ModelValidationError = class ModelValidationError extends BaseRepositoryError {
-    constructor() {
-      super()
     }
   }
 }
