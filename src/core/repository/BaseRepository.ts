@@ -69,7 +69,7 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
         .exec(),
       this.Model
         .countDocuments(filter)
-    ]) as unknown as [Array<T>, number]
+    ]) as unknown as [Array<T>, number] // ¯\_(ツ)_/¯
 
     return new DataList(total, Math.ceil(total / page.limit), data)
   }
