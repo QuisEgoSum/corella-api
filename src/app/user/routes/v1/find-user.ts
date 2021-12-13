@@ -8,16 +8,18 @@ interface FindUserV1Request {
   }
 }
 
-export async function findUserV1(fastify: FastifyInstance, service: UserService) {
+export async function findUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
   return fastify
     .route<FindUserV1Request>(
       {
-        version: 'v1',
         url: '/user/:userId',
         method: 'GET',
         schema: {
           summary: 'Get user by id',
-          tags: ['User']
+          tags: ['User'],
+          params: {
+            userId: schemas.properties._id
+          }
         },
         config: {
           // TODO: Added route hook for adding security
