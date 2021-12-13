@@ -1,19 +1,20 @@
 import mongoose from 'mongoose'
-import IBaseRepository from './IBaseRepository'
-import BaseRepositoryError from './BaseRepositoryError'
-import DataList from './DataList'
+import {BaseRepositoryError} from './BaseRepositoryError'
+import {DataList} from 'core/data'
+import type {IBaseRepository} from './IBaseRepository'
 import type {
   FilterQuery,
   QueryOptions,
   UpdateQuery,
   UpdateWithAggregationPipeline,
-  UpdateWriteOpResult
+  UpdateWriteOpResult,
+  ReturnsNewDoc
 } from 'mongoose'
-import type {MongoServerError} from './MongooseError'
 import type {Optional, PageOptions} from './IBaseRepository'
+import type {BulkWriteOptions, BulkWriteResult, AnyBulkWriteOperation, MongoServerError} from 'mongodb'
 
 
-export default class BaseRepository<T> implements IBaseRepository<T> {
+export class BaseRepository<T> implements IBaseRepository<T> {
   private Model: mongoose.Model<T>
 
   constructor(Model: mongoose.Model<T>) {
@@ -31,7 +32,7 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
   }
 
   async create(entity?: Optional<T>): Promise<T> {
-    // @ts-ignore
+    //@ts-ignore
     return new this.Model(entity)
       .save()
       .then(entity => entity.toJSON())
@@ -43,6 +44,45 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
       .updateOne(filter, update, options)
       .exec()
       .catch(error => BaseRepository.errorHandler(error)) as unknown as Promise<UpdateWriteOpResult>
+  }
+
+  updateById(id: string | mongoose.Types.ObjectId, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<UpdateWriteOpResult> {
+    return this.Model
+      // @ts-ignore
+      .updateOne({_id: new mongoose.Types.ObjectId(id)}, update, options)
+      .exec()
+      .catch(error => BaseRepository.errorHandler(error)) as unknown as Promise<UpdateWriteOpResult>
+  }
+
+  findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>, options?: QueryOptions & { upsert: true } & ReturnsNewDoc): Promise<T | null> {
+    return this.Model
+      .findOneAndUpdate(filter, update, options)
+      .lean()
+      .exec()
+      .catch(error => BaseRepository.errorHandler(error)) as unknown as Promise<T | null>
+
+  }
+
+  findByIdAndUpdate(id: string | mongoose.Types.ObjectId, update: UpdateQuery<T>, options?: QueryOptions & { upsert: true } & ReturnsNewDoc): Promise<T | null> {
+    return this.Model
+      .findByIdAndUpdate(new mongoose.Types.ObjectId(id), update, options)
+      .lean()
+      .exec()
+      .catch(error => BaseRepository.errorHandler(error)) as unknown as Promise<T | null>
+  }
+
+  findOneAndDelete(filter?: FilterQuery<T>, options?: QueryOptions | null): Promise<T | null> {
+    return this.Model
+      .findOneAndDelete(filter, options)
+      .lean()
+      .exec() as unknown as Promise<T | null>
+  }
+
+  findByIdAndDelete(id: string | mongoose.Types.ObjectId, options?: QueryOptions | null): Promise<T | null> {
+    return this.Model
+      .findByIdAndDelete(id, options)
+      .lean()
+      .exec() as unknown as Promise<T | null>
   }
 
   deleteOne(query: mongoose.FilterQuery<T>): Promise<boolean> {
@@ -86,5 +126,16 @@ export default class BaseRepository<T> implements IBaseRepository<T> {
       .findOne(query, projection, options)
       .lean()
       .exec() as unknown as Promise<T | null>
+  }
+
+  count(filter: FilterQuery<T>): Promise<number> {
+    return this.Model
+      .countDocuments(filter)
+      .exec()
+  }
+
+  bulkWrite(writes: Array<AnyBulkWriteOperation<T>>, options?: BulkWriteOptions): Promise<BulkWriteResult> {
+    return this.Model
+      .bulkWrite(writes, options)
   }
 }

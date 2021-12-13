@@ -1,6 +1,6 @@
 
 
-export default class DataList<T> {
+export class DataList<T> {
 
   total: number
   pages: number

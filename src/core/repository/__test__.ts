@@ -1,7 +1,6 @@
-// @ts-nocheck
 import mongoose from 'mongoose'
-import BaseRepository from './BaseRepository'
-import BaseRepositoryError from './BaseRepositoryError'
+import {BaseRepository} from './BaseRepository'
+import {BaseRepositoryError} from './BaseRepositoryError'
 import * as assert from 'assert'
 
 
@@ -82,15 +81,18 @@ describe('BaseRepository', function() {
 
   it('FindById', async function() {
     const model = await modelRepository.findById(state.model._id, {_id: 1, test: 1, createdAt: 1})
-
+    // @ts-ignore
     assert.equal('_id' in model, true, 'Not exists _id in saved document')
+    // @ts-ignore
     assert.equal('test' in model, true, 'Not exists test in saved document')
+    // @ts-ignore
     assert.equal('createdAt' in model, true, 'Not exists createdAt in saved document')
+    // @ts-ignore
     assert.equal('updatedAt' in model, false, 'Exists updatedAt in saved document')
   })
 
   // it('Update one', async function() {
-  //   const result = await modelRepository.updateOne()
+  //   const result = await modelRepository.findByIdAndUpdate('', {})
   // })
 })
 

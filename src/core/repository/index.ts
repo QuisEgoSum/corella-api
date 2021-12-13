@@ -1,10 +1,11 @@
-import BaseRepository from './BaseRepository'
-import DataList from './DataList'
-import BaseRepositoryError from './BaseRepositoryError'
+/**
+ * Does anyone know what's wrong with mongoose types?
+ */
+import {BaseRepository} from './BaseRepository'
+import {BaseRepositoryError} from './BaseRepositoryError'
 
 
-export default {
+export {
   BaseRepository,
-  BaseRepositoryError,
-  DataList
+  BaseRepositoryError
 }

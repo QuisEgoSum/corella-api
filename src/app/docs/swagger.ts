@@ -1,7 +1,7 @@
-import config from '../../core/config/config'
+import {config} from 'core/config'
 
 
-export default {
+export const swagger = {
   exposeRoute: true,
   routePrefix: '/docs/swagger',
   hideUntagged: true,

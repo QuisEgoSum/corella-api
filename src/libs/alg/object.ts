@@ -1,13 +1,13 @@
 
 
-const isObject = (value: unknown): boolean =>
+export const isObject = (value: unknown): boolean =>
   typeof value === 'object'
   &&  value !== null
   &&  !Array.isArray(value)
   &&  !(value instanceof Map)
   &&  !(value instanceof Set)
 
-const isPrimitive = (value: unknown): boolean =>
+export const isPrimitive = (value: unknown): boolean =>
   typeof value !== 'object'
   &&  typeof value !== 'function'
   || (
@@ -15,7 +15,7 @@ const isPrimitive = (value: unknown): boolean =>
     && !value
   )
 
-function assignDefaultPropertiesDeep<T, E>(target: T, source: E): T & E {
+export function assignDefaultPropertiesDeep<T, E>(target: T, source: E): T & E {
   for (const [key, value] of Object.entries(source)) {
     if (!(key in target)) {
       // @ts-ignore
@@ -32,11 +32,4 @@ function assignDefaultPropertiesDeep<T, E>(target: T, source: E): T & E {
   }
   // @ts-ignore
   return target
-}
-
-
-export default {
-  isObject,
-  isPrimitive,
-  assignDefaultPropertiesDeep
 }

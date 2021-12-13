@@ -1,4 +1,4 @@
-import swagger from './swagger'
+import {swagger} from './swagger'
 
 
 export {

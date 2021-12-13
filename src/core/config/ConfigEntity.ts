@@ -4,7 +4,7 @@ export type PkgJson = {
 }
 
 
-export default class ConfigEntity {
+export class ConfigEntity {
   public pkgJson: PkgJson
 
   constructor(defaultConfig: ConfigEntity) {

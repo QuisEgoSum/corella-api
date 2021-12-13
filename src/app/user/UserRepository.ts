@@ -1,18 +1,10 @@
-import BaseRepository from 'core/repository/BaseRepository'
-import UserModel, {IUser} from './UserModel'
-import mongoose from 'mongoose'
+import {BaseRepository} from 'core/repository/BaseRepository'
+import type {UserModel} from './UserModel'
+import type {IUser} from './UserModel'
 
 
-class UserRepository extends BaseRepository<IUser> {
-  constructor() {
-    super(UserModel)
-  }
-
-  async test() {
-    // await this.deleteOne({username: {$exists: true}})
-
-    await this.deleteById(new mongoose.Types.ObjectId())
+export class UserRepository extends BaseRepository<IUser> {
+  constructor(Model: typeof UserModel) {
+    super(Model)
   }
 }
-
-export default UserRepository

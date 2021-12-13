@@ -1,7 +1,7 @@
-import {MongoServerError} from './MongooseError'
+import type {MongoServerError} from 'mongodb'
 
 
-export default class BaseRepositoryError extends Error {
+export class BaseRepositoryError extends Error {
   constructor() {
     super()
   }

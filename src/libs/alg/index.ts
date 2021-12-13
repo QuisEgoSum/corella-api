@@ -1,5 +1,5 @@
-import object from './object'
+import * as object from './object'
 
-export default {
+export {
   object
 }
