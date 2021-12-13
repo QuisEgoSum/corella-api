@@ -47,7 +47,6 @@
     "core": "src/core",
     "app": "src/app",
     "utils": "src/utils",
-    "libs": "src/libs",
-    "@config": "src/app/config/config.js"
+    "libs": "src/libs"
   }
 }
