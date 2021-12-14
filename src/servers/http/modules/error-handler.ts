@@ -11,9 +11,7 @@ export async function errorHandler(error: Error | FastifyError | BaseError, requ
   let payload: Record<string, any> | null = null
 
   if (error instanceof BaseError) {
-    // @ts-ignore
     code = error.httpCode()
-    // @ts-ignore
     payload = error.toJSON()
   }
 
