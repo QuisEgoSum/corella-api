@@ -103,7 +103,9 @@
       "app": ["app"],
       "utils": ["utils"],
       "libs": ["libs"],
-      "@config": ["app/config/config.ts"]
+      "@config": ["core/config"],
+      "@logger": ["core/logger"],
+      "@error": ["core/error"]
     }
   },
   "include": ["src"],

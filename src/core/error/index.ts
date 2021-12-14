@@ -12,79 +12,78 @@ export const EntityNotExistsError = OpenapiError.compile(
     }
 )
 
+export const JsonSchemaValidationError = OpenapiError.compile(
+  {
+    properties: {
+      message: {
+        type: 'string',
+        example: 'Invalid JSON property'
+      },
+      keyword: {
+        type: 'string',
+        example: 'type',
+        enum: ["type", "minLength", "maxLength", "minimum", "maximum", "regex", "pattern"]
+      },
+      schemaPath: {
+        type: 'string',
+        example: '#/properties/name/minLength'
+      },
+      dataPath: {
+        type: 'string',
+        example: '/name'
+      },
+      details: {
+        type: 'object',
+        oneOf: [
+          {
+            title: 'Minimum example',
+            type: 'object',
+            properties: {
+              limit: {
+                type: 'integer',
+                example: 1
+              }
+            },
+            additionalProperties: false
+          },
+          {
+            title: 'Required property example',
+            type: 'object',
+            properties: {
+              missingProperty: {
+                type: 'string',
+                example: 'name'
+              }
+            },
+            additionalProperties: false
+          }
+        ]
+      }
+    },
+    additionalProperties: false,
+    required: ['message', 'code', 'error']
+  },
+  {
+    error: 'JsonSchemaValidationError',
+    code: 1002
+  }
+)
+
 export const JsonSchemaValidationErrors = OpenapiError.compile(
   {
     httpCode: 400,
     properties: {
+      in: {
+        type: 'string',
+        example: 'body',
+        enum: ['body', 'params', 'querystring']
+      },
       errors: {
         type: 'array',
-        items: {
-          title: 'JsonSchemaValidationError',
-          type: 'object',
-          properties: {
-            message: {
-              type: 'string',
-              example: 'Invalid JSON property'
-            },
-            code: {
-              type: 'integer',
-              default: 1002
-            },
-            error: {
-              type: 'string',
-              default: 'Json'
-            },
-            in: {
-              type: 'string',
-              example: 'body',
-              enum: ['body', 'params', 'querystring']
-            },
-            keyword: {
-              type: 'string',
-              example: 'type',
-              enum: ["type", "minLength", "maxLength", "minimum", "maximum", "regex", "pattern"]
-            },
-            schemaPath: {
-              type: 'string',
-              example: '#/properties/name/minLength'
-            },
-            dataPath: {
-              type: 'string',
-              example: '/name'
-            },
-            details: {
-              type: 'object',
-              oneOf: [
-                {
-                  title: 'Minimum example',
-                  type: 'object',
-                  properties: {
-                    limit: {
-                      type: 'integer',
-                      example: 1
-                    }
-                  },
-                  additionalProperties: false
-                },
-                {
-                  title: 'Required property example',
-                  type: 'object',
-                  properties: {
-                    missingProperty: {
-                      type: 'string',
-                      example: 'name'
-                    }
-                  },
-                  additionalProperties: false
-                }
-              ]
-            }
-          },
-          additionalProperties: false,
-          required: ['message', 'code', 'error', 'in']
-        }
+        items: JsonSchemaValidationError.schema()
       }
-    }
+    },
+    required: ['errors', 'in']
   },
     {
       error: 'JsonSchemaValidationErrors',
@@ -220,5 +219,25 @@ export const WaitingTimeExceededError = InternalError.extends(
     error: 'WaitingTimeExceededError',
     message: 'Waiting time exceeded',
     code: 1013
+  }
+)
+
+export const RouteNotFound = OpenapiError.compile(
+  {
+    properties: {
+      method: {
+        type: 'string',
+        enum: ['GET', 'POST', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS']
+      },
+      url: {
+        type: 'string'
+      }
+    },
+    required: ['method', 'url']
+  },
+  {
+    error: 'RouteNotFound',
+    message: 'Route not found',
+    code: 1014
   }
 )

@@ -19,7 +19,8 @@
     "no-duplicate-case": "error",
     "no-extra-boolean-cast": "error",
     "no-inner-declarations": "error",
-    "@typescript-eslint/ban-ts-comment": "off"
+    "@typescript-eslint/ban-ts-comment": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   },
   "plugins": [
     "@typescript-eslint"

@@ -11,11 +11,13 @@ const configPath = process.argv.find(arg => arg.startsWith('--config='))?.replac
 
 const defaultConfig = YAML.parse(fs.readFileSync(defaultConfigPath, {encoding: 'utf-8'}))
 
-export const config: ConfigEntity = object.assignDefaultPropertiesDeep(
+const sourceConfig: ConfigEntity = object.assignDefaultPropertiesDeep(
   configPath
     ? YAML.parse(fs.readFileSync(configPath, {encoding: 'utf-8'}))
     : {},
   defaultConfig
 )
 
-config.pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, {encoding: 'utf-8'}))
+sourceConfig.pkgJson = JSON.parse(fs.readFileSync(pkgJsonPath, {encoding: 'utf-8'}))
+
+export const config = new ConfigEntity(sourceConfig)

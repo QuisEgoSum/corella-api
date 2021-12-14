@@ -1,17 +1,19 @@
 import {config} from 'core/config'
+import {SwaggerOptions} from 'fastify-swagger'
 
 
-export const swagger = {
+export const swagger: SwaggerOptions = {
+  mode: 'dynamic',
   exposeRoute: true,
   routePrefix: '/docs/swagger',
   hideUntagged: true,
   openapi: {
     info: {
-      title: config,
+      title: config.pkgJson.name,
       version: config.pkgJson.version
     },
-    consumes: ['application/json'],
-    produces: ['application/json'],
+    // consumes: ['application/json'],
+    // produces: ['application/json'],
     components: {
       securitySchemes: {
         UserBearer: {
@@ -22,6 +24,6 @@ export const swagger = {
       }
     },
     tags: [],
-    'x-tagGroups': []
+    // 'x-tagGroups': []
   }
 }

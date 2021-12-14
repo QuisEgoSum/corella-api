@@ -1,0 +1,12 @@
+production: false
+
+server:
+  http:
+    protocol: http
+    host: localhost:8080
+    port: 8080
+
+logger:
+  pretty: true
+  time: true
+  isoTime: true
