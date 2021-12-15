@@ -1,5 +1,7 @@
 import type {FastifyInstance} from 'fastify'
 import type {UserService} from 'app/user/UserService'
+import {UserBase} from '../schemas/entities'
+import {BadRequestNoBody} from '../../../common/schemas/default'
 
 
 interface FindUserV1Request {
@@ -19,14 +21,23 @@ export async function findUser(fastify: FastifyInstance, service: UserService, s
           tags: ['User'],
           params: {
             userId: schemas.properties._id
+          },
+          response: {
+            [200]: {
+              description: 'User',
+              type: 'object',
+              properties: {
+                user: UserBase
+              },
+              additionalProperties: false,
+              required: ['user']
+            },
+            [400]: new BadRequestNoBody()
           }
         },
-        config: {
-          // TODO: Added route hook for adding security
-          security: {
-            auth: true,
-            admin: true
-          }
+        security: {
+          auth: true,
+          admin: true
         },
         handler: async function(request, reply) {
           const user = await service.findById(request.params.userId)

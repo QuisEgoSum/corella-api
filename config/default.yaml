@@ -1,5 +1,14 @@
 production: false
 
+database:
+  credentials:
+    connectionString: mongodb://localhost/project-template
+  options:
+    useNewUrlParser: true
+    useUnifiedTopology: true
+    ignoreUndefined: false
+    keepAlive: true
+
 server:
   http:
     protocol: http
@@ -10,3 +19,15 @@ logger:
   pretty: true
   time: true
   isoTime: true
+  level: debug # debug | info
+
+user:
+  registration: true
+
+  session:
+    maximum: 10
+
+  superadmin:
+    username: admin
+    email: admin@nowhere.org
+    password: SuperSecretPassword

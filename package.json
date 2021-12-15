@@ -22,6 +22,7 @@
     "fastify-cookie": "^5.4.0",
     "fastify-cors": "^6.0.2",
     "fastify-helmet": "^5.3.2",
+    "fastify-plugin": "^3.0.0",
     "fastify-static": "^4.5.0",
     "fastify-swagger": "^4.12.6",
     "module-alias": "^2.2.2",
@@ -30,10 +31,13 @@
     "openapi-error": "0.0.4",
     "pino": "^7.5.1",
     "socket.io": "^4.4.0",
+    "uuid": "^8.3.2",
     "yaml": "^1.10.2"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/mocha": "^9.0.0",
+    "@types/uuid": "^8.3.3",
     "@typescript-eslint/eslint-plugin": "^5.6.0",
     "@typescript-eslint/parser": "^5.6.0",
     "@typescript-eslint/typescript-estree": "^5.6.0",

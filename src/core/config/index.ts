@@ -11,7 +11,7 @@ const configPath = process.argv.find(arg => arg.startsWith('--config='))?.replac
 
 const defaultConfig = YAML.parse(fs.readFileSync(defaultConfigPath, {encoding: 'utf-8'}))
 
-const sourceConfig: ConfigEntity = object.assignDefaultPropertiesDeep(
+const sourceConfig = object.assignDefaultPropertiesDeep(
   configPath
     ? YAML.parse(fs.readFileSync(configPath, {encoding: 'utf-8'}))
     : {},

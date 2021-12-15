@@ -1,8 +1,10 @@
 import type {Optional, PageOptions} from 'core/repository/IBaseRepository'
 import type {DataList} from 'core/data'
+import type {BaseRepository} from '../repository'
 
 
-export interface IBaseService<T> {
+export interface IBaseService<T, R extends BaseRepository<T>> {
+  repository: R
 
   /**
    * @throws {EntityExistsError}

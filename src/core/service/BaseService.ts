@@ -5,16 +5,16 @@ import type {Optional, PageOptions} from 'core/repository/IBaseRepository'
 import type {IBaseService} from './IBaseService'
 
 
-export class BaseService<T> implements IBaseService<T> {
+export class BaseService<T, R extends BaseRepository<T>> implements IBaseService<T, R> {
 
-  private Error: {
+  public Error: {
     EntityExistsError: typeof EntityExistsError,
     EntityNotExistsError: typeof EntityNotExistsError
   }
 
-  private repository: BaseRepository<T>
+  public repository: R
 
-  constructor(repository: BaseRepository<T>) {
+  constructor(repository: R) {
     this.repository = repository
     this.Error = {
       EntityExistsError: EntityExistsError,

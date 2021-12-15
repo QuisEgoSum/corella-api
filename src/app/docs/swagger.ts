@@ -16,10 +16,10 @@ export const swagger: SwaggerOptions = {
     // produces: ['application/json'],
     components: {
       securitySchemes: {
-        UserBearer: {
+        UserSession: {
           type: 'apiKey',
-          name: 'Authorization',
-          in: 'header'
+          name: 'sessionId',
+          in: 'cookie'
         }
       }
     },

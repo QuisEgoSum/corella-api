@@ -15,7 +15,7 @@ import type {BulkWriteOptions, BulkWriteResult, AnyBulkWriteOperation, MongoServ
 
 
 export class BaseRepository<T> implements IBaseRepository<T> {
-  private Model: mongoose.Model<T>
+  public readonly Model: mongoose.Model<T>
 
   constructor(Model: mongoose.Model<T>) {
     this.Model = Model

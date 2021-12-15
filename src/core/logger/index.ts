@@ -3,6 +3,7 @@ import {config} from '@config'
 
 
 export const logger = pino({
+  level: config.logger.level,
   // depthLimit: 10,
   // redact: ['hostname'],
   formatters: {

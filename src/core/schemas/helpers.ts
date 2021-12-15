@@ -59,5 +59,16 @@ export class ObjectId extends SchemaHelper {
     this.errorMessage.pattern = params.entity
       ? ObjectId.errorPattern.replace('{{stub}}', params.entity)
       : 'Invalid unique ID'
+    this.errorMessage.type = this.errorMessage.pattern
+  }
+}
+
+export class Timestamp extends SchemaHelper {
+  static type = 'integer'
+  static description = 'Timestamp'
+
+  constructor(params: SchemaHelperParams) {
+    params.example = params.example || Date.now()
+    super(params, Timestamp)
   }
 }
