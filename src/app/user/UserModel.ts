@@ -1,9 +1,9 @@
-import {Schema, model} from 'mongoose'
+import {Schema, model, Types} from 'mongoose'
 import {UserRole} from './UserRole'
 
 
 export interface IUser {
-  _id: Schema.Types.ObjectId,
+  _id: Types.ObjectId,
   username: string,
   email: string,
   role: UserRole,

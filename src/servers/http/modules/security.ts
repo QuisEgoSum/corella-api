@@ -1,15 +1,11 @@
 import {FastifyRequest, RouteOptions} from 'fastify'
 import {service, UserRole, error as userError} from 'app/user'
-import {Types} from 'mongoose'
+import type {AuthorizedUser} from 'app/user'
 
 
 declare module 'fastify' {
   interface FastifyRequest {
-    session?: {
-      sessionId: string,
-      userId: Types.ObjectId,
-      userRole: UserRole
-    }
+    session?: AuthorizedUser
   }
   interface RouteOptions {
     security?: {
@@ -30,7 +26,7 @@ async function isAdmin(request: FastifyRequest) {
   }
 }
 
-export function addSecurityHook(routeOptions: RouteOptions) {
+export function securityHook(routeOptions: RouteOptions) {
   if (!routeOptions.onRequest) {
     routeOptions.onRequest = []
   } else if (typeof routeOptions.onRequest === 'function') {

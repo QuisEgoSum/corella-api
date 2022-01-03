@@ -1,6 +1,9 @@
 import mongoose from 'mongoose'
 import {config} from '@config'
-import {logger} from '@logger'
+import {logger as defaultLogger} from '@logger'
+
+
+const logger = defaultLogger.child({label: 'db'}, {})
 
 
 export async function createConnection() {

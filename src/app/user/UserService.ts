@@ -2,10 +2,12 @@ import {BaseService} from 'core/service'
 import type {IUser} from './UserModel'
 import type {UserRepository} from './UserRepository'
 import {service as sessionService} from './packages/session'
-import {UserAuthorizationError} from './user-error'
+import {IncorrectUserCredentials, UserAuthorizationError} from './user-error'
 import bcrypt from 'bcrypt'
 import {Types} from 'mongoose'
 import {config} from '@config'
+import {AuthorizedUser, UserRole} from './index'
+import {UserCredentials} from './schemas'
 
 
 export class UserService extends BaseService<IUser, UserRepository> {
@@ -24,7 +26,7 @@ export class UserService extends BaseService<IUser, UserRepository> {
     super(userRepository)
   }
 
-  async authorization(sessionId?: string) {
+  async authorization(sessionId?: string): Promise<AuthorizedUser> {
     if (!sessionId) {
       throw new UserAuthorizationError()
     }
@@ -42,10 +44,30 @@ export class UserService extends BaseService<IUser, UserRepository> {
     }
   }
 
+  async signin(credentials: UserCredentials): Promise<{user: IUser, sessionId: string}> {
+    const user = await this.repository.findByLogin(credentials.login)
+
+    if (!user) {
+      throw new IncorrectUserCredentials()
+    }
+
+    if (!await UserService.compareHashPassword(credentials.password, user.passwordHash)) {
+      throw new IncorrectUserCredentials()
+    }
+
+    const session = await sessionService.createForUser(user._id)
+
+    return {
+      user: user,
+      sessionId: session._id
+    }
+  }
+
   async upsertSuperadmin() {
     const superadmin = {
       username: config.user.superadmin.username,
       email: config.user.superadmin.email,
+      role: UserRole.ADMIN,
       passwordHash: await UserService.hashPassword(config.user.superadmin.password)
     }
 

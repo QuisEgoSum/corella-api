@@ -10,7 +10,8 @@ import {httpLogger} from './modules/logger'
 import {errorHandler} from './modules/error-handler'
 import {notFoundHandler} from './modules/not-found-handler'
 import {schemaErrorFormatter, ajv} from 'core/validation'
-import {addSecurityHook} from './modules/security'
+import {securityHook} from './modules/security'
+import {docsHook} from './modules/docs'
 
 
 export function createHttpServer() {
@@ -21,7 +22,8 @@ export function createHttpServer() {
   })
 
   server
-    .addHook('onRoute', addSecurityHook)
+    .addHook('onRoute', securityHook)
+    .addHook('onRoute', docsHook)
     .setErrorHandler(errorHandler)
     .setNotFoundHandler(notFoundHandler)
     // @ts-ignore

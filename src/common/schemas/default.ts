@@ -1,39 +1,59 @@
 import {JsonSchemaValidationErrors} from '@error'
 import {Schema} from 'openapi-error'
-import {UserAuthorizationError} from '../../app/user/user-error'
+import {UserAuthorizationError, UserRightsError} from 'app/user/user-error'
 
 
-export class BadRequestNoBody {
+export class ErrorResponse {
   private description: string
   private type: string
   private additionalProperties: boolean
-  private oneOf: Partial<Schema>[]
+  private oneOf: any[]
 
-  constructor(...oneOfSchemas: Partial<Schema>[]) {
-    this.description = 'Bad request'
+  static ErrorResponseOne = class ErrorResponse {
+    private title: string
+    private type: string
+    private properties: {error: Schema}
+    private additionalProperties: boolean
+    private required: string[]
+
+
+    constructor(schema: Schema) {
+      this.title = schema.title
+      this.type = 'object'
+      this.properties = {
+        error: schema
+      }
+      this.additionalProperties = false
+      this.required = ['error']
+    }
+  }
+
+  constructor(description: string, ...oneOfSchemas: Schema[]) {
     this.type = 'object'
-    this.additionalProperties = false
-    this.oneOf = [
-      ...oneOfSchemas,
-      JsonSchemaValidationErrors.schema()
-    ]
+    this.description = description
+    this.additionalProperties = true
+    this.oneOf = oneOfSchemas.map(schema => new ErrorResponse.ErrorResponseOne(schema))
   }
 }
 
-export class UserUnauthorized {
-  private description: string
-  private type: string
-  private additionalProperties: boolean
-  private properties: Record<string, any>
-  private required: string[]
+export class BadRequestNoBody extends ErrorResponse {
+  constructor(...oneOfSchemas: Schema[]) {
+    super(
+      'Bad request',
+      JsonSchemaValidationErrors.schema(),
+      ...oneOfSchemas
+    )
+  }
+}
 
+export class UserUnauthorized extends ErrorResponse {
   constructor() {
-    const schema = UserAuthorizationError.schema()
+    super('Unauthorized', UserAuthorizationError.schema())
+  }
+}
 
-    this.description = 'Unauthorized'
-    this.type = 'object'
-    this.properties = schema.properties
-    this.required = schema.required
-    this.additionalProperties = false
+export class UserRights extends ErrorResponse{
+  constructor() {
+    super('Forbidden', UserRightsError.schema())
   }
 }

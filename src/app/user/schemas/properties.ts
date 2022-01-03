@@ -9,15 +9,15 @@ export const username = {
   maxLength: 24,
   example: 'user',
   errorMessage: {
-    minLength: '',
-    maxLength: ''
+    minLength: 'Username cannot be shorter than 1 character',
+    maxLength: 'Username cannot be longer than 24 characters'
   }
 }
 export const email = {
   type: 'string',
   example: 'user@nowhere.com',
   errorMessage: {
-
+    //TODO: email validation
   }
 }
 export const role = {

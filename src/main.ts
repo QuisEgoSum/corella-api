@@ -2,6 +2,8 @@ import 'module-alias/register'
 import {createHttpServer} from './servers/http'
 import {createConnection} from './core/database'
 import {service as userService} from 'app/user'
+import {promisify} from 'util'
+import {config} from '@config'
 import {logger} from '@logger'
 
 
@@ -11,9 +13,11 @@ import {logger} from '@logger'
 
   const httpServer = createHttpServer()
 
-  httpServer.ready(error => error ? logger.error(error) : logger.info('Fastify ready'))
+  await promisify(httpServer.ready)()
 
-  await httpServer.listen(8080)
+  logger.info('Fastify ready')
+
+  await httpServer.listen(config.server.http.port, config.server.http.address)
 })()
   .catch(error => {
     console.error(error)

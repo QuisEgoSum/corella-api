@@ -1,6 +1,6 @@
 import fs from 'fs/promises'
 import path from 'path'
-import {config} from 'core/config'
+import {config} from '@config'
 import type {FastifyInstance} from 'fastify'
 
 

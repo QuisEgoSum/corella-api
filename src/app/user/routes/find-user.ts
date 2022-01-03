@@ -1,10 +1,10 @@
 import type {FastifyInstance} from 'fastify'
 import type {UserService} from 'app/user/UserService'
-import {UserBase} from '../schemas/entities'
-import {BadRequestNoBody} from '../../../common/schemas/default'
+import {UserBase} from 'app/user/schemas/entities'
+import {BadRequestNoBody} from 'common/schemas/default'
 
 
-interface FindUserV1Request {
+interface FindUserRequest {
   Params: {
     userId: string
   }
@@ -12,7 +12,7 @@ interface FindUserV1Request {
 
 export async function findUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
   return fastify
-    .route<FindUserV1Request>(
+    .route<FindUserRequest>(
       {
         url: '/user/:userId',
         method: 'GET',
@@ -45,7 +45,7 @@ export async function findUser(fastify: FastifyInstance, service: UserService, s
           reply
             .code(200)
             .type('application/json')
-            .send(user)
+            .send({user})
         }
       }
     )

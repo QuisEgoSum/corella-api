@@ -7,6 +7,7 @@ import * as error from './user-error'
 import * as schemas from './schemas'
 import {UserRole} from './UserRole'
 import type {FastifyInstance} from 'fastify'
+import {Types} from 'mongoose'
 
 
 export const service = new UserService(new UserRepository(UserModel))
@@ -17,4 +18,9 @@ export {
   UserRole,
   Session,
   error
+}
+export type AuthorizedUser = {
+  sessionId: string,
+  userId: Types.ObjectId,
+  userRole: UserRole
 }

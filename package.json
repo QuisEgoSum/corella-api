@@ -9,7 +9,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "lint": "eslint . --ext .ts",
     "prepublishOnly": "npm run build",
-    "dev": "nodemon src/main.ts"
+    "dev": "nodemon --watch './**/*.ts' --exec 'ts-node' src/main.ts"
   },
   "author": "QuisEgoSum",
   "license": "UNLICENSED",
@@ -28,7 +28,7 @@
     "module-alias": "^2.2.2",
     "mongodb": "^4.2.1",
     "mongoose": "^6.1.0",
-    "openapi-error": "0.0.5",
+    "openapi-error": "0.0.6",
     "pino": "^7.5.1",
     "socket.io": "^4.4.0",
     "uuid": "^8.3.2",
@@ -51,6 +51,7 @@
     "typescript": "^4.5.2"
   },
   "_moduleAliases": {
+    "common": "src/common",
     "core": "src/core",
     "app": "src/app",
     "utils": "src/utils",

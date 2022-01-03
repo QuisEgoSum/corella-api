@@ -1,4 +1,4 @@
-import {RouteNotFound} from 'core/error'
+import {RouteNotFoundError} from 'core/error'
 import {FastifyReply, FastifyRequest} from 'fastify'
 
 
@@ -6,5 +6,5 @@ export async function notFoundHandler(request: FastifyRequest, reply: FastifyRep
   reply
     .code(404)
     .type('application/json')
-    .send(new RouteNotFound({method: request.method, url: request.url}))
+    .send(new RouteNotFoundError({method: request.method, url: request.url}))
 }

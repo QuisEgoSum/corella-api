@@ -198,11 +198,11 @@ export const TooEarlyError = OpenapiError.compile(
   }
 )
 
-export const InvalidJSONStructureError = InvalidDataError.extends(
+export const InvalidJsonStructureError = InvalidDataError.extends(
   {
     properties: {
       position: {
-        type: 'integer'
+        type: 'string'
       }
     }
   },
@@ -222,7 +222,7 @@ export const WaitingTimeExceededError = InternalError.extends(
   }
 )
 
-export const RouteNotFound = OpenapiError.compile(
+export const RouteNotFoundError = OpenapiError.compile(
   {
     properties: {
       method: {
@@ -236,8 +236,36 @@ export const RouteNotFound = OpenapiError.compile(
     required: ['method', 'url']
   },
   {
-    error: 'RouteNotFound',
+    error: 'RouteNotFoundError',
     message: 'Route not found',
     code: 1014
+  }
+)
+
+export const RequestHandlingError = InvalidDataError.extends(
+  {
+    title: 'RequestHandlingError',
+    properties: {
+      message: {
+        description: 'Contain several examples(one of) of this error message',
+        type: 'string',
+        default: 'Body cannot be empty when content-type is set to \'application/json\'',
+        oneOf: [
+          {
+            title: 'FST_ERR_CTP_EMPTY_JSON_BODY',
+            type: 'string',
+            default: 'Body cannot be empty when content-type is set to \'application/json\''
+          },
+          {
+            title: 'FST_ERR_CTP_INVALID_MEDIA_TYPE',
+            type: 'string',
+            default: 'Unsupported Media Type: application/octet-stream'
+          }
+        ]
+      }
+    }
+  },
+  {
+    code: 1015,
   }
 )

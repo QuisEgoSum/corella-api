@@ -14,6 +14,7 @@ export type ConfigPaths = {
 export type ConfigServer = {
   readonly http: {
     readonly protocol: 'http' | 'https',
+    readonly address: string,
     readonly host: string,
     readonly port: number
   }
@@ -29,6 +30,12 @@ export type LoggerConfig = {
 export type UserConfig = {
   readonly session: {
     readonly maximum: number
+    readonly cookie: {
+      path: string,
+      domain: string,
+      sameSite: boolean | "lax" | "strict" | "none" | undefined,
+      maxAge: number
+    }
   },
   readonly superadmin: {
     readonly password: string,
