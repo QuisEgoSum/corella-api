@@ -1,5 +1,12 @@
 import {_id, createdAt, email, role, updatedAt, username} from './properties'
+import {UserRole} from '../UserRole'
+import {properties} from './index'
 
+
+export interface UserCredentials {
+  login: string,
+  password: string
+}
 
 export const UserCredentials = {
   title: 'UserCredentials',
@@ -43,4 +50,33 @@ export const UserBase = {
     'createdAt',
     'updatedAt'
   ]
+}
+
+export interface CreateUser {
+  username: string,
+  email: string,
+  role: UserRole,
+  password: string
+}
+
+export const CreateUser = {
+  title: 'CreateUser',
+  type: 'object',
+  properties: {
+    username: properties.username,
+    email: properties.email,
+    role: properties.role,
+    password: properties.password
+  },
+  additionalProperties: false,
+  required: ['username', 'email', 'role', 'password'],
+  errorMessage: {
+    type: 'User data must be object',
+    required: {
+      username: 'Enter username',
+      email: 'Enter email',
+      role: 'Select role',
+      password: 'Enter password'
+    }
+  }
 }

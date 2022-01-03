@@ -1,4 +1,4 @@
-import {JsonSchemaValidationErrors} from '@error'
+import {InvalidJsonStructureError, JsonSchemaValidationErrors, NoDataForUpdatingError} from '@error'
 import {Schema} from 'openapi-error'
 import {UserAuthorizationError, UserRightsError} from 'app/user/user-error'
 
@@ -32,7 +32,14 @@ export class ErrorResponse {
     this.type = 'object'
     this.description = description
     this.additionalProperties = true
-    this.oneOf = oneOfSchemas.map(schema => new ErrorResponse.ErrorResponseOne(schema))
+    this.oneOf = []
+
+    oneOfSchemas.map(schema => this.addSchema(schema))
+  }
+
+  addSchema(schema: Schema) {
+    this.oneOf.push(new ErrorResponse.ErrorResponseOne(schema))
+    return this
   }
 }
 
@@ -46,14 +53,37 @@ export class BadRequestNoBody extends ErrorResponse {
   }
 }
 
-export class UserUnauthorized extends ErrorResponse {
+export class Unauthorized extends ErrorResponse {
   constructor() {
     super('Unauthorized', UserAuthorizationError.schema())
   }
 }
 
-export class UserRights extends ErrorResponse{
-  constructor() {
-    super('Forbidden', UserRightsError.schema())
+export class UserForbidden extends ErrorResponse {
+  constructor(...oneOfSchemas: Schema[]) {
+    super('Forbidden', UserRightsError.schema(), ...oneOfSchemas)
+  }
+}
+
+export class BadRequest extends ErrorResponse {
+  constructor(...oneOfSchemas: Schema[]) {
+    super('Bad request', ...oneOfSchemas)
+  }
+
+  bodyErrors() {
+    this.addSchema(JsonSchemaValidationErrors.schema())
+    this.addSchema(InvalidJsonStructureError.schema())
+    return this
+  }
+
+  updateError() {
+    this.addSchema(NoDataForUpdatingError.schema())
+    return this
+  }
+}
+
+export class NotFound extends ErrorResponse {
+  constructor(...oneOfSchemas: Schema[]) {
+    super('Not Found', ...oneOfSchemas)
   }
 }

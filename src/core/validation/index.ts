@@ -2,6 +2,7 @@ import Ajv from 'ajv'
 import ajvErrors from 'ajv-errors'
 import ajvKeywords from 'ajv-keywords'
 import {JsonSchemaValidationErrors, JsonSchemaValidationError} from 'core/error'
+import emailValidator from 'email-validator'
 
 
 export const ajv = new Ajv(
@@ -20,6 +21,10 @@ ajvKeywords(ajv)
 
 ajv.addKeyword({keyword: 'example'})
 ajv.addKeyword({keyword: 'content'})
+ajv.addKeyword({
+    keyword: 'emailValidator',
+    validate: (_: any, data: string) => emailValidator.validate(data)
+})
 
 
 export function errorFormatter(error: Record<string, any>) {

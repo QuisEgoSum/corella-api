@@ -20,6 +20,6 @@ import {logger} from '@logger'
   await httpServer.listen(config.server.http.port, config.server.http.address)
 })()
   .catch(error => {
-    console.error(error)
+    logger.fatal(error)
     process.exit(1)
   })

@@ -141,12 +141,10 @@ export const UniqueKeyError = OpenapiError.compile(
     httpCode: 400,
     properties: {
       key: {
-        type: 'string',
-        example: 'username'
+        type: 'string'
       },
       value: {
-        type: 'string',
-        example: 'admin'
+        type: 'string'
       }
     },
     required: ['key', 'value']
@@ -207,7 +205,7 @@ export const InvalidJsonStructureError = InvalidDataError.extends(
     }
   },
   {
-    error: 'InvalidJSONStructureError',
+    error: 'InvalidJsonStructureError',
     message: 'Invalid JSON structure',
     code: 1012
   }
@@ -244,7 +242,6 @@ export const RouteNotFoundError = OpenapiError.compile(
 
 export const RequestHandlingError = InvalidDataError.extends(
   {
-    title: 'RequestHandlingError',
     properties: {
       message: {
         description: 'Contain several examples(one of) of this error message',
@@ -267,5 +264,6 @@ export const RequestHandlingError = InvalidDataError.extends(
   },
   {
     code: 1015,
+    error: 'RequestHandlingError'
   }
 )

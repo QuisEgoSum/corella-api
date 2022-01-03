@@ -16,8 +16,11 @@ export const username = {
 export const email = {
   type: 'string',
   example: 'user@nowhere.com',
+  emailValidator: true,
+  maxLength: 1024,
   errorMessage: {
-    //TODO: email validation
+    emailValidator: 'Invalid email address',
+    maxLength: 'Email address cannot be longer than 1024 characters'
   }
 }
 export const role = {
@@ -25,6 +28,15 @@ export const role = {
   enum: Object.values(UserRole),
   errorMessage: {
     enum: `Acceptable user role values: ${Object.values(UserRole).join(', ')}`
+  }
+}
+export const password = {
+  type: 'string',
+  minLength: 6,
+  maxLength: 1024,
+  errorMessage: {
+    minLength: 'Password must not be less than 6 characters',
+    maxLength: 'Password must not be more than 1024 characters'
   }
 }
 export const createdAt = new Timestamp({description: 'Timestamp of user creation'})

@@ -41,6 +41,9 @@ const UserSchema = new Schema<IUser>(
     timestamps: true
   }
 )
+  .index({email: 1}, {unique: true})
+  .index({username: 1}, {unique: true})
+  .index({createdAt: 1})
 
 
 export const UserModel = model<IUser>('User', UserSchema, 'users')

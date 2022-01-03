@@ -1,5 +1,5 @@
 import type {RouteOptions} from 'fastify'
-import {ErrorResponse, UserRights, UserUnauthorized} from 'common/schemas/default'
+import {ErrorResponse, UserForbidden, Unauthorized} from 'common/schemas/default'
 import {RequestHandlingError} from '@error'
 
 
@@ -39,9 +39,9 @@ export function docsHook(routeOptions: RouteOptions) {
 
   if (routeOptions.security?.auth) {
     routeOptions.schema.security.push({UserSession: []})
-    routeOptions.schema.response[401] = new UserUnauthorized()
+    routeOptions.schema.response[401] = new Unauthorized()
   }
   if (routeOptions.security?.admin) {
-    routeOptions.schema.response[403] = new UserRights()
+    routeOptions.schema.response[403] = new UserForbidden()
   }
 }

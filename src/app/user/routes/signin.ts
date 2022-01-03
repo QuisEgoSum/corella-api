@@ -1,12 +1,12 @@
 import type {FastifyInstance} from 'fastify'
 import type {UserService} from 'app/user/UserService'
-import type {UserCredentials} from 'app/user/schemas'
+import type {entities} from 'app/user/schemas'
 import {UserBase} from '../schemas/entities'
 import {config} from '@config'
 
 
 interface SigninUser {
-  Body: UserCredentials
+  Body: entities.UserCredentials
 }
 
 export async function signin(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {

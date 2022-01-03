@@ -19,8 +19,8 @@ export async function errorHandler(error: FastifyError | BaseError | SyntaxError
     error = payload
   } else if (error instanceof SyntaxError && error.type === 'entity.parse.failed') {
     code = 400
-    payload = new InvalidJsonStructureError().toJSON()
-  } else if (error.message.startsWith('Unexpected token \n in JSON') && error.stack.includes('secure-json-parse')) {
+    payload = new InvalidJsonStructureError({position: error.message}).toJSON()
+  } else if (error.message.startsWith('Unexpected token') && error.stack.includes('secure-json-parse')) {
     code = 400
     payload = new InvalidJsonStructureError({
       position: error.message

@@ -2,12 +2,14 @@ import {BaseService} from 'core/service'
 import type {IUser} from './UserModel'
 import type {UserRepository} from './UserRepository'
 import {service as sessionService} from './packages/session'
-import {IncorrectUserCredentials, UserAuthorizationError} from './user-error'
+import {IncorrectUserCredentials, UserAuthorizationError, UserExistsError, UserNotExistsError} from './user-error'
 import bcrypt from 'bcrypt'
 import {Types} from 'mongoose'
 import {config} from '@config'
-import {AuthorizedUser, UserRole} from './index'
-import {UserCredentials} from './schemas'
+import {UserSession, UserRole} from './index'
+import type {entities} from './schemas'
+import {CreateUser} from './schemas/entities'
+import {BaseRepositoryError} from 'core/repository'
 
 
 export class UserService extends BaseService<IUser, UserRepository> {
@@ -24,9 +26,23 @@ export class UserService extends BaseService<IUser, UserRepository> {
 
   constructor(userRepository: UserRepository) {
     super(userRepository)
+
+    this.Error.EntityNotExistsError = UserNotExistsError
   }
 
-  async authorization(sessionId?: string): Promise<AuthorizedUser> {
+  errorHandler(error: Error | BaseRepositoryError): IUser {
+    if (error instanceof BaseRepositoryError.UniqueKeyError) {
+      if (error.key === 'username') {
+        throw new UserExistsError({message: 'User with this username already exists'})
+      } else {
+        throw new UserExistsError({message: 'User with this email address already exists'})
+      }
+    } else {
+      throw error
+    }
+  }
+
+  async authorization(sessionId?: string): Promise<UserSession> {
     if (!sessionId) {
       throw new UserAuthorizationError()
     }
@@ -44,7 +60,7 @@ export class UserService extends BaseService<IUser, UserRepository> {
     }
   }
 
-  async signin(credentials: UserCredentials): Promise<{user: IUser, sessionId: string}> {
+  async signin(credentials: entities.UserCredentials): Promise<{user: IUser, sessionId: string}> {
     const user = await this.repository.findByLogin(credentials.login)
 
     if (!user) {
@@ -61,6 +77,17 @@ export class UserService extends BaseService<IUser, UserRepository> {
       user: user,
       sessionId: session._id
     }
+  }
+
+  async create(user: CreateUser) {
+    const createUser = {
+      username: user.username,
+      email: user.email,
+      role: user.role,
+      passwordHash: await UserService.hashPassword(user.password)
+    }
+
+    return super.create(createUser)
   }
 
   async upsertSuperadmin() {

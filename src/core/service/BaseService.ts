@@ -3,6 +3,7 @@ import {EntityExistsError, EntityNotExistsError} from 'core/error'
 import {DataList} from 'core/data'
 import type {Optional, PageOptions} from 'core/repository/IBaseRepository'
 import type {IBaseService} from './IBaseService'
+import type {Types} from 'mongoose'
 
 
 export class BaseService<T, R extends BaseRepository<T>> implements IBaseService<T, R> {
@@ -22,7 +23,7 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
   }
 
-  private errorHandler(error: Error | BaseRepositoryError): T {
+  errorHandler(error: Error | BaseRepositoryError): T {
     if (error instanceof BaseRepositoryError.UniqueKeyError) {
       throw new this.Error.EntityExistsError(error)
     } else {
@@ -43,7 +44,7 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
   }
 
-  async findById(id: string): Promise<T> {
+  async findById(id: string | Types.ObjectId): Promise<T> {
     const document = await this.repository.findById(id)
 
     if (document === null) {

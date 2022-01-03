@@ -1,11 +1,11 @@
 import {FastifyRequest, RouteOptions} from 'fastify'
 import {service, UserRole, error as userError} from 'app/user'
-import type {AuthorizedUser} from 'app/user'
+import type {UserSession} from 'app/user'
 
 
 declare module 'fastify' {
   interface FastifyRequest {
-    session?: AuthorizedUser
+    session: UserSession
   }
   interface RouteOptions {
     security?: {

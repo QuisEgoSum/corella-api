@@ -1,27 +1,25 @@
 import type {FastifyInstance} from 'fastify'
 import type {UserService} from 'app/user/UserService'
-import {BadRequestNoBody, NotFound} from 'common/schemas/default'
-import {UserNotExistsError} from '../user-error'
+import type {entities} from 'app/user/schemas'
+import {BadRequest} from 'common/schemas/default'
+import {UserExistsError} from '../user-error'
 
 
-interface FindUserRequest {
-  Params: {
-    userId: string
-  }
+interface CreateUserRequest {
+  Body: entities.CreateUser
 }
 
-export async function findUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
+export async function createUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
   return fastify
-    .route<FindUserRequest>(
+    .route<CreateUserRequest>(
       {
-        url: '/user/:userId',
-        method: 'GET',
+        url: '/user',
+        method: 'POST',
         schema: {
-          summary: 'Get user by id',
+          // @ts-ignore
+          summary: 'Create user',
           tags: ['User'],
-          params: {
-            userId: schemas.properties._id
-          },
+          body: schemas.entities.CreateUser,
           response: {
             [200]: {
               description: 'User',
@@ -32,8 +30,7 @@ export async function findUser(fastify: FastifyInstance, service: UserService, s
               additionalProperties: false,
               required: ['user']
             },
-            [400]: new BadRequestNoBody(),
-            [404]: new NotFound(UserNotExistsError.schema())
+            [400]: new BadRequest(UserExistsError.schema()).bodyErrors()
           }
         },
         security: {
@@ -41,7 +38,7 @@ export async function findUser(fastify: FastifyInstance, service: UserService, s
           admin: true
         },
         handler: async function(request, reply) {
-          const user = await service.findById(request.params.userId)
+          const user = await service.create(request.body)
 
           reply
             .code(200)

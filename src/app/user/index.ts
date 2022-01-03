@@ -19,7 +19,7 @@ export {
   Session,
   error
 }
-export type AuthorizedUser = {
+export type UserSession = {
   sessionId: string,
   userId: Types.ObjectId,
   userRole: UserRole
