@@ -1,5 +1,6 @@
 import {ObjectId, Timestamp} from 'common/schemas/helpers'
 import {UserRole} from '../UserRole'
+import {v4} from 'uuid'
 
 
 export const _id = new ObjectId({entity: 'user'})
@@ -32,6 +33,10 @@ export const email = {
     emailValidator: 'Invalid email address',
     maxLength: 'Email address cannot be longer than 1024 characters'
   }
+}
+export const avatar = {
+  type: 'string',
+  example: `#=${v4()}`
 }
 export const mEmail = {
   type: 'string',
