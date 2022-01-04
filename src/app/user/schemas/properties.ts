@@ -1,4 +1,4 @@
-import {ObjectId, Timestamp} from 'core/schemas/helpers'
+import {ObjectId, Timestamp} from 'common/schemas/helpers'
 import {UserRole} from '../UserRole'
 
 
@@ -13,6 +13,16 @@ export const username = {
     maxLength: 'Username cannot be longer than 24 characters'
   }
 }
+export const mUsername = {
+  type: 'string',
+  minLength: 1,
+  maxLength: 24,
+  example: 'Joe',
+  errorMessage: {
+    minLength: 'Specify at least 1 character to search by username',
+    maxLength: 'Username cannot be longer than 24 characters'
+  }
+}
 export const email = {
   type: 'string',
   example: 'user@nowhere.com',
@@ -20,6 +30,15 @@ export const email = {
   maxLength: 1024,
   errorMessage: {
     emailValidator: 'Invalid email address',
+    maxLength: 'Email address cannot be longer than 1024 characters'
+  }
+}
+export const mEmail = {
+  type: 'string',
+  minLength: 1,
+  maxLength: 1024,
+  errorMessage: {
+    minLength: 'Specify at least 1 character to search by email',
     maxLength: 'Email address cannot be longer than 1024 characters'
   }
 }

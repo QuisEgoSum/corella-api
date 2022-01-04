@@ -11,7 +11,7 @@ import type {
   ReturnsNewDoc
 } from 'mongoose'
 import type {Optional, PageOptions} from './IBaseRepository'
-import type {BulkWriteOptions, BulkWriteResult, AnyBulkWriteOperation, MongoServerError} from 'mongodb'
+import type {BulkWriteOptions, BulkWriteResult, AnyBulkWriteOperation, MongoServerError, DeleteResult} from 'mongodb'
 
 
 export class BaseRepository<T> implements IBaseRepository<T> {
@@ -63,7 +63,7 @@ export class BaseRepository<T> implements IBaseRepository<T> {
 
   }
 
-  findByIdAndUpdate(id: string | mongoose.Types.ObjectId, update: UpdateQuery<T>, options?: QueryOptions & { upsert: true } & ReturnsNewDoc): Promise<T | null> {
+  findByIdAndUpdate(id: string | mongoose.Types.ObjectId, update: UpdateQuery<T>, options?: QueryOptions & { upsert?: true } & ReturnsNewDoc): Promise<T | null> {
     return this.Model
       .findByIdAndUpdate(new mongoose.Types.ObjectId(id), update, options)
       .lean()
@@ -137,5 +137,10 @@ export class BaseRepository<T> implements IBaseRepository<T> {
   bulkWrite(writes: Array<AnyBulkWriteOperation<T>>, options?: BulkWriteOptions): Promise<BulkWriteResult> {
     return this.Model
       .bulkWrite(writes, options)
+  }
+
+  deleteMany(filter?: FilterQuery<T>, options?: QueryOptions): Promise<DeleteResult> {
+    return this.Model
+      .deleteMany(filter, options) as unknown as Promise<DeleteResult>
   }
 }

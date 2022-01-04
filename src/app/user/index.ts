@@ -10,7 +10,7 @@ import type {FastifyInstance} from 'fastify'
 import {Types} from 'mongoose'
 
 
-export const service = new UserService(new UserRepository(UserModel))
+export const service = new UserService(new UserRepository(UserModel), Session.service)
 export const router = async function router(fastify: FastifyInstance) {
   return routes(fastify, service, schemas)
 }

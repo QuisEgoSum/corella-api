@@ -1,25 +1,24 @@
 import type {FastifyInstance} from 'fastify'
 import type {UserService} from 'app/user/UserService'
-import type {entities} from 'app/user/schemas'
+import type {UpdateUser} from '../schemas/entities'
 import {BadRequest} from 'common/schemas/response'
-import {UserExistsError} from '../user-error'
 
 
-interface CreateUserRequest {
-  Body: entities.CreateUser
+interface UpdateUserRequest {
+  Body: UpdateUser
 }
 
-export async function createUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
+
+export async function updateUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
   return fastify
-    .route<CreateUserRequest>(
+    .route<UpdateUserRequest>(
       {
         url: '/user',
-        method: 'POST',
+        method: 'PATCH',
         schema: {
-          // @ts-ignore
-          summary: 'Create user',
-          tags: ['User - Admin'],
-          body: schemas.entities.CreateUser,
+          summary: 'Update user',
+          tags: ['User - Me'],
+          body: schemas.entities.UpdateUser,
           response: {
             [200]: {
               description: 'User',
@@ -30,15 +29,14 @@ export async function createUser(fastify: FastifyInstance, service: UserService,
               additionalProperties: false,
               required: ['user']
             },
-            [400]: new BadRequest(UserExistsError.schema()).bodyErrors()
+            [400]: new BadRequest().bodyErrors().updateError()
           }
         },
         security: {
-          auth: true,
-          admin: true
+          auth: true
         },
         handler: async function(request, reply) {
-          const user = await service.create(request.body)
+          const user = await service.findByIdAndUpdate(request.session.userId, request.body)
 
           reply
             .code(200)

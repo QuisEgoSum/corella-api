@@ -1,5 +1,4 @@
-import type {Optional, PageOptions} from 'core/repository/IBaseRepository'
-import type {DataList} from 'core/data'
+import type {Optional} from 'core/repository/IBaseRepository'
 import type {BaseRepository} from '../repository'
 
 
@@ -30,6 +29,4 @@ export interface IBaseService<T, R extends BaseRepository<T>> {
    * @throws {EntityNotExistsError}
    */
   deleteById(id: string): Promise<void>
-
-  findPage(page: PageOptions): Promise<DataList<T>>
 }

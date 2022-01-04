@@ -26,4 +26,12 @@ export class SessionService extends BaseService<ISession, SessionRepository> {
   async findSessionById(sessionId: string) {
     return this.repository.findUserBySessionIdAndUpdate(sessionId)
   }
+
+  async deleteUserSession(userId: string | Types.ObjectId, sessionId: string) {
+    return this.repository.deleteOne({_id: sessionId, user: new Types.ObjectId(userId)})
+  }
+
+  async deleteUserSessionsExpect(userId: string | Types.ObjectId, sessionId: string) {
+    return this.repository.deleteMany({user: new Types.ObjectId(userId), _id: {$ne: sessionId}})
+  }
 }

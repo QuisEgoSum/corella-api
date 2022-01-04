@@ -87,3 +87,31 @@ export class NotFound extends ErrorResponse {
     super('Not Found', ...oneOfSchemas)
   }
 }
+
+export class DataList {
+  private title: string
+  private description: string
+  private properties: unknown
+  private required: string[]
+  private additionalProperties: boolean
+  constructor(schema: unknown) {
+    this.title = 'DataList'
+    this.description = 'Data list'
+    this.properties = {
+      total: {
+        description: 'Total data for queries',
+        type: 'integer'
+      },
+      pages: {
+        description: 'Total pages for queries',
+        type: 'integer'
+      },
+      data: {
+        type: 'array',
+        items: schema
+      }
+    }
+    this.required = ['total', 'pages', 'data']
+    this.additionalProperties = false
+  }
+}

@@ -1,9 +1,9 @@
 import {BaseRepository, BaseRepositoryError} from 'core/repository'
-import {EntityExistsError, EntityNotExistsError} from 'core/error'
-import {DataList} from 'core/data'
-import type {Optional, PageOptions} from 'core/repository/IBaseRepository'
+import {EntityExistsError, EntityNotExistsError, NoDataForUpdatingError} from 'core/error'
+import type {Optional} from 'core/repository/IBaseRepository'
 import type {IBaseService} from './IBaseService'
 import type {Types} from 'mongoose'
+import {QueryOptions} from 'mongoose'
 
 
 export class BaseService<T, R extends BaseRepository<T>> implements IBaseService<T, R> {
@@ -31,6 +31,12 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
   }
 
+  private checkUpdateData(data: {[key: string]: any}) {
+    if (!Object.keys(data).length) {
+      throw new NoDataForUpdatingError()
+    }
+  }
+
   async create(entity: Optional<T>): Promise<T> {
     return this.repository.create(entity)
       .catch(error => this.errorHandler(error))
@@ -44,8 +50,8 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
   }
 
-  async findById(id: string | Types.ObjectId): Promise<T> {
-    const document = await this.repository.findById(id)
+  async findById(id: string | Types.ObjectId, projection?: unknown | null, options?: QueryOptions | null): Promise<T> {
+    const document = await this.repository.findById(id, projection, options)
 
     if (document === null) {
       throw new this.Error.EntityNotExistsError()
@@ -54,7 +60,7 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     return document
   }
 
-  async findByIdAndDelete(id: string): Promise<T> {
+  async findByIdAndDelete(id: string | Types.ObjectId): Promise<T> {
     const document = await this.repository.findByIdAndDelete(id)
 
     if (document === null) {
@@ -64,17 +70,14 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     return document
   }
 
-  async findByIdAndUpdate(id: string, update: Optional<T>): Promise<T> {
-    const document = await this.repository.findByIdAndUpdate(id, update)
+  async findByIdAndUpdate(id: string | Types.ObjectId, update: Optional<T>): Promise<T> {
+    this.checkUpdateData(update)
+    const document = await this.repository.findByIdAndUpdate(id, update, {new: true})
 
     if (document === null) {
       throw new this.Error.EntityNotExistsError()
     }
 
     return document
-  }
-
-  findPage(page: PageOptions): Promise<DataList<T>> {
-    return this.repository.findPage(page)
   }
 }

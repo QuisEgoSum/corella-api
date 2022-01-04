@@ -1,5 +1,6 @@
 import {Schema, model, Types} from 'mongoose'
 import {UserRole} from './UserRole'
+import {v4} from 'uuid'
 
 
 export interface IUser {
@@ -7,7 +8,8 @@ export interface IUser {
   username: string,
   email: string,
   role: UserRole,
-  passwordHash: string,
+  avatar: string,
+  passwordHash: string | null,
   createdAt: number,
   updatedAt: number
 }
@@ -25,9 +27,14 @@ const UserSchema = new Schema<IUser>(
       type: String,
       enum: Object.values(UserRole)
     },
+    avatar: {
+      type: String,
+      default: (): string => `#=${v4()}`
+    },
     passwordHash: {
       type: String,
-      select: false
+      select: false,
+      default: null
     },
     createdAt: {
       type: Number

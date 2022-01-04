@@ -1,8 +1,7 @@
 import {config} from 'core/config'
-import {SwaggerOptions} from 'fastify-swagger'
 
 
-export const swagger: SwaggerOptions = {
+export const swagger: Record<string, any> = {
   mode: 'dynamic',
   exposeRoute: true,
   routePrefix: '/docs/swagger',
@@ -12,8 +11,6 @@ export const swagger: SwaggerOptions = {
       title: config.pkgJson.name,
       version: config.pkgJson.version
     },
-    // consumes: ['application/json'],
-    // produces: ['application/json'],
     components: {
       securitySchemes: {
         UserSession: {
@@ -24,6 +21,14 @@ export const swagger: SwaggerOptions = {
       }
     },
     tags: [],
-    // 'x-tagGroups': []
+    'x-tagGroups': [
+      {
+        name: 'User',
+        tags: [
+          'User - Me',
+          'User - Admin'
+        ]
+      }
+    ]
   }
 }

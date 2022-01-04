@@ -10,7 +10,7 @@ export async function getUser(fastify: FastifyInstance, service: UserService, sc
         method: 'GET',
         schema: {
           summary: 'Get user',
-          tags: ['User'],
+          tags: ['User - Me'],
           response: {
             [200]: {
               description: 'User',

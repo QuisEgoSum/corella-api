@@ -9,6 +9,7 @@ interface SigninUser {
   Body: entities.UserCredentials
 }
 
+
 export async function signin(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
   return fastify
     .route<SigninUser>(
@@ -17,7 +18,7 @@ export async function signin(fastify: FastifyInstance, service: UserService, sch
         method: 'POST',
         schema: {
           summary: 'User sing in',
-          tags: ['User'],
+          tags: ['User - Me'],
           body: schemas.entities.UserCredentials,
           response: {
             [200]: {

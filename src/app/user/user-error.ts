@@ -59,3 +59,12 @@ export const UserExistsError = EntityExistsError.extends(
     code: 2004
   }
 )
+
+export const InvalidPasswordError = InvalidDataError.extends(
+  {},
+  {
+    error: 'InvalidPasswordError',
+    code: 2005,
+    message: 'Invalid password'
+  }
+)

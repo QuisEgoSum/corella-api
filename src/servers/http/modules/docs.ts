@@ -1,5 +1,5 @@
 import type {RouteOptions} from 'fastify'
-import {ErrorResponse, UserForbidden, Unauthorized} from 'common/schemas/default'
+import {ErrorResponse, UserForbidden, Unauthorized} from 'common/schemas/response'
 import {RequestHandlingError} from '@error'
 
 
