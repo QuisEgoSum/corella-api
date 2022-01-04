@@ -3,7 +3,7 @@ import type {UserService} from 'app/user/UserService'
 import {config} from '@config'
 
 
-export async function logout(fastify: FastifyInstance, service: UserService) {
+export async function signout(fastify: FastifyInstance, service: UserService) {
   return fastify
     .route(
       {

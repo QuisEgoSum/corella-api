@@ -2,7 +2,7 @@ import type {FastifyInstance} from 'fastify'
 import type {UserService} from 'app/user/UserService'
 
 
-export async function logoutAll(fastify: FastifyInstance, service: UserService) {
+export async function signoutAll(fastify: FastifyInstance, service: UserService) {
   return fastify
     .route(
       {

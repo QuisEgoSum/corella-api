@@ -16,7 +16,7 @@ import type {entities} from './schemas'
 import {CreateUser, UpdateUser, UpdateUserById, UpdateUserPassword} from './schemas/entities'
 import {BaseRepositoryError} from 'core/repository'
 import type {FindUsersQuery} from './schemas/entities'
-import {DataList} from '../../core/data'
+import {DataList} from '../../common/data'
 import {escapeStringRegexp} from '../../libs/alg/string'
 import {SessionService} from './packages/session/SessionService'
 
