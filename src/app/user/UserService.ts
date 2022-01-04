@@ -1,6 +1,17 @@
+import {UserRole} from './UserRole'
+import {UserSession} from './packages/session/SessionModel'
+import {
+  CreateUser,
+  UpdateUser,
+  UpdateUserById,
+  UpdateUserPassword
+} from './schemas/entities'
 import {BaseService} from 'core/service'
-import type {IUser} from './UserModel'
-import type {UserRepository} from './UserRepository'
+import {BaseRepositoryError} from 'core/repository'
+import {escapeStringRegexp} from 'libs/alg/string'
+import bcrypt from 'bcrypt'
+import {FilterQuery, Types} from 'mongoose'
+import {config} from '@config'
 import {
   IncorrectUserCredentials,
   InvalidPasswordError,
@@ -8,17 +19,12 @@ import {
   UserExistsError,
   UserNotExistsError
 } from './user-error'
-import bcrypt from 'bcrypt'
-import {FilterQuery, Types} from 'mongoose'
-import {config} from '@config'
-import {UserSession, UserRole} from './index'
+import type {IUser} from './UserModel'
+import type {UserRepository} from './UserRepository'
 import type {entities} from './schemas'
-import {CreateUser, UpdateUser, UpdateUserById, UpdateUserPassword} from './schemas/entities'
-import {BaseRepositoryError} from 'core/repository'
 import type {FindUsersQuery} from './schemas/entities'
-import {DataList} from '../../common/data'
-import {escapeStringRegexp} from '../../libs/alg/string'
-import {SessionService} from './packages/session/SessionService'
+import type {DataList} from 'common/data'
+import type {SessionService} from './packages/session/SessionService'
 
 
 export class UserService extends BaseService<IUser, UserRepository> {

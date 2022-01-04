@@ -1,6 +1,6 @@
 import {FastifyRequest, RouteOptions} from 'fastify'
 import {service, UserRole, error as userError} from 'app/user'
-import type {UserSession} from 'app/user'
+import type {UserSession} from 'app/user/packages/session/SessionModel'
 
 
 declare module 'fastify' {
