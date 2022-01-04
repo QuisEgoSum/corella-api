@@ -4,7 +4,9 @@ import {
   CreateUser,
   UpdateUser,
   UpdateUserById,
-  UpdateUserPassword
+  UpdateUserPassword,
+  FindUsersQuery,
+  UserCredentials
 } from './schemas/entities'
 import {BaseService} from 'core/service'
 import {BaseRepositoryError} from 'core/repository'
@@ -21,8 +23,6 @@ import {
 } from './user-error'
 import type {IUser} from './UserModel'
 import type {UserRepository} from './UserRepository'
-import type {entities} from './schemas'
-import type {FindUsersQuery} from './schemas/entities'
 import type {DataList} from 'common/data'
 import type {SessionService} from './packages/session/SessionService'
 
@@ -75,7 +75,7 @@ export class UserService extends BaseService<IUser, UserRepository> {
     }
   }
 
-  async signin(credentials: entities.UserCredentials): Promise<{user: IUser, sessionId: string}> {
+  async signin(credentials: UserCredentials): Promise<{user: IUser, sessionId: string}> {
     const user = await this.repository.findByLogin(credentials.login)
     if (!user || user.passwordHash === null) {
       throw new IncorrectUserCredentials()
