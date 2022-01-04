@@ -12,16 +12,16 @@ import {notFoundHandler} from './modules/not-found-handler'
 import {schemaErrorFormatter, ajv} from 'core/validation'
 import {securityHook} from './modules/security'
 import {docsHook} from './modules/docs'
+import type {FastifyInstance} from 'fastify'
 
 
-export function createHttpServer() {
-  const server = fastify({
+export function createHttpServer(server?: FastifyInstance) {
+  server = server || fastify({
     trustProxy: true,
     logger: httpLogger,
     bodyLimit: 10737418240
   })
-
-  server
+  return server
     .addHook('onRoute', securityHook)
     .addHook('onRoute', docsHook)
     .setErrorHandler(errorHandler)
@@ -34,6 +34,4 @@ export function createHttpServer() {
     .register(fastifyStatic, {root: config.paths.shareStatic})
     .register(userRouter)
     .register(docsRouter)
-
-  return server
 }
