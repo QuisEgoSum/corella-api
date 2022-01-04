@@ -10,7 +10,7 @@ import type {
   UpdateWriteOpResult,
   ReturnsNewDoc
 } from 'mongoose'
-import type {Optional, PageOptions} from './IBaseRepository'
+import type {PageOptions} from './IBaseRepository'
 import type {BulkWriteOptions, BulkWriteResult, AnyBulkWriteOperation, MongoServerError, DeleteResult} from 'mongodb'
 
 
@@ -31,7 +31,7 @@ export class BaseRepository<T> implements IBaseRepository<T> {
     }
   }
 
-  async create(entity?: Optional<T>): Promise<T> {
+  async create(entity?: Partial<T>): Promise<T> {
     //@ts-ignore
     return new this.Model(entity)
       .save()

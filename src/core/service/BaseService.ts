@@ -1,6 +1,5 @@
 import {BaseRepository, BaseRepositoryError} from 'core/repository'
 import {EntityExistsError, EntityNotExistsError, NoDataForUpdatingError} from 'core/error'
-import type {Optional} from 'core/repository/IBaseRepository'
 import type {IBaseService} from './IBaseService'
 import type {Types} from 'mongoose'
 import {QueryOptions} from 'mongoose'
@@ -37,7 +36,7 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
   }
 
-  async create(entity: Optional<T>): Promise<T> {
+  async create(entity: Partial<T>): Promise<T> {
     return this.repository.create(entity)
       .catch(error => this.errorHandler(error))
   }
@@ -70,7 +69,7 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     return document
   }
 
-  async findByIdAndUpdate(id: string | Types.ObjectId, update: Optional<T>): Promise<T> {
+  async findByIdAndUpdate(id: string | Types.ObjectId, update: Partial<T>): Promise<T> {
     this.checkUpdateData(update)
     const document = await this.repository.findByIdAndUpdate(id, update, {new: true})
 

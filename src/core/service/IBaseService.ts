@@ -1,4 +1,3 @@
-import type {Optional} from 'core/repository/IBaseRepository'
 import type {BaseRepository} from '../repository'
 
 
@@ -8,7 +7,7 @@ export interface IBaseService<T, R extends BaseRepository<T>> {
   /**
    * @throws {EntityExistsError}
    */
-  create(entity: Optional<T>): Promise<T>
+  create(entity: Partial<T>): Promise<T>
 
   /**
    * @throws {EntityNotExistsError}
@@ -18,7 +17,7 @@ export interface IBaseService<T, R extends BaseRepository<T>> {
   /**
    * @throws {EntityExistsError | EntityNotExistsError}
    */
-  findByIdAndUpdate(id: string, update: Optional<T>): Promise<T>
+  findByIdAndUpdate(id: string, update: Partial<T>): Promise<T>
 
   /**
    * @throws {EntityNotExistsError}

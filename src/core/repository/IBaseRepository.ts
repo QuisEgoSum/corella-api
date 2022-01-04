@@ -12,14 +12,11 @@ import type {ReturnsNewDoc} from 'mongoose'
 import type {BulkWriteOptions, BulkWriteResult, AnyBulkWriteOperation} from 'mongodb'
 
 
-export type Optional<T> = {
-  [P in keyof T]?: T[P]
-}
-
 export type PageOptions = {
   limit: number,
   page: number
 }
+
 
 export interface IBaseRepository<T> {
 
