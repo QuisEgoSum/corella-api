@@ -1,15 +1,6 @@
-import {UserRole} from './UserRole'
-import {UserSession} from './packages/session/SessionModel'
-import {
-  CreateUser,
-  UpdateUser,
-  UpdateUserById,
-  UpdateUserPassword,
-  FindUsersQuery,
-  UserCredentials
-} from './schemas/entities'
 import {BaseService} from 'core/service'
 import {BaseRepositoryError} from 'core/repository'
+import {UserRole} from './UserRole'
 import {escapeStringRegexp} from 'libs/alg/string'
 import bcrypt from 'bcrypt'
 import {FilterQuery, Types} from 'mongoose'
@@ -21,6 +12,15 @@ import {
   UserExistsError,
   UserNotExistsError
 } from './user-error'
+import type {
+  CreateUser,
+  UpdateUser,
+  UpdateUserById,
+  UpdateUserPassword,
+  FindUsersQuery,
+  UserCredentials
+} from './schemas/entities'
+import type {UserSession} from './packages/session/SessionModel'
 import type {IUser} from './UserModel'
 import type {UserRepository} from './UserRepository'
 import type {DataList} from 'common/data'

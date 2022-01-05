@@ -7,7 +7,6 @@ import * as error from './user-error'
 import * as schemas from './schemas'
 import {UserRole} from './UserRole'
 import type {FastifyInstance} from 'fastify'
-import {Types} from 'mongoose'
 
 
 export const service = new UserService(new UserRepository(UserModel), Session.service)
