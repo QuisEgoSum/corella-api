@@ -25,3 +25,5 @@ export const logger = pino({
       })
     : undefined
 })
+
+config.useLogger(logger)

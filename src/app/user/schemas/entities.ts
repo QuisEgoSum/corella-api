@@ -1,6 +1,5 @@
-import {_id, createdAt, email, mEmail, role, updatedAt, username} from './properties'
+import {_id, avatar, createdAt, email, mEmail, mUsername, password, role, updatedAt, username} from './properties'
 import {UserRole} from '../UserRole'
-import {properties} from './index'
 import {QueryPageLimit, QueryPageNumber, QuerySortDirection} from 'common/schemas/query'
 import type {SortDirection} from 'mongodb'
 
@@ -40,6 +39,7 @@ export const UserBase = {
     username: username,
     email: email,
     role: role,
+    avatar: avatar,
     createdAt: createdAt,
     updatedAt: updatedAt
   },
@@ -65,10 +65,10 @@ export const CreateUser = {
   title: 'CreateUser',
   type: 'object',
   properties: {
-    username: properties.username,
-    email: properties.email,
-    role: properties.role,
-    password: properties.password
+    username: username,
+    email: email,
+    role: role,
+    password: password
   },
   additionalProperties: false,
   required: ['username', 'email', 'role', 'password'],
@@ -96,9 +96,9 @@ export const FindUsersQuery = {
   title: 'FindUsersQuery',
   type: 'object',
   properties: {
-    fRole: properties.role,
-    mUsername: properties.mUsername,
-    mEmail: properties.mEmail,
+    fRole: role,
+    mUsername: mUsername,
+    mEmail: mEmail,
     sCreatedAt: new QuerySortDirection().setDefault('desc'),
     page: new QueryPageNumber().setDefault(1),
     limit: new QueryPageLimit().setDefault(10)
@@ -117,10 +117,10 @@ export const UpdateUserById = {
   title: 'UpdateUserById',
   type: 'object',
   properties: {
-    email: properties.email,
-    username: properties.username,
-    password: properties.password,
-    role: properties.role
+    email: email,
+    username: username,
+    password: password,
+    role: role
   },
   additionalProperties: false
 }
@@ -133,7 +133,7 @@ export const UpdateUser = {
   title: 'UpdateUser',
   type: 'object',
   properties: {
-    username: properties.username
+    username: username
   },
   additionalProperties: false
 }
@@ -147,7 +147,7 @@ export const UpdateUserPassword = {
   title: 'UpdateUserPassword',
   type: 'object',
   properties: {
-    password: properties.password,
+    password: password,
     oldPassword: {
       type: 'string'
     }
