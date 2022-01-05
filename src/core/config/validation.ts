@@ -1,18 +1,17 @@
 import Ajv from 'ajv'
-
-export const ajv = new Ajv(
-  {
-    coerceTypes: true,
-    allErrors: true,
-    allowUnionTypes: true
-  }
-)
-
 // @ts-ignore
 import schema from './schema'
 
 
 export function validation(config: Record<string, any>) {
+  const ajv = new Ajv(
+    {
+      coerceTypes: true,
+      allErrors: true,
+      allowUnionTypes: true
+    }
+  )
+
   const validate = ajv.compile(schema)
 
   validate(config)
