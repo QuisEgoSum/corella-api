@@ -38,4 +38,5 @@ function readConfig(): ConfigEntity {
   return sourceConfig
 }
 
+
 export const config = new ConfigEntity(readConfig())
