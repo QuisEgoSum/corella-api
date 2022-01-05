@@ -33,3 +33,16 @@ export function assignDefaultPropertiesDeep<T, E>(target: T, source: E): T & E {
   // @ts-ignore
   return target
 }
+
+export function copyDeep<T>(target: T): T {
+  if (typeof target !== 'object' || typeof target === 'object' && !target) {
+    return target
+  }
+  if (Array.isArray(target)) {
+    return target.map(value => copyDeep(value)) as unknown as T
+  } else {
+    const result: Record<any, any> = {}
+    Object.entries(target).forEach(([name, value]) => result[name] = copyDeep(value))
+    return result
+  }
+}

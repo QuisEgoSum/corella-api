@@ -1,4 +1,5 @@
 import path from 'path'
+import type {Logger} from 'pino'
 
 
 export type PkgJson = {
@@ -57,6 +58,10 @@ export type DatabaseConfig = {
 }
 
 export class ConfigEntity {
+  public configInfo: {
+    usedOverrideFilePath?: string,
+    usedEnv: string[]
+  }
   public readonly production: boolean
   public readonly pkgJson: PkgJson
   public readonly paths: ConfigPaths
@@ -66,6 +71,7 @@ export class ConfigEntity {
   public readonly database: DatabaseConfig
 
   constructor(defaultConfig: ConfigEntity) {
+    this.configInfo = defaultConfig.configInfo
     this.production = defaultConfig.production
     this.pkgJson = defaultConfig.pkgJson
     this.server = defaultConfig.server
@@ -78,6 +84,23 @@ export class ConfigEntity {
     this.paths = {
       root: rootDir,
       shareStatic: path.resolve(rootDir, 'static/share')
+    }
+  }
+
+  useLogger(logger: Logger) {
+    logger = logger.child({label: 'config'})
+    if (this.configInfo.usedOverrideFilePath) {
+      logger.info(`Use override config file ${this.configInfo.usedOverrideFilePath}`)
+    }
+    this.configInfo.usedEnv.forEach(env => logger.info(`Used env ${env}`))
+
+    if (this.production) {
+      if (this.logger.pretty) {
+        logger.warn(`You have set "logger.pretty" to "true", the recommended value in "production" mode is "false" to improve performance`)
+      }
+      if (this.logger.isoTime) {
+        logger.warn(`You have set "logger.isoTime" to "true", the recommended value in "production" mode is "false" to improve performance`)
+      }
     }
   }
 }

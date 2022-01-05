@@ -15,8 +15,6 @@ import {logger} from '@logger'
 
   await promisify(httpServer.ready)()
 
-  logger.info('Fastify ready')
-
   await httpServer.listen(config.server.http.port, config.server.http.address)
 })()
   .catch(error => {
