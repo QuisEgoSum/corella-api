@@ -1,5 +1,5 @@
 {
-  "name": "untitled",
+  "name": "corella-api",
   "version": "0.0.0",
   "description": "",
   "main": "build/main.js",
@@ -14,7 +14,7 @@
     "checkConfig": "npm run build && node -r module-alias/register tools/pre-commit/config.js && npm run removeBuild"
   },
   "author": "QuisEgoSum",
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "dependencies": {
     "ajv": "^8.8.2",
     "ajv-errors": "^3.0.0",

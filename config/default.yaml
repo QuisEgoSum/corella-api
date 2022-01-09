@@ -2,7 +2,7 @@ production: false
 
 database:
   credentials:
-    connectionString: mongodb://localhost/project-template
+    connectionString: mongodb://localhost/corella-local
   options:
     useNewUrlParser: true
     useUnifiedTopology: true
