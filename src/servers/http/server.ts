@@ -40,6 +40,6 @@ export function createHttpServer(server?: FastifyInstance) {
     .register(fastifyCookie)
     .register(fastifySwagger, swagger)
     .register(fastifyStatic, {root: config.paths.shareStatic})
-    .register(userRouter)
-    .register(docsRouter)
+    .register(userRouter, {prefix: '/api'})
+    .register(docsRouter, {prefix: '/api'})
 }
