@@ -18,6 +18,10 @@ export type ConfigServer = {
     readonly address: string,
     readonly host: string,
     readonly port: number
+  },
+  readonly cors: {
+    readonly allowedOrigins: string[],
+    readonly allowedHeaders: string[]
   }
 }
 

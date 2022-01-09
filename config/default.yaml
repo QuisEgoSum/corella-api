@@ -16,6 +16,15 @@ server:
     host: localhost:8080
     port: 8080
 
+  cors:
+    allowedOrigins:
+      - http://localhost:8000
+    allowedHeaders:
+      - origin
+      - content-type
+      - cookie
+
+
 logger:
   # Recommended false for production
   pretty: true

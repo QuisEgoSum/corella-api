@@ -36,6 +36,25 @@
             "host",
             "port"
           ]
+        },
+        "cors": {
+          "type": "object",
+          "properties": {
+            "allowedOrigins": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "allowedHeaders": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": ["allowedOrigins", "allowedHeaders"]
         }
       },
       "additionalProperties": false,

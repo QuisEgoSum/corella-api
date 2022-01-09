@@ -1,5 +1,7 @@
 import {fastify} from 'fastify'
 import fastifySwagger from 'fastify-swagger'
+import fastifyCors from 'fastify-cors'
+import fastifyHelmet from 'fastify-helmet'
 import fastifyStatic from 'fastify-static'
 import fastifyCookie from 'fastify-cookie'
 import {swagger} from 'app/docs'
@@ -29,6 +31,12 @@ export function createHttpServer(server?: FastifyInstance) {
     // @ts-ignore
     .setValidatorCompiler(({schema}) => ajv.compile(schema))
     .setSchemaErrorFormatter(schemaErrorFormatter)
+    .register(fastifyCors, {
+      allowedHeaders: config.server.cors.allowedHeaders,
+      origin: config.server.cors.allowedOrigins,
+      methods: ['GET', 'PUT', 'POST', 'DELETE']
+    })
+    .register(fastifyHelmet)
     .register(fastifyCookie)
     .register(fastifySwagger, swagger)
     .register(fastifyStatic, {root: config.paths.shareStatic})
