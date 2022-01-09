@@ -55,11 +55,31 @@
           },
           "additionalProperties": false,
           "required": ["allowedOrigins", "allowedHeaders"]
+        },
+        "csp": {
+          "type": "object",
+          "properties": {
+            "defaultSrc": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "additionalProperties": true
         }
       },
       "additionalProperties": false,
       "required": [
-        "http"
+        "http",
+        "cors",
+        "csp"
       ]
     },
     "logger": {

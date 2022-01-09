@@ -22,6 +22,13 @@ export type ConfigServer = {
   readonly cors: {
     readonly allowedOrigins: string[],
     readonly allowedHeaders: string[]
+  },
+  readonly csp: {
+    readonly directives: {
+      readonly defaultSrc: string[],
+      readonly  data: string[]
+      [key: string]: string[] | any
+    }
   }
 }
 
