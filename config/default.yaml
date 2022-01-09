@@ -23,6 +23,24 @@ server:
       - origin
       - content-type
       - cookie
+  csp:
+    directives:
+      defaultSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "'unsafe-eval'",
+        "*.jsdelivr.net",
+        "*.googleapis.com",
+        "*.gstatic.com",
+        "blob:",
+        "data:"
+      ]
+      data: [
+        "'unsafe-inline'",
+        "'unsafe-eval'",
+        "blob:",
+        "data:"
+      ]
 
 
 logger:

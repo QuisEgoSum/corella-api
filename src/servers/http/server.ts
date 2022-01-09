@@ -36,7 +36,9 @@ export function createHttpServer(server?: FastifyInstance) {
       origin: config.server.cors.allowedOrigins,
       methods: ['GET', 'PUT', 'POST', 'DELETE']
     })
-    .register(fastifyHelmet)
+    .register(fastifyHelmet, {
+      contentSecurityPolicy: config.server.csp
+    })
     .register(fastifyCookie)
     .register(fastifySwagger, swagger)
     .register(fastifyStatic, {root: config.paths.shareStatic})
