@@ -4,7 +4,7 @@ import {config} from 'core/config'
 export const swagger: Record<string, any> = {
   mode: 'dynamic',
   exposeRoute: true,
-  routePrefix: '/docs/swagger',
+  routePrefix: '/api/docs/swagger',
   hideUntagged: true,
   openapi: {
     info: {
