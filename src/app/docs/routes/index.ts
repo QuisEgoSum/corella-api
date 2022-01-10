@@ -9,5 +9,5 @@ export async function routes(
     {[key: string]: (fastify: FastifyInstance) => Promise<FastifyInstance>}
     >(__dirname)
 
-  return Promise.all(routes.map(route => route(fastify)))
+  await Promise.all(routes.map(route => route(fastify)))
 }

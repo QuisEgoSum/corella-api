@@ -12,5 +12,5 @@ export async function routes(
     {[key: string]: (fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) => Promise<FastifyInstance>}
     >(__dirname)
 
-  return Promise.all(routes.map(route => route(fastify, userService, schemas)))
+  await Promise.all(routes.map(route => route(fastify, userService, schemas)))
 }

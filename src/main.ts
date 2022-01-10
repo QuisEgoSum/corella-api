@@ -1,7 +1,8 @@
 import 'module-alias/register'
 import {createHttpServer} from './servers/http'
 import {createConnection} from './core/database'
-import {service as userService} from 'app/user'
+import {initDocs} from 'app/docs'
+import {initUser} from 'app/user'
 import {promisify} from 'util'
 import {config} from '@config'
 import {logger} from '@logger'
@@ -9,9 +10,24 @@ import {logger} from '@logger'
 
 (async function main() {
   await createConnection()
-  await userService.upsertSuperadmin()
 
-  const httpServer = createHttpServer()
+  const Docs = await initDocs()
+  const User = await initUser()
+
+  const httpServer = await createHttpServer(
+    {
+      routers: [
+        Docs.router,
+        User.router
+      ],
+      swagger: Docs.swagger,
+      securityOptions: {
+        UserRole: User.UserRole,
+        userError: User.error,
+        userService: User.service
+      }
+    }
+  )
 
   await promisify(httpServer.ready)()
 
