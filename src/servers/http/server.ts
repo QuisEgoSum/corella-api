@@ -4,27 +4,30 @@ import fastifyCors from 'fastify-cors'
 import fastifyHelmet from 'fastify-helmet'
 import fastifyStatic from 'fastify-static'
 import fastifyCookie from 'fastify-cookie'
-import {swagger} from 'app/docs'
-import {router as userRouter} from 'app/user'
-import {router as docsRouter} from 'app/docs'
 import {config} from '@config'
 import {httpLogger} from './modules/logger'
 import {errorHandler} from './modules/error-handler'
 import {notFoundHandler} from './modules/not-found-handler'
 import {schemaErrorFormatter, ajv} from 'core/validation'
-import {securityHook} from './modules/security'
+import {createSecurityHook, CreateSecurityHookOptions} from './modules/security'
 import {docsHook} from './modules/docs'
 import type {FastifyInstance} from 'fastify'
 
 
-export function createHttpServer(server?: FastifyInstance) {
-  server = server || fastify({
+export interface CreateHttpServerOptions {
+  routers: Array<(fastify: FastifyInstance) => Promise<any>>,
+  server?: FastifyInstance,
+  swagger: any,
+  securityOptions: CreateSecurityHookOptions
+}
+
+export async function createHttpServer(options: CreateHttpServerOptions) {
+  const fastifyInstance: FastifyInstance = options.server || fastify({
     trustProxy: true,
     logger: httpLogger,
     bodyLimit: 10737418240
   })
-  return server
-    .addHook('onRoute', securityHook)
+    .addHook('onRoute', await createSecurityHook(options.securityOptions))
     .addHook('onRoute', docsHook)
     .setErrorHandler(errorHandler)
     .setNotFoundHandler(notFoundHandler)
@@ -40,8 +43,10 @@ export function createHttpServer(server?: FastifyInstance) {
       contentSecurityPolicy: config.server.csp
     })
     .register(fastifyCookie)
-    .register(fastifySwagger, swagger)
+    .register(fastifySwagger, options.swagger)
     .register(fastifyStatic, {root: config.paths.shareStatic})
-    .register(userRouter)
-    .register(docsRouter)
+
+  options.routers.forEach(router => fastifyInstance.register(router))
+
+  return fastifyInstance
 }

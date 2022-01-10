@@ -3,4 +3,12 @@ import {SessionRepository} from './SessionRepository'
 import {SessionService} from './SessionService'
 
 
-export const service = new SessionService(new SessionRepository(SessionModel))
+export interface Session {
+  service: SessionService
+}
+
+export async function initSession(): Promise<Session> {
+  return {
+    service: new SessionService(new SessionRepository(SessionModel))
+  }
+}
