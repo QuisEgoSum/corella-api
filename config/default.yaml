@@ -13,7 +13,7 @@ server:
   http:
     protocol: http
     address: 127.0.0.1
-    host: localhost:8080
+    host: localhost:8080/api
     port: 8080
 
   cors:
