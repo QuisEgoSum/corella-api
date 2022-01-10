@@ -1,13 +1,19 @@
-import {swagger} from './swagger'
-import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
+import type {FastifyInstance} from 'fastify'
+import type {router} from 'servers/http'
 
 
-const router = async function router(fastify: FastifyInstance) {
-  return routes(fastify)
+interface Docs {
+  swagger: typeof import('./swagger').swagger,
+  router: router
 }
 
-export {
-  swagger,
-  router
+
+export async function initDocs(): Promise<Docs> {
+  return {
+    swagger: (await import('./swagger')).swagger,
+    router: async function router(fastify: FastifyInstance) {
+      await routes(fastify)
+    }
+  }
 }

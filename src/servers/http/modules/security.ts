@@ -1,6 +1,7 @@
 import {FastifyRequest, RouteOptions} from 'fastify'
-import {service, UserRole, error as userError} from 'app/user'
 import type {UserSession} from 'app/user/packages/session/SessionModel'
+import type {UserRole} from 'app/user/UserRole'
+import type {UserService} from 'app/user/UserService'
 
 
 declare module 'fastify' {
@@ -15,27 +16,35 @@ declare module 'fastify' {
   }
 }
 
-
-async function auth(request: FastifyRequest) {
-  request.session = await service.authorization(request.cookies.sessionId)
+export interface CreateSecurityHookOptions {
+  userService: UserService,
+  UserRole: typeof UserRole,
+  userError: typeof import('app/user/user-error')
 }
 
-async function isAdmin(request: FastifyRequest) {
-  if (request.session?.userRole !== UserRole.ADMIN) {
-    throw new userError.UserRightsError()
-  }
-}
 
-export function securityHook(routeOptions: RouteOptions) {
-  if (!routeOptions.onRequest) {
-    routeOptions.onRequest = []
-  } else if (typeof routeOptions.onRequest === 'function') {
-    routeOptions.onRequest = [routeOptions.onRequest]
+export async function createSecurityHook({userService, UserRole, userError}: CreateSecurityHookOptions) {
+  async function auth(request: FastifyRequest) {
+    request.session = await userService.authorization(request.cookies.sessionId)
   }
-  if (routeOptions.security?.admin) {
-    routeOptions.onRequest.unshift(isAdmin)
+
+  async function isAdmin(request: FastifyRequest) {
+    if (request.session?.userRole !== UserRole.ADMIN) {
+      throw new userError.UserRightsError()
+    }
   }
-  if (routeOptions.security?.auth) {
-    routeOptions.onRequest.unshift(auth)
+
+  return function securityHook(routeOptions: RouteOptions) {
+    if (!routeOptions.onRequest) {
+      routeOptions.onRequest = []
+    } else if (typeof routeOptions.onRequest === 'function') {
+      routeOptions.onRequest = [routeOptions.onRequest]
+    }
+    if (routeOptions.security?.admin) {
+      routeOptions.onRequest.unshift(isAdmin)
+    }
+    if (routeOptions.security?.auth) {
+      routeOptions.onRequest.unshift(auth)
+    }
   }
 }
