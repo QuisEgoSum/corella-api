@@ -21,7 +21,7 @@ export async function createUser(fastify: FastifyInstance, service: UserService,
           tags: ['User - Admin'],
           body: schemas.entities.CreateUser,
           response: {
-            [200]: {
+            [201]: {
               description: 'User',
               type: 'object',
               properties: {
@@ -41,7 +41,7 @@ export async function createUser(fastify: FastifyInstance, service: UserService,
           const user = await service.create(request.body)
 
           reply
-            .code(200)
+            .code(201)
             .type('application/json')
             .send({user})
         }
