@@ -2,7 +2,7 @@ import {BaseRepository, BaseRepositoryError} from 'core/repository'
 import {EntityExistsError, EntityNotExistsError, NoDataForUpdatingError} from 'core/error'
 import type {IBaseService} from './IBaseService'
 import type {Types} from 'mongoose'
-import {QueryOptions} from 'mongoose'
+import {FilterQuery, QueryOptions} from 'mongoose'
 
 
 export class BaseService<T, R extends BaseRepository<T>> implements IBaseService<T, R> {
@@ -78,5 +78,13 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
 
     return document
+  }
+
+  async deleteOne(query: FilterQuery<T>): Promise<void> {
+    const isDeleted = await this.repository.deleteOne(query)
+
+    if (!isDeleted) {
+      throw new this.Error.EntityNotExistsError()
+    }
   }
 }

@@ -1,4 +1,5 @@
 import type {BaseRepository} from '../repository'
+import {FilterQuery} from 'mongoose'
 
 
 export interface IBaseService<T, R extends BaseRepository<T>> {
@@ -28,4 +29,6 @@ export interface IBaseService<T, R extends BaseRepository<T>> {
    * @throws {EntityNotExistsError}
    */
   deleteById(id: string): Promise<void>
+
+  deleteOne(query: FilterQuery<T>): Promise<void>
 }
