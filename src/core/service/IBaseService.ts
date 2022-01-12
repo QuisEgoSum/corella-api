@@ -1,5 +1,13 @@
 import type {BaseRepository} from '../repository'
-import {FilterQuery} from 'mongoose'
+import type {
+  FilterQuery,
+  QueryOptions,
+  ReturnsNewDoc,
+  Types,
+  UpdateQuery,
+  UpdateWithAggregationPipeline,
+  UpdateWriteOpResult
+} from 'mongoose'
 
 
 export interface IBaseService<T, R extends BaseRepository<T>> {
@@ -31,4 +39,18 @@ export interface IBaseService<T, R extends BaseRepository<T>> {
   deleteById(id: string): Promise<void>
 
   deleteOne(query: FilterQuery<T>): Promise<void>
+
+  findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>, options: QueryOptions & { upsert: true } & ReturnsNewDoc): Promise<T>
+
+  findOneAndDelete(filter?: FilterQuery<T>, options?: QueryOptions | null): Promise<T>
+
+  /**
+   * @throws {UniqueKeyError}
+   */
+  updateOne(filter?: FilterQuery<T>, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<void>
+
+  /**
+   * @throws {UniqueKeyError}
+   */
+  updateById(id: string | Types.ObjectId, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<void>
 }

@@ -1,12 +1,17 @@
 import {BaseRepository, BaseRepositoryError} from 'core/repository'
 import {EntityExistsError, EntityNotExistsError, NoDataForUpdatingError} from 'core/error'
 import type {IBaseService} from './IBaseService'
-import type {Types} from 'mongoose'
-import {FilterQuery, QueryOptions} from 'mongoose'
+import type {
+  Types,
+  UpdateQuery,
+  FilterQuery,
+  QueryOptions,
+  ReturnsNewDoc,
+  UpdateWithAggregationPipeline
+} from 'mongoose'
 
 
 export class BaseService<T, R extends BaseRepository<T>> implements IBaseService<T, R> {
-
   public Error: {
     EntityExistsError: typeof EntityExistsError,
     EntityNotExistsError: typeof EntityNotExistsError
@@ -84,6 +89,43 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     const isDeleted = await this.repository.deleteOne(query)
 
     if (!isDeleted) {
+      throw new this.Error.EntityNotExistsError()
+    }
+  }
+
+  async findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>, options: QueryOptions & {upsert: true} & ReturnsNewDoc): Promise<T> {
+    const document = await this.repository.findOneAndUpdate(filter, update, options)
+
+    if (document === null) {
+      throw new this.Error.EntityNotExistsError()
+    }
+
+    return document
+  }
+
+  async findOneAndDelete(filter?: FilterQuery<T>, options?: QueryOptions | null): Promise<T> {
+    const document = await this.repository.findOneAndDelete(filter, options)
+
+    if (document === null) {
+      throw new this.Error.EntityNotExistsError()
+    }
+
+    return document
+  }
+
+  async updateOne(filter?: FilterQuery<T>, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<void> {
+    const result = await this.repository.updateOne(filter, update, options)
+
+    if (result.matchedCount === 0) {
+      throw new this.Error.EntityNotExistsError()
+    }
+  }
+
+
+  async updateById(id: string | Types.ObjectId, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<void> {
+    const result = await this.repository.updateById(id, update, options)
+
+    if (result.matchedCount === 0) {
       throw new this.Error.EntityNotExistsError()
     }
   }
