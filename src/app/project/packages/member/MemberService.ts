@@ -3,6 +3,7 @@ import {IMember} from './MemberModel'
 import {MemberRepository} from './MemberRepository'
 import {Types} from 'mongoose'
 import {MemberExistsError, MemberNotExistsError} from './member-error'
+import {role} from '../../../user/schemas/properties'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {
@@ -30,17 +31,32 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     projectId: Types.ObjectId | string,
     userId: Types.ObjectId | string
   ) {
-    // await this.deleteOne(
-    //   {
-    //     projectId: new Types.ObjectId(projectId),
-    //     userId: new Types.ObjectId(userId)
-    //   }
-    // )
+    await this.deleteOne(
+      {
+        projectId: new Types.ObjectId(projectId),
+        userId: new Types.ObjectId(userId)
+      }
+    )
   }
 
   async changeMemberRole(
     projectId: Types.ObjectId | string,
     userId: Types.ObjectId | string,
     roleId: Types.ObjectId | string
-  )
+  ) {
+    return this.findOneAndUpdate(
+      {
+        projectId: new Types.ObjectId(projectId),
+        userId: new Types.ObjectId(userId)
+      },
+      {
+        $set: {
+          roleId: new Types.ObjectId(roleId)
+        }
+      },
+      {
+        new: true
+      }
+    )
+  }
 }
