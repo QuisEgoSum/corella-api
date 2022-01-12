@@ -93,7 +93,7 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
   }
 
-  async findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>, options: QueryOptions & {upsert: true} & ReturnsNewDoc): Promise<T> {
+  async findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>, options?: QueryOptions & {upsert: true} & ReturnsNewDoc): Promise<T> {
     const document = await this.repository.findOneAndUpdate(filter, update, options)
 
     if (document === null) {
