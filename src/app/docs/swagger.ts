@@ -28,6 +28,14 @@ export const swagger: Record<string, any> = {
           'User - Me',
           'User - Admin'
         ]
+      },
+      {
+        name: 'Project',
+        tags: [
+          'Project',
+          'Project Member',
+          'Project Role'
+        ]
       }
     ]
   }
