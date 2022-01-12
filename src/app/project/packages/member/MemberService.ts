@@ -3,7 +3,6 @@ import {IMember} from './MemberModel'
 import {MemberRepository} from './MemberRepository'
 import {Types} from 'mongoose'
 import {MemberExistsError, MemberNotExistsError} from './member-error'
-import {role} from '../../../user/schemas/properties'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {

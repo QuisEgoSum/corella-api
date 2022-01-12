@@ -7,16 +7,19 @@ import {initTask} from './packages/task'
 import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
 import * as schemas from './schemas'
+import {initMember} from './packages/member'
 
 
 export async function initProject() {
   const Role = await initRole()
   const Task = await initTask()
+  const Member = await initMember()
 
   const service = new ProjectService(
     new ProjectRepository(ProjectModel),
     Role.service,
-    Task.Counter.service
+    Task.Counter.service,
+    Member.service
   )
 
   return {
