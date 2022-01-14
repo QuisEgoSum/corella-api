@@ -85,6 +85,16 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     return document
   }
 
+  async findOne(filter: FilterQuery<T>, projection?: unknown | null, options?: QueryOptions | null): Promise<T> {
+    const document = await this.repository.findOne(filter, projection, options)
+
+    if (document === null) {
+      throw new this.Error.EntityNotExistsError()
+    }
+
+    return document
+  }
+
   async deleteOne(query: FilterQuery<T>): Promise<void> {
     const isDeleted = await this.repository.deleteOne(query)
 
