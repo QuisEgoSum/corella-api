@@ -1,7 +1,6 @@
 import {FastifyRequest, RouteOptions} from 'fastify'
 import type {UserSession} from 'app/user/packages/session/SessionModel'
-import type {UserRole} from 'app/user/UserRole'
-import type {UserService} from 'app/user/UserService'
+import type {User} from 'app/user'
 
 
 declare module 'fastify' {
@@ -17,15 +16,16 @@ declare module 'fastify' {
 }
 
 export interface CreateSecurityHookOptions {
-  userService: UserService,
-  UserRole: typeof UserRole,
-  userError: typeof import('app/user/user-error')
+  User: User
 }
 
 
-export async function createSecurityHook({userService, UserRole, userError}: CreateSecurityHookOptions) {
+export async function createSecurityHook({User}: CreateSecurityHookOptions) {
+  const userError = User.getUserErrors()
+  const UserRole = User.getUserRole()
+
   async function auth(request: FastifyRequest) {
-    request.session = await userService.authorization(request.cookies.sessionId)
+    request.session = await User.authorization(request.cookies.sessionId)
   }
 
   async function isAdmin(request: FastifyRequest) {

@@ -3,12 +3,15 @@ import {SessionRepository} from './SessionRepository'
 import {SessionService} from './SessionService'
 
 
-export interface Session {
-  service: SessionService
+
+export class Session {
+  public service: SessionService
+
+  constructor(sessionService: SessionService) {
+    this.service = sessionService
+  }
 }
 
 export async function initSession(): Promise<Session> {
-  return {
-    service: new SessionService(new SessionRepository(SessionModel))
-  }
+  return new Session(new SessionService(new SessionRepository(SessionModel)))
 }
