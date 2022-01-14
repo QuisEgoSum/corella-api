@@ -5,33 +5,61 @@ import {routes} from './routes'
 import {initSession} from './packages/session'
 import * as error from './user-error'
 import * as schemas from './schemas'
-import {UserRole} from './UserRole'
-import type {Session} from './packages/session'
+import {UserRole, UserRole as Role} from './UserRole'
 import type {FastifyInstance} from 'fastify'
-import type {router} from 'servers/http'
+import type {Session} from './packages/session'
 
 
-export interface User {
-  Session: Session,
-  service: UserService,
-  error: typeof import('./user-error'),
-  UserRole: typeof UserRole,
-  router: router
+export class User {
+  private readonly service: UserService
+  private readonly UserRole: typeof Role
+  public readonly error: typeof import('./user-error')
+  private readonly schemas: typeof import('./schemas')
+  private readonly Session: Session
+
+  constructor(
+    service: UserService,
+    UserRole: typeof Role,
+    error: typeof import('./user-error'),
+    schemas: typeof import('./schemas'),
+    Session: Session
+  ) {
+    this.service = service
+    this.UserRole = UserRole
+    this.error = error
+    this.schemas = schemas
+    this.Session = Session
+
+    this.router = this.router.bind(this)
+  }
+
+  async router(fastify: FastifyInstance) {
+    await routes(fastify, this.service, this.schemas)
+  }
+
+  async authorization(sessionId: string) {
+    return this.service.authorization(sessionId)
+  }
+
+  getUserRole() {
+    return this.UserRole
+  }
+
+  getUserErrors() {
+    return this.error
+  }
 }
-
 
 export async function initUser(): Promise<User> {
   const Session = await initSession()
   const service = new UserService(new UserRepository(UserModel), Session.service)
   await service.upsertSuperadmin()
 
-  return {
-    Session,
+  return new User(
     service,
-    error,
     UserRole,
-    router: async function router(fastify: FastifyInstance) {
-      await routes(fastify, service, schemas)
-    }
-  }
+    error,
+    schemas,
+    Session
+  )
 }

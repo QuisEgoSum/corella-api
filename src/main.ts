@@ -25,9 +25,7 @@ import {logger} from '@logger'
       ],
       swagger: Docs.swagger,
       securityOptions: {
-        UserRole: User.UserRole,
-        userError: User.error,
-        userService: User.service
+        User
       }
     }
   )
