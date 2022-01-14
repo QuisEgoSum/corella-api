@@ -42,6 +42,8 @@ export interface IBaseService<T, R extends BaseRepository<T>> {
 
   findOneAndUpdate(filter: FilterQuery<T>, update: UpdateQuery<T>, options: QueryOptions & { upsert: true } & ReturnsNewDoc): Promise<T>
 
+  findOne(filter: FilterQuery<T>, options: QueryOptions): Promise<T>
+
   findOneAndDelete(filter?: FilterQuery<T>, options?: QueryOptions | null): Promise<T>
 
   /**
