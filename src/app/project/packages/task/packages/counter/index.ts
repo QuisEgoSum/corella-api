@@ -3,10 +3,15 @@ import {CounterRepository} from './CounterRepository'
 import {CounterModel} from './CounterModel'
 
 
-export async function initCounter() {
-  const service = new CounterService(new CounterRepository(CounterModel))
-
-  return {
-    service
+export class Counter {
+  public readonly service: CounterService
+  constructor(
+    counterService: CounterService
+  ) {
+    this.service = counterService
   }
+}
+
+export async function initCounter() {
+  return new Counter(new CounterService(new CounterRepository(CounterModel)))
 }

@@ -2,12 +2,43 @@ import {ProjectModel} from './ProjectModel'
 import {ProjectRepository} from './ProjectRepository'
 import {ProjectService} from './ProjectService'
 import {RolePermission} from './packages/role/RolePermission'
-import {initRole} from './packages/role'
-import {initTask} from './packages/task'
+import {initRole, Role as RolePkg} from './packages/role'
+import {initTask, Task as TaskPkg} from './packages/task'
+import {initMember, Member as MemberPkg} from './packages/member'
 import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
 import * as schemas from './schemas'
-import {initMember} from './packages/member'
+
+
+export class Project {
+  private readonly service: ProjectService
+  private readonly Task: TaskPkg
+  private Role: RolePkg
+  private Member: MemberPkg
+  
+  constructor(
+    projectService: ProjectService,
+    Task: TaskPkg,
+    Role: RolePkg,
+    Member: MemberPkg
+  ) {
+    this.service = projectService
+    this.Task = Task
+    this.Role = Role
+    this.Member = Member
+
+    this.router = this.router.bind(this)
+  }
+
+  getRolePermission() {
+    return this.Role.RolePermission
+  }
+
+  async router(fastify: FastifyInstance) {
+    await routes(fastify, this.service, schemas)
+    await this.Role.router(fastify)
+  }
+}
 
 
 export async function initProject() {
@@ -22,14 +53,12 @@ export async function initProject() {
     Member.service
   )
 
-  return {
+  return new Project(
     service,
-    RolePermission,
-    router: async function router(fastify: FastifyInstance) {
-      await routes(fastify, service, schemas)
-      await Role.router(fastify)
-    }
-  }
+    Task,
+    Role,
+    Member
+  )
 }
 
 
