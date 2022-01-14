@@ -3,10 +3,16 @@ import {MemberRepository} from './MemberRepository'
 import {MemberModel} from './MemberModel'
 
 
-export async function initMember() {
-  const service = new MemberService(new MemberRepository(MemberModel))
-
-  return {
-    service
+export class Member {
+  public readonly service: MemberService
+  constructor(
+    memberService: MemberService
+  ) {
+    this.service = memberService
   }
+}
+
+
+export async function initMember() {
+  return new Member(new MemberService(new MemberRepository(MemberModel)))
 }
