@@ -32,4 +32,16 @@ export class RoleService extends BaseService<IRole, RoleRepository> {
       }
     )
   }
+
+  async existsRole(projectId: Types.ObjectId | string, roleId: Types.ObjectId | string) {
+    await this.findOne(
+      {
+        _id: new Types.ObjectId(roleId),
+        projectId: new Types.ObjectId(projectId)
+      },
+      {
+        _id: 1
+      }
+    )
+  }
 }

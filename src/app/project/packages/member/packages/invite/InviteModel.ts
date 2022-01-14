@@ -1,4 +1,4 @@
-import {Schema, model, Types} from 'mongoose'
+import {model, Schema, Types} from 'mongoose'
 import {InviteStatus} from './InviteStatus'
 
 
@@ -6,7 +6,7 @@ export interface IInvite {
   _id: Types.ObjectId,
   userId: Types.ObjectId,
   projectId: Types.ObjectId,
-  roleId: Types.ObjectId,
+  roleId: Types.ObjectId | null,
   status: InviteStatus,
   expiresAt?: number,
   createdAt: number
@@ -29,7 +29,8 @@ const InviteSchema = new Schema<IInvite>(
     },
     status: {
       type: String,
-      enum: Object.values(InviteStatus)
+      enum: Object.values(InviteStatus),
+      default: InviteStatus.NEW
     },
     expiresAt: {
       type: Number
