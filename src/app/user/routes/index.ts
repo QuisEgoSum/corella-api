@@ -8,9 +8,7 @@ export async function routes(
   userService: UserService,
   schemas: typeof import('app/user/schemas')
 ) {
-  const routes = await loadRoutes<
-    {[key: string]: (fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) => Promise<FastifyInstance>}
-    >(__dirname)
+  const routes = await loadRoutes<(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) => Promise<FastifyInstance>>(__dirname)
 
   await Promise.all(routes.map(route => route(fastify, userService, schemas)))
 }
