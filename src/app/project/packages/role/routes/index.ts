@@ -5,16 +5,15 @@ import type {RoleService} from '../RoleService'
 
 export interface RoleRouteOptions {
   roleService: RoleService,
-  schemas: typeof import('app/project/packages/role/schemas')
+  roleSchemas: typeof import('app/project/packages/role/schemas')
 }
 
 
 export async function routes(
   fastify: FastifyInstance,
-  roleService: RoleService,
-  schemas: typeof import('app/project/packages/role/schemas')
+  options: RoleRouteOptions
 ) {
   const routes = await loadRoutes<(fastify: FastifyInstance, options: RoleRouteOptions) => Promise<FastifyInstance>>(__dirname)
 
-  await Promise.all(routes.map(route => route(fastify, {roleService, schemas})))
+  await Promise.all(routes.map(route => route(fastify, options)))
 }

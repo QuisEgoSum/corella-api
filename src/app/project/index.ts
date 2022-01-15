@@ -31,12 +31,8 @@ export class Project {
     this.router = this.router.bind(this)
   }
 
-  getRolePermission() {
-    return this.Role.RolePermission
-  }
-
   async router(fastify: FastifyInstance) {
-    await routes(fastify, this.service, schemas)
+    await routes(fastify, {projectService: this.service, projectSchemas: schemas})
     await this.Role.router(fastify)
     await this.Member.router(fastify)
   }

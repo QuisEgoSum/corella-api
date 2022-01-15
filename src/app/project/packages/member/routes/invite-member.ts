@@ -13,7 +13,7 @@ export interface InviteMemberRequest {
 }
 
 
-export async function inviteMember(fastify: FastifyInstance, {memberService, schemas, roleError, userError}: MemberRouteOptions) {
+export async function inviteMember(fastify: FastifyInstance, {memberService, memberSchemas, roleError, userError}: MemberRouteOptions) {
   return fastify
     .route<InviteMemberRequest>(
       {
@@ -23,15 +23,15 @@ export async function inviteMember(fastify: FastifyInstance, {memberService, sch
           summary: 'Invite member to project',
           tags: ['Project Member'],
           params: {
-            projectId: schemas.properties.projectId
+            projectId: memberSchemas.properties.projectId
           },
-          body: schemas.entities.InviteMember,
+          body: memberSchemas.entities.InviteMember,
           response: {
             [201]: {
               description: 'Invited member',
               type: 'object',
               properties: {
-                member: schemas.entities.BaseMember
+                member: memberSchemas.entities.BaseMember
               },
               additionalProperties: false,
               required: ['member']

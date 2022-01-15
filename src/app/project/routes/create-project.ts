@@ -1,7 +1,7 @@
-import {FastifyInstance} from 'fastify'
-import type {CreateProject} from '../schemas/entities'
 import {BadRequest} from 'common/schemas/response'
-import {ProjectRouteOptions} from './index'
+import type {FastifyInstance} from 'fastify'
+import type {CreateProject} from '../schemas/entities'
+import type {ProjectRouteOptions} from './index'
 
 
 interface CreateProjectRequest {
@@ -11,7 +11,7 @@ interface CreateProjectRequest {
 
 export async function createProject(
   fastify: FastifyInstance,
-  {schemas, projectService}: ProjectRouteOptions
+  {projectSchemas, projectService}: ProjectRouteOptions
 ) {
   return fastify
     .route<CreateProjectRequest>(
@@ -21,13 +21,13 @@ export async function createProject(
         schema: {
           summary: 'Create project',
           tags: ['Project'],
-          body: schemas.entities.CreateProject,
+          body: projectSchemas.entities.CreateProject,
           response: {
             [201]: {
               description: 'Created project',
               type: 'object',
               properties: {
-                project: schemas.entities.BaseProject
+                project: projectSchemas.entities.BaseProject
               },
               additionalProperties: false,
               required: ['project']

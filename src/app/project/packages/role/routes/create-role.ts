@@ -12,7 +12,7 @@ interface CreateRoleRequest {
 }
 
 
-export async function createRole(fastify: FastifyInstance, {roleService, schemas}: RoleRouteOptions) {
+export async function createRole(fastify: FastifyInstance, {roleService, roleSchemas}: RoleRouteOptions) {
   return fastify
     .route<CreateRoleRequest>(
       {
@@ -22,15 +22,15 @@ export async function createRole(fastify: FastifyInstance, {roleService, schemas
           summary: 'Create project role',
           tags: ['Project Role'],
           params: {
-            projectId: schemas.properties.projectId
+            projectId: roleSchemas.properties.projectId
           },
-          body: schemas.entities.CreateRole,
+          body: roleSchemas.entities.CreateRole,
           response: {
             [201]: {
               description: 'Created role',
               type: 'object',
               properties: {
-                role: schemas.entities.BaseRole
+                role: roleSchemas.entities.BaseRole
               },
               additionalProperties: false,
               required: ['role']

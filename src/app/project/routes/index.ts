@@ -5,16 +5,15 @@ import type {ProjectService} from '../ProjectService'
 
 export interface ProjectRouteOptions {
   projectService: ProjectService,
-  schemas: typeof import('app/project/schemas')
+  projectSchemas: typeof import('app/project/schemas')
 }
 
 
 export async function routes(
   fastify: FastifyInstance,
-  projectService: ProjectService,
-  schemas: typeof import('app/project/schemas')
+  options: ProjectRouteOptions
 ) {
   const routes = await loadRoutes<(fastify: FastifyInstance, options: ProjectRouteOptions) => Promise<FastifyInstance>>(__dirname)
 
-  await Promise.all(routes.map(route => route(fastify, {projectService, schemas})))
+  await Promise.all(routes.map(route => route(fastify, options)))
 }
