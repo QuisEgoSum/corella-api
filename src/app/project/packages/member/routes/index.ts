@@ -5,7 +5,7 @@ import type {MemberService} from '../MemberService'
 
 export interface MemberRouteOptions {
   memberService: MemberService,
-  schemas: typeof import('app/project/packages/member/schemas'),
+  memberSchemas: typeof import('app/project/packages/member/schemas'),
   roleError: typeof import('app/project/packages/role/role-error'),
   userError: typeof import('app/user/user-error')
 }

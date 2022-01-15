@@ -32,7 +32,7 @@ export class Member {
     await routes(fastify,
         {
           memberService: this.service,
-          schemas: schemas,
+          memberSchemas: schemas,
           userError: this.User.getUserErrors(),
           roleError: this.Role.Error
         }

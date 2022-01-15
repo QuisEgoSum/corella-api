@@ -27,7 +27,7 @@ export class Role {
   }
 
   async router(fastify: FastifyInstance) {
-    return routes(fastify, this.service, this.schemas)
+    return routes(fastify, {roleService: this.service, roleSchemas: this.schemas})
   }
 }
 
