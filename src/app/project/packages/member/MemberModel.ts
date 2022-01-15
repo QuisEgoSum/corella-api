@@ -1,4 +1,5 @@
 import {Schema, model, Types} from 'mongoose'
+import {MemberStatus} from './MemberStatus'
 
 
 export interface IMember {
@@ -6,6 +7,7 @@ export interface IMember {
   projectId: Types.ObjectId,
   userId: Types.ObjectId,
   roleId: Types.ObjectId,
+  status: MemberStatus,
   createdAt: number,
   updatedAt: number
 }
@@ -24,6 +26,10 @@ const MemberSchema = new Schema<IMember>(
     roleId: {
       type: Schema.Types.ObjectId,
       ref: 'ProjectRole'
+    },
+    status: {
+      type: String,
+      enum: Object.values(MemberStatus)
     },
     createdAt: {
       type: Number

@@ -45,6 +45,7 @@ const RoleSchema = new Schema<IRole>(
     timestamps: true
   }
 )
+  .index({_id: 1, projectId: 1})
   .index({projectId: 1})
 
 

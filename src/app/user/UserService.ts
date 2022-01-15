@@ -170,4 +170,8 @@ export class UserService extends BaseService<IUser, UserRepository> {
       {upsert: true}
     )
   }
+
+  async existsUser(userId: Types.ObjectId | string) {
+    await this.findById(new Types.ObjectId(userId))
+  }
 }

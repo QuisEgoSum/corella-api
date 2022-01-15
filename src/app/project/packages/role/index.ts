@@ -4,6 +4,7 @@ import {RoleModel} from './RoleModel'
 import * as schemas from './schemas'
 import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
+import * as error from './role-error'
 import {RolePermission} from './RolePermission'
 
 
@@ -11,6 +12,7 @@ export class Role {
   public readonly service: RoleService
   public readonly schemas: typeof import('./schemas')
   public readonly RolePermission: typeof RolePermission
+  public readonly Error: typeof import('./role-error')
 
   constructor(
     roleService: RoleService,
@@ -19,6 +21,7 @@ export class Role {
     this.service = roleService
     this.schemas = schemas
     this.RolePermission = RolePermission
+    this.Error = error
 
     this.router = this.router.bind(this)
   }

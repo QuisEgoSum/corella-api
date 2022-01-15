@@ -4,11 +4,14 @@ import {RoleRepository} from './RoleRepository'
 import {Types} from 'mongoose'
 import {RolePermission} from './RolePermission'
 import {CreateRole} from './schemas/entities'
+import {RoleNotExistsError} from './role-error'
 
 
 export class RoleService extends BaseService<IRole, RoleRepository> {
   constructor(roleRepository: RoleRepository) {
     super(roleRepository)
+
+    this.Error.EntityNotExistsError = RoleNotExistsError
   }
 
   async createRole(projectId: Types.ObjectId | string, role: CreateRole) {
@@ -26,8 +29,19 @@ export class RoleService extends BaseService<IRole, RoleRepository> {
     return this.create(
       {
         name: 'Maintainer',
-        projectId: new Types.ObjectId(projectId),
         permissions: Object.values(RolePermission) as unknown as RolePermission[],
+        projectId: new Types.ObjectId(projectId),
+        allowedEdit: false
+      }
+    )
+  }
+
+  async createGuest(projectId: Types.ObjectId | string) {
+    return this.create(
+      {
+        name: 'Guest',
+        permissions: [],
+        projectId: new Types.ObjectId(projectId),
         allowedEdit: false
       }
     )

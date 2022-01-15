@@ -34,7 +34,8 @@ export const swagger: Record<string, any> = {
         tags: [
           'Project',
           'Project Member',
-          'Project Role'
+          'Project Role',
+          'Project Member'
         ]
       }
     ]

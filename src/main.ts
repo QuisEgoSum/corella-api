@@ -14,7 +14,7 @@ import {logger} from '@logger'
 
   const Docs = await initDocs()
   const User = await initUser()
-  const Project = await initProject()
+  const Project = await initProject(User)
 
   const httpServer = await createHttpServer(
     {
