@@ -8,6 +8,7 @@ import {initMember, Member as MemberPkg} from './packages/member'
 import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
 import * as schemas from './schemas'
+import type {User as UserPkg} from 'app/user'
 
 
 export class Project {
@@ -37,14 +38,15 @@ export class Project {
   async router(fastify: FastifyInstance) {
     await routes(fastify, this.service, schemas)
     await this.Role.router(fastify)
+    await this.Member.router(fastify)
   }
 }
 
 
-export async function initProject() {
+export async function initProject(User: UserPkg) {
   const Role = await initRole()
   const Task = await initTask()
-  const Member = await initMember()
+  const Member = await initMember(User, Role)
 
   const service = new ProjectService(
     new ProjectRepository(ProjectModel),

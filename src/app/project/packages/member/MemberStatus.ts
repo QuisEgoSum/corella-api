@@ -1,0 +1,9 @@
+
+
+export enum MemberStatus {
+  INVITED = 'INVITED',
+  PARTICIPANT = 'PARTICIPANT',
+  DELETED = 'DELETED',
+  CANCELLED_INVITE = 'CANCELLED',
+  LEAVE = 'LEAVE'
+}

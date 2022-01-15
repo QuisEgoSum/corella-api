@@ -39,7 +39,8 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
 
     const [maintainerRole] = await Promise.all([
       this.roleService.createMaintainer(project._id),
-      this.counterService.createCounter(project._id),
+      this.roleService.createGuest(project._id),
+      this.counterService.createCounter(project._id)
     ])
 
     await this.memberService.addMember(project._id, ownerId, maintainerRole._id)

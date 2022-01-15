@@ -8,12 +8,15 @@ import * as schemas from './schemas'
 import {UserRole, UserRole as Role} from './UserRole'
 import type {FastifyInstance} from 'fastify'
 import type {Session} from './packages/session'
+import {InviteExpand} from '../project/packages/member/packages/invite/schemas/entities'
+import {logger} from '@logger'
+import {Types} from 'mongoose'
 
 
 export class User {
   private readonly service: UserService
   private readonly UserRole: typeof Role
-  public readonly error: typeof import('./user-error')
+  private readonly error: typeof import('./user-error')
   private readonly schemas: typeof import('./schemas')
   private readonly Session: Session
 
@@ -47,6 +50,15 @@ export class User {
 
   getUserErrors() {
     return this.error
+  }
+
+  async createInviteProjectNotification(invite: InviteExpand) {
+    logger.debug({message: 'Invite member', invite})
+    // TODO
+  }
+
+  async existsUser(userId: Types.ObjectId | string) {
+    await this.service.existsUser(userId)
   }
 }
 
