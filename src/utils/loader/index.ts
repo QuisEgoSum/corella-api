@@ -24,7 +24,7 @@ export async function loadModulesFromDir<T>(dir: string): Promise<Array<T>> {
   return Promise.all(modules)
 }
 
-export async function loadRoutes<T>(dir: string) {
+export async function loadRoutes<T>(dir: string): Promise<T[]> {
   const modules = await loadModulesFromDir<T>(dir)
 
   return modules.map(module => Object.values(module)).flat(1)

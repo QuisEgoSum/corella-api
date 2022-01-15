@@ -1,8 +1,8 @@
 import type {FastifyInstance} from 'fastify'
-import type {UserService} from 'app/user/UserService'
+import type {UserRoutesOptions} from './index'
 
 
-export async function signoutAll(fastify: FastifyInstance, service: UserService) {
+export async function signoutAll(fastify: FastifyInstance, {userService}: UserRoutesOptions) {
   return fastify
     .route(
       {
@@ -30,7 +30,7 @@ export async function signoutAll(fastify: FastifyInstance, service: UserService)
           auth: true
         },
         handler: async function(request, reply) {
-          const numberOfSessions = await service.logoutAllExpect(request.session.userId, request.session.sessionId)
+          const numberOfSessions = await userService.logoutAllExpect(request.session.userId, request.session.sessionId)
 
           reply
             .code(200)
