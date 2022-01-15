@@ -14,9 +14,7 @@ export async function routes(
   roleService: RoleService,
   schemas: typeof import('app/project/packages/role/schemas')
 ) {
-  const routes = await loadRoutes<
-    {[key: string]: (fastify: FastifyInstance, options: RoleRouteOptions) => Promise<FastifyInstance>}
-    >(__dirname)
+  const routes = await loadRoutes<(fastify: FastifyInstance, options: RoleRouteOptions) => Promise<FastifyInstance>>(__dirname)
 
   await Promise.all(routes.map(route => route(fastify, {roleService, schemas})))
 }
