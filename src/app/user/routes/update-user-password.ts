@@ -1,7 +1,7 @@
-import type {FastifyInstance} from 'fastify'
-import type {UserService} from 'app/user/UserService'
-import type {UpdateUserPassword} from '../schemas/entities'
 import {BadRequest} from 'common/schemas/response'
+import type {FastifyInstance} from 'fastify'
+import type {UpdateUserPassword} from '../schemas/entities'
+import type {UserRoutesOptions} from './index'
 
 
 interface UpdateUserRequest {
@@ -9,7 +9,7 @@ interface UpdateUserRequest {
 }
 
 
-export async function updateUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
+export async function updateUser(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
   return fastify
     .route<UpdateUserRequest>(
       {
@@ -18,13 +18,13 @@ export async function updateUser(fastify: FastifyInstance, service: UserService,
         schema: {
           summary: 'Update user password',
           tags: ['User - Me'],
-          body: schemas.entities.UpdateUserPassword,
+          body: userSchemas.entities.UpdateUserPassword,
           response: {
             [200]: {
               description: 'User',
               type: 'object',
               properties: {
-                user: schemas.entities.UserBase
+                user: userSchemas.entities.UserBase
               },
               additionalProperties: false,
               required: ['user']
@@ -36,7 +36,7 @@ export async function updateUser(fastify: FastifyInstance, service: UserService,
           auth: true
         },
         handler: async function(request, reply) {
-          const user = await service.updateUserPassword(request.session.userId, request.body)
+          const user = await userService.updateUserPassword(request.session.userId, request.body)
 
           reply
             .code(200)

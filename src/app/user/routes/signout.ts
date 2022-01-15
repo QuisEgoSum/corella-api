@@ -1,6 +1,6 @@
-import type {FastifyInstance} from 'fastify'
-import type {UserService} from 'app/user/UserService'
 import {config} from '@config'
+import type {FastifyInstance} from 'fastify'
+import type{UserRoutesOptions} from './index'
 
 
 interface SignoutUser {
@@ -9,7 +9,7 @@ interface SignoutUser {
   }
 }
 
-export async function signout(fastify: FastifyInstance, service: UserService) {
+export async function signout(fastify: FastifyInstance, {userService}: UserRoutesOptions) {
   return fastify
     .route<SignoutUser>(
       {
@@ -43,7 +43,7 @@ export async function signout(fastify: FastifyInstance, service: UserService) {
           auth: true
         },
         handler: async function(request, reply) {
-          await service.logout(request.session.userId, request.session.sessionId)
+          await userService.logout(request.session.userId, request.session.sessionId)
 
           let cookieOptions = config.user.session.cookie
 

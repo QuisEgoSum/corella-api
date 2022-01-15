@@ -1,7 +1,7 @@
-import type {FastifyInstance} from 'fastify'
-import type {UserService} from 'app/user/UserService'
 import {BadRequestNoBody, DataList} from 'common/schemas/response'
+import type {FastifyInstance} from 'fastify'
 import type {FindUsersQuery} from '../schemas/entities'
+import type {UserRoutesOptions} from './index'
 
 
 interface FindUsersRequest {
@@ -9,7 +9,7 @@ interface FindUsersRequest {
 }
 
 
-export async function findUsers(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
+export async function findUsers(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
   return fastify
     .route<FindUsersRequest>(
       {
@@ -18,9 +18,9 @@ export async function findUsers(fastify: FastifyInstance, service: UserService, 
         schema: {
           summary: 'Get users list',
           tags: ['User - Admin'],
-          querystring: schemas.entities.FindUsersQuery,
+          querystring: userSchemas.entities.FindUsersQuery,
           response: {
-            [200]: new DataList(schemas.entities.UserBase),
+            [200]: new DataList(userSchemas.entities.UserBase),
             [400]: new BadRequestNoBody()
           }
         },
@@ -29,9 +29,7 @@ export async function findUsers(fastify: FastifyInstance, service: UserService, 
           admin: true
         },
         handler: async function(request, reply) {
-          const dataList = await service.findPage(request.query)
-          console.log(request.query)
-          console.log(dataList)
+          const dataList = await userService.findPage(request.query)
 
           reply
             .code(200)

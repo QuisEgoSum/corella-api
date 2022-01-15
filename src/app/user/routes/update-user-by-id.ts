@@ -1,8 +1,8 @@
-import type {FastifyInstance} from 'fastify'
-import type {UserService} from 'app/user/UserService'
-import type {UpdateUserById} from '../schemas/entities'
-import {BadRequest, NotFound} from 'common/schemas/response'
 import {UserNotExistsError} from '../user-error'
+import {BadRequest, NotFound} from 'common/schemas/response'
+import type {FastifyInstance} from 'fastify'
+import type {UpdateUserById} from '../schemas/entities'
+import type {UserRoutesOptions} from './index'
 
 
 interface UpdateUserByIdRequest {
@@ -13,7 +13,7 @@ interface UpdateUserByIdRequest {
 }
 
 
-export async function updateUserById(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
+export async function updateUserById(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
   return fastify
     .route<UpdateUserByIdRequest>(
       {
@@ -23,15 +23,15 @@ export async function updateUserById(fastify: FastifyInstance, service: UserServ
           summary: 'Update user by id',
           tags: ['User - Admin'],
           params: {
-            userId: schemas.properties._id
+            userId: userSchemas.properties._id
           },
-          body: schemas.entities.UpdateUserById,
+          body: userSchemas.entities.UpdateUserById,
           response: {
             [200]: {
               description: 'User',
               type: 'object',
               properties: {
-                user: schemas.entities.UserBase
+                user: userSchemas.entities.UserBase
               },
               additionalProperties: false,
               required: ['user']
@@ -45,7 +45,7 @@ export async function updateUserById(fastify: FastifyInstance, service: UserServ
           admin: true
         },
         handler: async function(request, reply) {
-          const user = await service.findByIdAndUpdate(request.params.userId, request.body)
+          const user = await userService.findByIdAndUpdate(request.params.userId, request.body)
 
           reply
             .code(200)

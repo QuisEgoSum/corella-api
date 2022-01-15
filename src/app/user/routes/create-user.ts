@@ -1,31 +1,30 @@
 import type {FastifyInstance} from 'fastify'
-import type {UserService} from 'app/user/UserService'
-import type {entities} from 'app/user/schemas'
 import {BadRequest} from 'common/schemas/response'
 import {UserExistsError} from '../user-error'
+import {UserRoutesOptions} from './index'
+import type {CreateUser} from '../schemas/entities'
 
 
 interface CreateUserRequest {
-  Body: entities.CreateUser
+  Body: CreateUser
 }
 
-export async function createUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
+export async function createUser(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
   return fastify
     .route<CreateUserRequest>(
       {
         url: '/user',
         method: 'POST',
         schema: {
-          // @ts-ignore
           summary: 'Create user',
           tags: ['User - Admin'],
-          body: schemas.entities.CreateUser,
+          body: userSchemas.entities.CreateUser,
           response: {
             [201]: {
               description: 'User',
               type: 'object',
               properties: {
-                user: schemas.entities.UserBase
+                user: userSchemas.entities.UserBase
               },
               additionalProperties: false,
               required: ['user']
@@ -38,7 +37,7 @@ export async function createUser(fastify: FastifyInstance, service: UserService,
           admin: true
         },
         handler: async function(request, reply) {
-          const user = await service.create(request.body)
+          const user = await userService.create(request.body)
 
           reply
             .code(201)

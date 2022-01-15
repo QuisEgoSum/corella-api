@@ -1,8 +1,8 @@
 import type {FastifyInstance} from 'fastify'
-import type {UserService} from 'app/user/UserService'
+import type {UserRoutesOptions} from './index'
 
 
-export async function getUser(fastify: FastifyInstance, service: UserService, schemas: typeof import('app/user/schemas')) {
+export async function getUser(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
   return fastify
     .route(
       {
@@ -16,7 +16,7 @@ export async function getUser(fastify: FastifyInstance, service: UserService, sc
               description: 'User',
               type: 'object',
               properties: {
-                user: schemas.entities.UserBase
+                user: userSchemas.entities.UserBase
               },
               additionalProperties: false,
               required: ['user']
@@ -27,7 +27,7 @@ export async function getUser(fastify: FastifyInstance, service: UserService, sc
           auth: true
         },
         handler: async function(request, reply) {
-          const user = await service.findById(request.session.userId)
+          const user = await userService.findById(request.session.userId)
 
           reply
             .code(200)

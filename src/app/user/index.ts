@@ -37,7 +37,7 @@ export class User {
   }
 
   async router(fastify: FastifyInstance) {
-    await routes(fastify, this.service, this.schemas)
+    await routes(fastify, {userService: this.service, userSchemas: this.schemas})
   }
 
   async authorization(sessionId: string) {
