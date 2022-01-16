@@ -15,7 +15,7 @@ export const username = {
   }
 }
 export const mUsername = {
-  description: 'Search by partial match of the email address',
+  description: 'Search by partial match of the username',
   type: 'string',
   minLength: 1,
   maxLength: 24,
