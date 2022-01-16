@@ -29,7 +29,7 @@ export async function getMembers(fastify: FastifyInstance, {memberService, membe
             limit: new QueryPageLimit().setDefault(20)
           },
           response: {
-            [200]: new DataList(memberSchemas.entities)
+            [200]: new DataList(memberSchemas.entities.BaseMember)
           }
         },
         security: {
