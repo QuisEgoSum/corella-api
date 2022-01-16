@@ -91,10 +91,11 @@ export class NotFound extends ErrorResponse {
 export class DataList {
   private title: string
   private description: string
-  private properties: unknown
+  private properties: Record<string, any>
   private required: string[]
   private additionalProperties: boolean
-  constructor(schema: unknown) {
+  private example?: unknown
+  constructor(schema: Record<any, any>) {
     this.title = 'DataList'
     this.description = 'Data list'
     this.properties = {
@@ -113,5 +114,8 @@ export class DataList {
     }
     this.required = ['total', 'pages', 'data']
     this.additionalProperties = false
+    if (schema.examples) {
+      this.properties.data.example = schema.examples
+    }
   }
 }
