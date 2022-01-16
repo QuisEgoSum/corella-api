@@ -8,17 +8,14 @@ import {User as UserPkg} from 'app/user'
 
 export class InviteService extends BaseService<IInvite, InviteRepository> {
   private roleService: RoleService
-  private User: UserPkg
 
   constructor(
     inviteRepository: InviteRepository,
     roleService: RoleService,
-    User: UserPkg
   ) {
     super(inviteRepository)
 
     this.roleService = roleService
-    this.User = User
   }
 
   async createInvite(projectId: Types.ObjectId | string, userId: Types.ObjectId | string, roleId?: Types.ObjectId | string) {
@@ -32,10 +29,6 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
         userId: new Types.ObjectId(userId),
         roleId: roleId ? new Types.ObjectId(roleId) : null
       }
-    )
-
-    await this.User.createInviteProjectNotification(
-      await this.repository.findExpandInvite(invite._id)
     )
 
     return invite

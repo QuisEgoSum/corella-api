@@ -1,6 +1,7 @@
 import {MemberService} from './MemberService'
 import {MemberRepository} from './MemberRepository'
 import {MemberModel} from './MemberModel'
+import {MemberEvents} from './MemberEvents'
 import {initInvite} from './packages/invite'
 import {routes} from './routes'
 import * as schemas from './schemas'
@@ -15,14 +16,17 @@ export class Member {
   public readonly Invite: InvitePkg
   public readonly User: UserPkg
   public readonly Role: RolePkg
+  public readonly events: MemberEvents
 
   constructor(
     memberService: MemberService,
+    memberEvents: MemberEvents,
     Invite: InvitePkg,
     User: UserPkg,
     Role: RolePkg
   ) {
     this.service = memberService
+    this.events = memberEvents
     this.Invite = Invite
     this.User = User
     this.Role = Role
@@ -40,10 +44,11 @@ export class Member {
   }
 }
 
+export const events = new MemberEvents()
 
 export async function initMember(User: UserPkg, Role: RolePkg) {
-  const Invite = await initInvite(User, Role)
-  const service = new MemberService(new MemberRepository(MemberModel), Invite.service, Role.service, User)
+  const Invite = await initInvite(Role)
+  const service = new MemberService(new MemberRepository(MemberModel), events, Invite.service, Role.service, User)
 
-  return new Member(service, Invite, User, Role)
+  return new Member(service, events, Invite, User, Role)
 }

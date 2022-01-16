@@ -9,7 +9,7 @@ export class MemberRepository extends BaseRepository<IMember> {
     super(Model)
   }
 
-  async upsertMember(member: {roleId: Types.ObjectId, projectId: Types.ObjectId, userId: Types.ObjectId, status: MemberStatus}) {
+  async upsertMember(member: {roleId: Types.ObjectId, projectId: Types.ObjectId, userId: Types.ObjectId, status: MemberStatus}): Promise<IMember> {
     return this.Model
       .findOneAndUpdate(
         {

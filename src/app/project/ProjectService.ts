@@ -47,4 +47,23 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
 
     return project
   }
+
+  async setMember(projectId: Types.ObjectId, memberId: Types.ObjectId) {
+    await this.findOneAndUpdate(
+      {
+        _id: projectId
+      },
+      {
+        $addToSet: {
+          members: memberId
+        }
+      },
+      {
+        projection: {
+          _id: 1
+        },
+        new: true
+      }
+    )
+  }
 }
