@@ -52,11 +52,6 @@ export class User {
     return this.error
   }
 
-  async createInviteProjectNotification(invite: InviteExpand) {
-    logger.debug({message: 'Invite member', invite})
-    // TODO
-  }
-
   async existsUser(userId: Types.ObjectId | string) {
     await this.service.existsUser(userId)
   }

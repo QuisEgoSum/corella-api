@@ -7,15 +7,18 @@ import {InviteService} from './packages/invite/InviteService'
 import {MemberStatus} from './MemberStatus'
 import {RoleService} from '../role/RoleService'
 import {User as UserPkg} from 'app/user'
+import {MemberEvents} from './MemberEvents'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {
   private inviteService: InviteService
   private roleService: RoleService
   private User: UserPkg
+  private events: MemberEvents
 
   constructor(
     memberRepository: MemberRepository,
+    memberEvents: MemberEvents,
     inviteService: InviteService,
     roleService: RoleService,
     User: UserPkg
@@ -25,6 +28,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     this.Error.EntityExistsError = MemberExistsError
     this.Error.EntityNotExistsError = MemberNotExistsError
   
+    this.events = memberEvents
     this.inviteService = inviteService
     this.roleService = roleService
     this.User = User
@@ -75,7 +79,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
 
     await this.inviteService.createInvite(projectId, userId, roleId)
 
-    return this.repository.upsertMember(
+    const addedMember = await this.repository.upsertMember(
       {
         projectId: new Types.ObjectId(projectId),
         userId: new Types.ObjectId(userId),
@@ -83,6 +87,10 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
         status: MemberStatus.INVITED
       }
     )
+
+    this.events.emit('INVITE_MEMBER', addedMember.projectId, addedMember.userId)
+
+    return addedMember
   }
 
   async removeMember(

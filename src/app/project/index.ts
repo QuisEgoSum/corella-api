@@ -9,6 +9,7 @@ import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
 import * as schemas from './schemas'
 import type {User as UserPkg} from 'app/user'
+import {addEventsListeners} from './project-events-listeners'
 
 
 export class Project {
@@ -50,6 +51,8 @@ export async function initProject(User: UserPkg) {
     Task.Counter.service,
     Member.service
   )
+
+  await addEventsListeners(service, Member.events)
 
   return new Project(
     service,
