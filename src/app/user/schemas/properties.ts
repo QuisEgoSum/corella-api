@@ -15,6 +15,7 @@ export const username = {
   }
 }
 export const mUsername = {
+  description: 'Search by partial match of the email address',
   type: 'string',
   minLength: 1,
   maxLength: 24,
@@ -22,6 +23,17 @@ export const mUsername = {
   errorMessage: {
     minLength: 'Specify at least 1 character to search by username',
     maxLength: 'Username cannot be longer than 24 characters'
+  }
+}
+export const fEmail = {
+  description: 'Search for a complete match of the email address',
+  type: 'string',
+  minLength: 1,
+  maxLength: 1024,
+  example: 'user@nowhere.com',
+  errorMessage: {
+    minLength: 'Specify at least 1 character to search by email',
+    maxLength: 'Email address cannot be longer than 1024 characters'
   }
 }
 export const email = {
@@ -39,6 +51,7 @@ export const avatar = {
   example: `#=${v4()}`
 }
 export const mEmail = {
+  description: 'Search by partial match of the email address',
   type: 'string',
   minLength: 1,
   maxLength: 1024,
