@@ -33,7 +33,8 @@ export const BaseMember = {
         username: user.username,
         email: {
           ...user.email,
-          type: ['string', 'null']
+          type: ['string', 'null'],
+          description: 'null if member status not PARTICIPANT'
         },
         avatar: user.avatar
       },
