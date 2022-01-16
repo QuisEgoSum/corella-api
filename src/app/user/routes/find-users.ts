@@ -13,7 +13,7 @@ export async function findUsers(fastify: FastifyInstance, {userService, userSche
   return fastify
     .route<FindUsersRequest>(
       {
-        url: '/users',
+        url: '/admin/users',
         method: 'GET',
         schema: {
           summary: 'Get users list',

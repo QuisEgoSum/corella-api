@@ -15,7 +15,7 @@ export async function findUser(fastify: FastifyInstance, {userService, userSchem
   return fastify
     .route<FindUserRequest>(
       {
-        url: '/user/:userId',
+        url: '/admin/user/:userId',
         method: 'GET',
         schema: {
           summary: 'Get user by id',

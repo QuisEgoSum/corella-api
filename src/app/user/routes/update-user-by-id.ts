@@ -17,7 +17,7 @@ export async function updateUserById(fastify: FastifyInstance, {userService, use
   return fastify
     .route<UpdateUserByIdRequest>(
       {
-        url: '/user/:userId',
+        url: '/admin/user/:userId',
         method: 'PATCH',
         schema: {
           summary: 'Update user by id',
