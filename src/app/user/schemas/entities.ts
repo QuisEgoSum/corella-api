@@ -1,7 +1,8 @@
-import {_id, avatar, createdAt, email, mEmail, mUsername, password, role, updatedAt, username} from './properties'
+import {_id, avatar, createdAt, email, mEmail, fEmail, mUsername, password, role, updatedAt, username} from './properties'
 import {UserRole} from '../UserRole'
 import {QueryPageLimit, QueryPageNumber, QuerySortDirection} from 'common/schemas/query'
 import type {SortDirection} from 'mongodb'
+import {Types} from 'mongoose'
 
 
 export interface UserCredentials {
@@ -29,6 +30,28 @@ export const UserCredentials = {
       password: 'Enter your password'
     }
   }
+}
+
+export interface UserPreview {
+  _id: Types.ObjectId,
+  username: string,
+  avatar: string
+}
+
+export const UserPreview = {
+  title: 'UserPreview',
+  type: 'object',
+  properties: {
+    _id,
+    username,
+    avatar
+  },
+  additionalProperties: false,
+  required: [
+    '_id',
+    'username',
+    'avatar'
+  ]
 }
 
 export const UserBase = {
@@ -84,6 +107,26 @@ export const CreateUser = {
 }
 
 export interface FindUsersQuery {
+  mUsername: string,
+  fEmail: string,
+  page: number,
+  limit: number
+}
+
+export const FindUsersQuery = {
+  title: 'FindUsersQuery',
+  type: 'object',
+  properties: {
+    mUsername,
+    fEmail,
+    page: new QueryPageNumber().setDefault(1),
+    limit: new QueryPageLimit().setDefault(10)
+  },
+  additionalProperties: false,
+  required: ['page', 'limit']
+}
+
+export interface FindUsersQueryAdmin {
   fRole?: UserRole,
   mUsername?: string,
   mEmail?: string,
@@ -92,7 +135,7 @@ export interface FindUsersQuery {
   limit: number
 }
 
-export const FindUsersQuery = {
+export const FindUsersQueryAdmin = {
   title: 'FindUsersQuery',
   type: 'object',
   properties: {
