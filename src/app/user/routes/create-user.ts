@@ -13,7 +13,7 @@ export async function createUser(fastify: FastifyInstance, {userService, userSch
   return fastify
     .route<CreateUserRequest>(
       {
-        url: '/user',
+        url: '/admin/user',
         method: 'POST',
         schema: {
           summary: 'Create user',
