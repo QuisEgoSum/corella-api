@@ -1,4 +1,4 @@
-import {_id, createdAt, name, updatedAt} from './properties'
+import {_id, createdAt, description, name, updatedAt} from './properties'
 
 
 export interface CreateProject {
@@ -9,7 +9,8 @@ export const CreateProject = {
   title: 'CreateProject',
   type: 'object',
   properties: {
-    name: name
+    name,
+    description
   },
   required: ['name'],
   additionalProperties: false,
@@ -24,10 +25,11 @@ export const BaseProject = {
   title: 'BaseProject',
   type: 'object',
   properties: {
-    _id: _id,
-    name: name,
-    createdAt: createdAt,
-    updatedAt: updatedAt
+    _id,
+    name,
+    description,
+    createdAt,
+    updatedAt
   },
   additionalProperties: false,
   required: ['_id', 'name', 'createdAt', 'updatedAt']

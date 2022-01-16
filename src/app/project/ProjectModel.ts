@@ -4,6 +4,7 @@ import {Schema, model, Types} from 'mongoose'
 export interface IProject {
   _id: Types.ObjectId,
   name: string,
+  description: string,
   members: Types.ObjectId[],
   createdAt: number,
   updatedAt: number
@@ -13,7 +14,14 @@ export interface IProject {
 const ProjectSchema = new Schema<IProject>(
   {
     name: {
-      type: String
+      type: String,
+      minlength: 1,
+      maxlength: 128
+    },
+    description: {
+      type: String,
+      minlength: 1,
+      maxlength: 8192
     },
     members: {
       type: [Types.ObjectId],
