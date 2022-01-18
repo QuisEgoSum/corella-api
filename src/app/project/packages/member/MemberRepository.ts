@@ -1,6 +1,6 @@
 import {BaseRepository} from 'core/repository'
 import {IMember, MemberModel} from './MemberModel'
-import {Types} from 'mongoose'
+import {PopulateOptions, Types} from 'mongoose'
 import {MemberStatus} from './MemberStatus'
 import {PageOptions} from 'core/repository/IBaseRepository'
 import {DataList} from 'common/data'
@@ -24,8 +24,37 @@ export interface PopulatedMember {
 
 
 export class MemberRepository extends BaseRepository<IMember> {
+  private readonly memberProjection: Record<string, any>
+  private readonly memberPopulate: string | string[] | PopulateOptions | PopulateOptions[]
+
   constructor(Model: typeof MemberModel) {
     super(Model)
+
+    this.memberProjection = {
+      _id: 1,
+      status: 1,
+      userId: 1,
+      roleId: 1,
+      createdAt: 1
+    }
+    this.memberPopulate = [
+      {
+        model: 'User',
+        path: 'userId',
+        select: {
+          username: 1,
+          email: 1,
+          avatar: 1
+        }
+      },
+      {
+        model: 'ProjectRole',
+        path: 'roleId',
+        select: {
+          name: 1
+        }
+      }
+    ]
   }
 
   async upsertMember(member: {roleId: Types.ObjectId, projectId: Types.ObjectId, userId: Types.ObjectId, status: MemberStatus}): Promise<PopulatedMember> {
@@ -46,24 +75,8 @@ export class MemberRepository extends BaseRepository<IMember> {
           }
         },
         {
-          populate: [
-            {
-              model: 'User',
-              path: 'userId',
-              select: {
-                username: 1,
-                email: 1,
-                avatar: 1
-              }
-            },
-            {
-              model: 'ProjectRole',
-              path: 'roleId',
-              select: {
-                name: 1
-              }
-            }
-          ],
+          populate: this.memberPopulate,
+          projection: this.memberProjection,
           upsert: true,
           new: true
         }
@@ -78,24 +91,8 @@ export class MemberRepository extends BaseRepository<IMember> {
       },
       null,
       {
-        populate: [
-          {
-            model: 'User',
-            path: 'userId',
-            select: {
-              username: 1,
-              email: 1,
-              avatar: 1
-            }
-          },
-          {
-            model: 'ProjectRole',
-            path: 'roleId',
-            select: {
-              name: 1
-            }
-          }
-        ],
+        populate: this.memberPopulate,
+        projection: this.memberProjection,
         sort: {
           createdAt: 1
         }

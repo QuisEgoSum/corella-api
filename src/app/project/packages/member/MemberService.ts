@@ -11,6 +11,7 @@ import {MemberEvents} from './MemberEvents'
 import {PageOptions} from 'core/repository/IBaseRepository'
 import {BaseMember} from './schemas/entities'
 import {DataList} from 'common/data'
+import {MemberDto} from './member-dto'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {
@@ -56,7 +57,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     projectId: Types.ObjectId | string,
     userId: Types.ObjectId | string,
     roleId: Types.ObjectId | string
-  ): Promise<BaseMember> {
+  ): Promise<MemberDto> {
     await this.User.existsUser(userId)
     await this.roleService.existsRole(projectId, roleId)
 
@@ -93,18 +94,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
 
     this.events.emit('INVITE_MEMBER', new Types.ObjectId(projectId), addedMember.userId._id)
 
-    return {
-      _id: addedMember._id,
-      status: addedMember.status,
-      user: {
-        _id: addedMember.userId._id,
-        username: addedMember.userId.username,
-        email: null,
-        avatar: addedMember.userId.avatar
-      },
-      role: addedMember.roleId,
-      createdAt: addedMember.createdAt
-    }
+    return new MemberDto(addedMember)
   }
 
   // async blockMember(
@@ -145,24 +135,9 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     )
   }
 
-  async findProjectMembers(projectId: string | Types.ObjectId, query: PageOptions): Promise<DataList<BaseMember>> {
+  async findProjectMembers(projectId: string | Types.ObjectId, query: PageOptions): Promise<DataList<MemberDto>> {
     const list = await this.repository.findProjectMembers(new Types.ObjectId(projectId), query)
-
-    const members = list.data
-      .map(member => {
-        const m: BaseMember = {
-          _id: member._id,
-          status: member.status,
-          user: member.userId,
-          role: member.roleId,
-          createdAt: member.createdAt
-        }
-        if (member.status !== MemberStatus.PARTICIPANT) {
-          m.user.email = null
-        }
-        return m
-      })
-
+    const members = list.data.map(member => new MemberDto(member))
     return new DataList(list.total, list.pages, members)
   }
 }
