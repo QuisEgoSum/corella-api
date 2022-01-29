@@ -45,35 +45,35 @@ export class ProjectRepository extends BaseRepository<IProject> {
                     }
                   }
                 },
-                {
-                  $lookup: {
-                    from: 'project_member_invitations',
-                    let: {
-                      projectId: '$projectId',
-                      userId: '$userId'
-                    },
-                    pipeline: [
-                      {
-                        $match: {
-                          $expr: {
-                            $and: [
-                              {$eq: ['$projectId', '$$projectId']},
-                              {$eq: ['$userId', '$$userId']},
-                              {$eq: ['$status', 'NEW']}
-                            ]
-                          }
-                        }
-                      },
-                      {
-                        $project: {
-                          status: 1,
-                          createdAt: 1
-                        }
-                      }
-                    ],
-                    as: 'invitations'
-                  }
-                }
+                // {
+                //   $lookup: {
+                //     from: 'project_member_invitations',
+                //     let: {
+                //       projectId: '$projectId',
+                //       userId: '$userId'
+                //     },
+                //     pipeline: [
+                //       {
+                //         $match: {
+                //           $expr: {
+                //             $and: [
+                //               {$eq: ['$projectId', '$$projectId']},
+                //               {$eq: ['$userId', '$$userId']},
+                //               {$eq: ['$status', 'NEW']}
+                //             ]
+                //           }
+                //         }
+                //       },
+                //       {
+                //         $project: {
+                //           status: 1,
+                //           createdAt: 1
+                //         }
+                //       }
+                //     ],
+                //     as: 'invitations'
+                //   }
+                // }
               ],
               as: 'member'
             }
@@ -101,9 +101,9 @@ export class ProjectRepository extends BaseRepository<IProject> {
               'member.status': 1,
               'member.role._id': 1,
               'member.role.name': 1,
-              'member.invite': {
-                $first: '$member.invitations'
-              },
+              // 'member.invite': {
+              //   $first: '$member.invitations'
+              // },
               'member.createdAt': 1,
               createdAt: 1
             }

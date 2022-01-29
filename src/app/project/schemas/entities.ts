@@ -48,11 +48,11 @@ export interface ExpandProjectPreview {
   member: {
     _id: Types.ObjectId,
     status: MemberStatus,
-    invite?: {
-      _id: Types.ObjectId,
-      status: InviteStatus,
-      createdAt: number
-    },
+    // invite?: {
+    //   _id: Types.ObjectId,
+    //   status: InviteStatus,
+    //   createdAt: number
+    // },
     role: {
       _id: Types.ObjectId,
       name: string
@@ -73,20 +73,20 @@ export const ExpandProjectPreview = {
       properties: {
         _id: member._id,
         status: member.status,
-        invite: {
-          type: 'object',
-          properties: {
-            _id: invite._id,
-            status: invite.status,
-            createdAt: invite.createdAt
-          },
-          additionalProperties: false,
-          required: [
-            '_id',
-            'status',
-            'createdAt'
-          ]
-        },
+        // invite: {
+        //   type: 'object',
+        //   properties: {
+        //     _id: invite._id,
+        //     status: invite.status,
+        //     createdAt: invite.createdAt
+        //   },
+        //   additionalProperties: false,
+        //   required: [
+        //     '_id',
+        //     'status',
+        //     'createdAt'
+        //   ]
+        // },
         role: {
           type: 'object',
           properties: {
@@ -130,25 +130,6 @@ export const ExpandProjectPreview = {
           "name": "Maintainer"
         },
         "createdAt": 1642350271464
-      },
-      "createdAt": 1642350271451
-    },
-    {
-      "_id": "61e446bf93fbc9a737fb6ec0",
-      "name": "Corella",
-      "member": {
-        "_id": "61e446e21e69d6811d3063ad",
-        "status": "INVITED",
-        "invite": {
-          "_id": "61e446e293fbc9a737fb6ed4",
-          "status": "NEW",
-          "createdAt": 1642350306176
-        },
-        "role": {
-          "_id": "61e446bf93fbc9a737fb6ec3",
-          "name": "Guest"
-        },
-        "createdAt": 1642350306179
       },
       "createdAt": 1642350271451
     }
