@@ -72,7 +72,11 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
     return this.repository.findUserProjects(new Types.ObjectId(userId), query)
   }
 
-  async pullMember(projectId: Types.ObjectId | string, userId: Types.ObjectId | string) {
-    return this.repository.pullMember(projectId, userId)
+  async pullMemberId(projectId: Types.ObjectId | string, userId: Types.ObjectId | string) {
+    return this.repository.pullMemberId(projectId, userId)
+  }
+
+  pushMemberId(projectId: Types.ObjectId, userId: Types.ObjectId) {
+    return this.repository.pushMemberId(projectId, userId)
   }
 }

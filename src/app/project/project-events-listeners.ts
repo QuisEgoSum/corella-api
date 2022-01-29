@@ -12,7 +12,8 @@ export async function addEventsListeners(
 ) {
   memberEvents
     .safeOn('INVITE_MEMBER', (projectId, memberId) => projectService.setMember(projectId, memberId))
-    .safeOn('CANCEL_INVITE', ((projectId, userId) => projectService.pullMember(projectId, userId)))
+    .safeOn('CANCEL_INVITE', ((projectId, userId) => projectService.pullMemberId(projectId, userId)))
+    .safeOn('ACCEPT_INVITE', ((projectId, userId) => projectService.pushMemberId(projectId, userId)))
   roleEvents
     .safeOn('DELETE_ROLE', ((projectId, roleId, defaultRole) => memberService.fromToChangeMembersRole(projectId, roleId, defaultRole)))
 }
