@@ -1,7 +1,7 @@
 import {MemberRouteOptions} from './index'
 import {FastifyInstance} from 'fastify'
 import {InviteMember} from '../schemas/entities'
-import {BadRequest} from 'common/schemas/response'
+import {BadRequest, NotFound} from 'common/schemas/response'
 import {MemberExistsError} from '../member-error'
 
 
@@ -37,10 +37,12 @@ export async function inviteMember(fastify: FastifyInstance, {memberService, mem
               required: ['member']
             },
             [400]: new BadRequest(
-              MemberExistsError.schema(),
+              MemberExistsError.schema()
+            ).bodyErrors(),
+            [404]: new NotFound(
               userError.UserNotExistsError.schema(),
               roleError.RoleNotExistsError.schema()
-            ).bodyErrors()
+            )
           }
         },
         handler: async function(request, reply) {
