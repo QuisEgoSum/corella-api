@@ -19,7 +19,7 @@ export async function createRole(fastify: FastifyInstance, {roleService, roleSch
         url: '/project/:projectId/role',
         method: 'POST',
         schema: {
-          summary: 'Create project role',
+          summary: 'Create role',
           tags: ['Project Role'],
           params: {
             projectId: roleSchemas.properties.projectId

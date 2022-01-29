@@ -140,4 +140,8 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     const members = list.data.map(member => new MemberDto(member))
     return new DataList(list.total, list.pages, members)
   }
+
+  async fromToChangeMembersRole(projectId: Types.ObjectId | string, fromRoleId: Types.ObjectId | string, toRoleId: Types.ObjectId | string) {
+    await this.repository.fromToChangeMembersRole(projectId, fromRoleId, toRoleId)
+  }
 }

@@ -3,13 +3,19 @@ import {IRole} from './RoleModel'
 import {RoleRepository} from './RoleRepository'
 import {Types} from 'mongoose'
 import {RolePermission} from './RolePermission'
-import {CreateRole} from './schemas/entities'
-import {RoleNotExistsError} from './role-error'
+import {CreateRole, UpdateRole} from './schemas/entities'
+import {RoleNotExistsError, UnableDeleteRoleError, UnableUpdateRoleError} from './role-error'
+import {PageOptions} from 'core/repository/IBaseRepository'
+import {RoleEvents} from './RoleEvents'
+import {InternalError} from '@error'
 
 
 export class RoleService extends BaseService<IRole, RoleRepository> {
-  constructor(roleRepository: RoleRepository) {
+  private events: RoleEvents
+  constructor(roleRepository: RoleRepository, roleEvents: RoleEvents) {
     super(roleRepository)
+
+    this.events = roleEvents
 
     this.Error.EntityNotExistsError = RoleNotExistsError
   }
@@ -23,6 +29,34 @@ export class RoleService extends BaseService<IRole, RoleRepository> {
         allowedEdit: true
       }
     )
+  }
+
+  async updateRole(projectId: Types.ObjectId | string, roleId: Types.ObjectId | string, updateRole: UpdateRole) {
+    const updatedRole = await this.repository.updateRole(projectId, roleId, updateRole)
+    if (updatedRole !== null) {
+      return updatedRole
+    }
+    await this.existsRole(projectId, roleId)
+    throw new UnableUpdateRoleError()
+  }
+
+  async deleteRole(projectId: Types.ObjectId | string, roleId: Types.ObjectId | string) {
+    const deletedRole = await this.repository.deleteRole(projectId, roleId)
+    if (deletedRole !== null) {
+      try {
+        const defaultRoleId = await this.findGuestId(projectId)
+        this.events.emit('DELETE_ROLE', projectId, roleId, defaultRoleId)
+      } catch (error) {
+        if (error instanceof this.Error.EntityNotExistsError) {
+          throw new InternalError({message: 'Default project role not found'})
+        } else {
+          throw error
+        }
+      }
+      return deletedRole
+    }
+    await this.existsRole(projectId, roleId)
+    throw new UnableDeleteRoleError()
   }
 
   async createMaintainer(projectId: Types.ObjectId | string) {
@@ -57,5 +91,17 @@ export class RoleService extends BaseService<IRole, RoleRepository> {
         _id: 1
       }
     )
+  }
+
+  async findRoles(projectId: string, query: PageOptions) {
+    return this.repository.findRoles(projectId, query)
+  }
+
+  private async findGuestId(projectId: Types.ObjectId | string): Promise<Types.ObjectId> {
+    const defaultRole = await this.repository.findGuestId(projectId)
+    if (defaultRole == null) {
+      throw new this.Error.EntityNotExistsError()
+    }
+    return defaultRole._id
   }
 }

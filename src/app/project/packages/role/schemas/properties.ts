@@ -4,7 +4,8 @@ import {RolePermission} from '../RolePermission'
 
 export const _id = new ObjectId({entity: 'role'})
 export const name = {
-  type: 'string'
+  type: 'string',
+  example: 'Developer'
 }
 export const permissions = {
   type: 'array',

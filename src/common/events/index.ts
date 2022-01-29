@@ -10,7 +10,7 @@ export class Events extends EventEmitter {
   }
 
   safeOn(eventName: string | symbol, listener: (...args: any[]) => void): this {
-    const log = logger.child({label: 'events', event: eventName})
+    const log = logger.child({label: 'events', event: eventName, class: this.constructor.name})
     const handler = async (...params: any[]) => {
       try {
         await listener(...params)

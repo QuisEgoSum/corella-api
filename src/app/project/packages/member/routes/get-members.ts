@@ -24,6 +24,9 @@ export async function getMembers(fastify: FastifyInstance, {memberService, membe
         schema: {
           summary: 'Get project members',
           tags: ['Project Member'],
+          params: {
+            projectId: memberSchemas.properties.projectId
+          },
           query: {
             page: new QueryPageNumber().setDefault(1),
             limit: new QueryPageLimit().setDefault(20)
