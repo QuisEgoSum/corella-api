@@ -48,15 +48,12 @@ export interface ExpandProjectPreview {
   member: {
     _id: Types.ObjectId,
     status: MemberStatus,
-    // invite?: {
-    //   _id: Types.ObjectId,
-    //   status: InviteStatus,
-    //   createdAt: number
-    // },
     role: {
       _id: Types.ObjectId,
-      name: string
-    }
+      name: string,
+      createdAt: number
+    },
+    createdAt: number
   },
   createdAt: number
 }
@@ -73,30 +70,18 @@ export const ExpandProjectPreview = {
       properties: {
         _id: member._id,
         status: member.status,
-        // invite: {
-        //   type: 'object',
-        //   properties: {
-        //     _id: invite._id,
-        //     status: invite.status,
-        //     createdAt: invite.createdAt
-        //   },
-        //   additionalProperties: false,
-        //   required: [
-        //     '_id',
-        //     'status',
-        //     'createdAt'
-        //   ]
-        // },
         role: {
           type: 'object',
           properties: {
             _id: role._id,
-            name: role.name
+            name: role.name,
+            createdAt: role.createdAt
           },
           additionalProperties: false,
           required: [
             '_id',
-            'name'
+            'name',
+            'createdAt'
           ]
         },
         createdAt: member.createdAt

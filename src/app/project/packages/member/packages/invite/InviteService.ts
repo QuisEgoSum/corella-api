@@ -12,6 +12,7 @@ import {
   UnknownFailedAcceptInviteError, UnknownFailedCancelInviteError
 } from './invite-error'
 import {InviteStatus} from './InviteStatus'
+import {PageOptions} from '../../../../../../core/repository/IBaseRepository'
 
 
 export class InviteService extends BaseService<IInvite, InviteRepository> {
@@ -80,5 +81,9 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     } else {
       throw new UnknownFailedCancelInviteError()
     }
+  }
+
+  async findProjectsByUserInvites(userId: Types.ObjectId | string, page: PageOptions) {
+    return this.repository.findProjectsByUserInvites(userId, page)
   }
 }

@@ -3,6 +3,9 @@ import {IInvite, InviteModel} from './InviteModel'
 import {Types} from 'mongoose'
 import {InviteExpand} from './schemas/entities'
 import {InviteStatus} from './InviteStatus'
+import {PageOptions} from '../../../../../../core/repository/IBaseRepository'
+import {DataList} from '../../../../../../common/data'
+import {ExpandProjectPreview} from '../../../../schemas/entities'
 
 
 export class InviteRepository extends BaseRepository<IInvite> {
@@ -80,5 +83,142 @@ export class InviteRepository extends BaseRepository<IInvite> {
           status: InviteStatus.CANCELLED
         }
       )
+  }
+
+  async findProjectsByUserInvites(userId: Types.ObjectId | string, page: PageOptions) {
+    const userObjectId = new Types.ObjectId(userId)
+
+    const dataPromise = this.Model.aggregate(
+      [
+        {$match: {userId: userObjectId, status: InviteStatus.NEW}},
+        {$sort: {createdAt: -1}},
+        {$skip: (page.page - 1) * page.limit},
+        {$limit: page.limit},
+        {
+          $lookup: {
+            from: 'projects',
+            localField: 'projectId',
+            foreignField: '_id',
+            as: 'project'
+          }
+        },
+        {$unwind: '$project'},
+        {$project: {members: 0}},
+        {
+          $lookup: {
+            from: 'project_members',
+            let: {
+              projectId: '$project._id',
+              userId: userId
+            },
+            pipeline: [
+              {
+                $match: {
+                  $expr: {
+                    $and: [
+                      {$eq: ['$projectId', '$$projectId']},
+                      {$eq: ['$userId', '$$userId']}
+                    ]
+                  }
+                }
+              }
+            ],
+            as: 'project.member'
+          }
+        },
+        {
+          $unwind: '$project.member'
+        },
+        {
+          $lookup: {
+            from: 'project_roles',
+            localField: 'project.member.roleId',
+            foreignField: '_id',
+            as: 'project.member.role'
+          }
+        },
+        {
+          $unwind: '$project.member.role'
+        },
+        {
+          $project: {
+            status: 1,
+            createdAt: 1,
+            project: {
+              _id: 1,
+              name: 1,
+              createdAt: 1,
+              member: {
+                _id: 1,
+                createdAt: 1,
+                status: 1,
+                role: {
+                  _id: 1,
+                  name: 1,
+                  createdAt: 1
+                }
+              }
+            }
+          }
+        }
+        // {$replaceRoot: {newRoot: '$project'}},
+        // {$project: {members: 0}},
+        // {
+        //   $lookup: {
+        //     from: 'project_members',
+        //     let: {
+        //       projectId: '$_id',
+        //       userId: userObjectId
+        //     },
+        //     pipeline: [
+        //       {
+        //         $match: {
+        //           $expr: {
+        //             $and: [
+        //               {$eq: ['$projectId', '$$projectId']},
+        //               {$eq: ['$userId', '$$userId']}
+        //             ]
+        //           }
+        //         }
+        //       }
+        //     ],
+        //     as: 'member'
+        //   }
+        // },
+        // {
+        //   $unwind: '$member'
+        // },
+        // {
+        //   $lookup: {
+        //     from: 'project_roles',
+        //     localField: 'member.roleId',
+        //     foreignField: '_id',
+        //     as: 'member.role'
+        //   }
+        // },
+        // {
+        //   $unwind: '$member.role'
+        // },
+        // {
+        //   $project: {
+        //     name: 1,
+        //     description: 1,
+        //     'member._id': 1,
+        //     'member.status': 1,
+        //     'member.role._id': 1,
+        //     'member.role.name': 1,
+        //     'member.createdAt': 1,
+        //     createdAt: 1
+        //   }
+        // }
+      ]
+    )
+
+    const [data, total] = await Promise.all([
+      dataPromise,
+      this.count({userId: userObjectId, status: InviteStatus.NEW})
+    ])
+
+    return new DataList<ExpandProjectPreview>(total, Math.ceil(total / page.limit), data)
   }
 }
