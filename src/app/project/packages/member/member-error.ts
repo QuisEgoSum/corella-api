@@ -1,4 +1,4 @@
-import {EntityExistsError, EntityNotExistsError} from '@error'
+import {EntityExistsError, EntityNotExistsError, InternalError} from '@error'
 
 
 export const MemberExistsError = EntityExistsError.extends(
@@ -26,5 +26,12 @@ export const MemberNotExistsError = EntityNotExistsError.extends(
     error: 'MemberNotExistsError',
     code: 3101,
     message: 'This user is not a member of the project'
+  }
+)
+
+export const FailedAcceptInvite = InternalError.extends(
+  {},
+  {
+    code: 3102
   }
 )

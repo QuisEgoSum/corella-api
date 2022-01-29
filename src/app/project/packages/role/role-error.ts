@@ -1,4 +1,4 @@
-import {AccessError, EntityNotExistsError} from '@error'
+import {AccessError, EntityNotExistsError, InternalError} from '@error'
 
 
 export const RoleNotExistsError = EntityNotExistsError.extends(
@@ -24,6 +24,13 @@ export const UnableDeleteRoleError = AccessError.extends(
   {
     error: 'UnableDeleteRoleError',
     message: 'Unable to delete this role',
-    code: 3201
+    code: 3202
+  }
+)
+
+export const DefaultProjectRoleNotExists = InternalError.extends(
+  {},
+  {
+    code: 3203
   }
 )

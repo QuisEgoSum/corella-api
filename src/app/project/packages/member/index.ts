@@ -38,7 +38,8 @@ export class Member {
           memberService: this.service,
           memberSchemas: schemas,
           userError: this.User.getUserErrors(),
-          roleError: this.Role.Error
+          roleError: this.Role.Error,
+          inviteSchemas: this.Invite.schemas
         }
       )
   }
