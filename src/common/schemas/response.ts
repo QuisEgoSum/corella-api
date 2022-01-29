@@ -113,6 +113,11 @@ export class BadRequest extends ErrorResponse {
     this.addSchema(NoDataForUpdatingError.schema())
     return this
   }
+
+  paramsErrors() {
+    this.addSchema(JsonSchemaValidationErrors.schema())
+    return this
+  }
 }
 
 export class NotFound extends ErrorResponse {

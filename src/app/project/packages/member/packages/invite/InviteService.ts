@@ -7,8 +7,9 @@ import {
   InviteAcceptedError,
   InviteCancelledError,
   InviteDeclinedError,
-  InviteNotExistsError, SomeoneElseInvitationError,
-  UnknownInviteStatusError
+  InviteNotExistsError,
+  SomeoneElseInvitationError, SomeoneElseProjectInvitationError,
+  UnknownFailedAcceptInviteError, UnknownFailedCancelInviteError
 } from './invite-error'
 import {InviteStatus} from './InviteStatus'
 
@@ -58,7 +59,26 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     } else if (invite.status === InviteStatus.CANCELLED) {
       throw new InviteCancelledError()
     } else {
-      throw new UnknownInviteStatusError()
+      throw new UnknownFailedAcceptInviteError()
+    }
+  }
+
+  async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string): Promise<IInvite> {
+    let invite = await this.repository.cancelInvite(projectId, inviteId)
+    if (invite !== null) {
+      return invite
+    }
+    invite = await this.findById(inviteId)
+    if (invite.projectId.toHexString() !== String(projectId)) {
+      throw new SomeoneElseProjectInvitationError()
+    } else if (invite.status === InviteStatus.CANCELLED) {
+      throw new InviteCancelledError()
+    } else if (invite.status === InviteStatus.DECLINED) {
+      throw new InviteDeclinedError()
+    } else if (invite.status === InviteStatus.ACCEPTED) {
+      throw new InviteAcceptedError()
+    } else {
+      throw new UnknownFailedCancelInviteError()
     }
   }
 }
