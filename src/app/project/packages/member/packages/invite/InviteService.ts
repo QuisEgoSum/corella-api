@@ -3,7 +3,6 @@ import {IInvite} from './InviteModel'
 import {InviteRepository} from './InviteRepository'
 import {Types} from 'mongoose'
 import {RoleService} from 'app/project/packages/role/RoleService'
-import {User as UserPkg} from 'app/user'
 
 
 export class InviteService extends BaseService<IInvite, InviteRepository> {
