@@ -3,6 +3,14 @@ import {IInvite} from './InviteModel'
 import {InviteRepository} from './InviteRepository'
 import {Types} from 'mongoose'
 import {RoleService} from 'app/project/packages/role/RoleService'
+import {
+  InviteAcceptedError,
+  InviteCancelledError,
+  InviteDeclinedError,
+  InviteNotExistsError, SomeoneElseInvitationError,
+  UnknownInviteStatusError
+} from './invite-error'
+import {InviteStatus} from './InviteStatus'
 
 
 export class InviteService extends BaseService<IInvite, InviteRepository> {
@@ -15,6 +23,8 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     super(inviteRepository)
 
     this.roleService = roleService
+
+    this.Error.EntityNotExistsError = InviteNotExistsError
   }
 
   async createInvite(projectId: Types.ObjectId | string, userId: Types.ObjectId | string, roleId?: Types.ObjectId | string) {
@@ -31,5 +41,24 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     )
 
     return invite
+  }
+
+  async acceptInvite(inviteId: Types.ObjectId | string, userId: Types.ObjectId | string): Promise<IInvite> {
+    let invite = await this.repository.acceptInvite(inviteId, userId)
+    if (invite !== null) {
+      return invite
+    }
+    invite = await this.findById(inviteId)
+    if (invite.userId.toHexString() !== String(userId)) {
+      throw new SomeoneElseInvitationError()
+    } else if (invite.status === InviteStatus.ACCEPTED) {
+      throw new InviteAcceptedError()
+    } else if (invite.status === InviteStatus.DECLINED) {
+      throw new InviteDeclinedError()
+    } else if (invite.status === InviteStatus.CANCELLED) {
+      throw new InviteCancelledError()
+    } else {
+      throw new UnknownInviteStatusError()
+    }
   }
 }

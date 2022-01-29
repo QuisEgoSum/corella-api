@@ -112,4 +112,31 @@ export class MemberRepository extends BaseRepository<IMember> {
         }
       )
   }
+
+  async findMemberStatusByUserId(projectId: Types.ObjectId | string, userId: Types.ObjectId | string): Promise<MemberStatus | null> {
+    return this.Model
+      .findOne(
+        {
+          projectId: new Types.ObjectId(projectId),
+          userId: new Types.ObjectId(userId)
+        },
+        {
+          status: 1
+        }
+      )
+      .then(member => member ? member.status : null)
+  }
+
+  async invitedMemberToParticipant(projectId: Types.ObjectId, userId: Types.ObjectId) {
+    return this.Model
+      .updateOne(
+        {
+          projectId: projectId,
+          userId: userId
+        },
+        {
+          status: MemberStatus.PARTICIPANT
+        }
+      )
+  }
 }

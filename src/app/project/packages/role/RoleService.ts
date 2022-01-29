@@ -4,10 +4,14 @@ import {RoleRepository} from './RoleRepository'
 import {Types} from 'mongoose'
 import {RolePermission} from './RolePermission'
 import {CreateRole, UpdateRole} from './schemas/entities'
-import {RoleNotExistsError, UnableDeleteRoleError, UnableUpdateRoleError} from './role-error'
+import {
+  DefaultProjectRoleNotExists,
+  RoleNotExistsError,
+  UnableDeleteRoleError,
+  UnableUpdateRoleError
+} from './role-error'
 import {PageOptions} from 'core/repository/IBaseRepository'
 import {RoleEvents} from './RoleEvents'
-import {InternalError} from '@error'
 
 
 export class RoleService extends BaseService<IRole, RoleRepository> {
@@ -48,7 +52,7 @@ export class RoleService extends BaseService<IRole, RoleRepository> {
         this.events.emit('DELETE_ROLE', projectId, roleId, defaultRoleId)
       } catch (error) {
         if (error instanceof this.Error.EntityNotExistsError) {
-          throw new InternalError({message: 'Default project role not found'})
+          throw new DefaultProjectRoleNotExists()
         } else {
           throw error
         }

@@ -2,16 +2,16 @@ import {BaseService} from 'core/service'
 import {IMember} from './MemberModel'
 import {MemberRepository} from './MemberRepository'
 import {Types} from 'mongoose'
-import {MemberExistsError, MemberNotExistsError} from './member-error'
+import {FailedAcceptInvite, MemberExistsError, MemberNotExistsError} from './member-error'
 import {InviteService} from './packages/invite/InviteService'
 import {MemberStatus} from './MemberStatus'
 import {RoleService} from '../role/RoleService'
 import {User as UserPkg} from 'app/user'
 import {MemberEvents} from './MemberEvents'
 import {PageOptions} from 'core/repository/IBaseRepository'
-import {BaseMember} from './schemas/entities'
 import {DataList} from 'common/data'
 import {MemberDto} from './member-dto'
+import {InternalError} from '@error'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {
@@ -61,20 +61,12 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     await this.User.existsUser(userId)
     await this.roleService.existsRole(projectId, roleId)
 
-    const member = await this.repository.findOne(
-      {
-        projectId: new Types.ObjectId(projectId),
-        userId: new Types.ObjectId(userId)
-      },
-      {
-        status: 1
-      }
-    )
+    const memberStatus = await this.repository.findMemberStatusByUserId(projectId, userId)
 
-    if (member) {
-      if (member.status === MemberStatus.PARTICIPANT) {
+    if (memberStatus) {
+      if (memberStatus === MemberStatus.PARTICIPANT) {
         throw new this.Error.EntityExistsError()
-      } else if (member.status === MemberStatus.INVITED) {
+      } else if (memberStatus === MemberStatus.INVITED) {
         throw new this.Error.EntityExistsError(
           {message: 'This user has already been invited to the project'}
         )
@@ -83,7 +75,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
 
     await this.inviteService.createInvite(projectId, userId, roleId)
 
-    const addedMember = await this.repository.upsertMember(
+    const member = await this.repository.upsertMember(
       {
         projectId: new Types.ObjectId(projectId),
         userId: new Types.ObjectId(userId),
@@ -92,9 +84,17 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
       }
     )
 
-    this.events.emit('INVITE_MEMBER', new Types.ObjectId(projectId), addedMember.userId._id)
+    this.events.emit('INVITE_MEMBER', new Types.ObjectId(projectId), member.userId._id)
 
-    return new MemberDto(addedMember)
+    return new MemberDto(member)
+  }
+
+  async acceptInvite(inviteId: Types.ObjectId | string, userId: Types.ObjectId | string) {
+    const invite = await this.inviteService.acceptInvite(inviteId, userId)
+    const result = await this.repository.invitedMemberToParticipant(invite.projectId, invite.userId)
+    if (!result.modifiedCount) {
+      throw new FailedAcceptInvite()
+    }
   }
 
   // async blockMember(
@@ -115,25 +115,25 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
   //   )
   // }
 
-  async changeMemberRole(
-    projectId: Types.ObjectId | string,
-    userId: Types.ObjectId | string,
-    roleId: Types.ObjectId | string
-  ) {
-    await this.roleService.existsRole(projectId, roleId)
-    return this.findOneAndUpdate(
-      {
-        projectId: new Types.ObjectId(projectId),
-        userId: new Types.ObjectId(userId)
-      },
-      {
-        roleId: new Types.ObjectId(roleId)
-      },
-      {
-        new: true
-      }
-    )
-  }
+  // async changeMemberRole(
+  //   projectId: Types.ObjectId | string,
+  //   userId: Types.ObjectId | string,
+  //   roleId: Types.ObjectId | string
+  // ) {
+  //   await this.roleService.existsRole(projectId, roleId)
+  //   return this.findOneAndUpdate(
+  //     {
+  //       projectId: new Types.ObjectId(projectId),
+  //       userId: new Types.ObjectId(userId)
+  //     },
+  //     {
+  //       roleId: new Types.ObjectId(roleId)
+  //     },
+  //     {
+  //       new: true
+  //     }
+  //   )
+  // }
 
   async findProjectMembers(projectId: string | Types.ObjectId, query: PageOptions): Promise<DataList<MemberDto>> {
     const list = await this.repository.findProjectMembers(new Types.ObjectId(projectId), query)
