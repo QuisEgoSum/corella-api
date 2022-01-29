@@ -14,10 +14,10 @@ import {MemberDto} from './member-dto'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {
-  private inviteService: InviteService
-  private roleService: RoleService
-  private User: UserPkg
-  private events: MemberEvents
+  private readonly inviteService: InviteService
+  private readonly roleService: RoleService
+  private readonly User: UserPkg
+  private readonly events: MemberEvents
 
   constructor(
     memberRepository: MemberRepository,
@@ -100,6 +100,10 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     const invite = await this.inviteService.cancelInvite(projectId, inviteId)
     await this.repository.blockMemberByUserId(projectId, invite.userId)
     this.events.emit('CANCEL_INVITE', invite.projectId, invite.userId)
+  }
+
+  async findProjectsByUserInvites(userId: Types.ObjectId | string, page: PageOptions) {
+    return this.inviteService.findProjectsByUserInvites(userId, page)
   }
 
   // async blockMember(
