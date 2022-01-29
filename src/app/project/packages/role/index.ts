@@ -6,6 +6,7 @@ import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
 import * as error from './role-error'
 import {RolePermission} from './RolePermission'
+import {RoleEvents} from './RoleEvents'
 
 
 export class Role {
@@ -13,12 +14,15 @@ export class Role {
   public readonly schemas: typeof import('./schemas')
   public readonly RolePermission: typeof RolePermission
   public readonly Error: typeof import('./role-error')
+  public readonly events: RoleEvents
 
   constructor(
     roleService: RoleService,
+    roleEvents: RoleEvents,
     schemas: typeof import('./schemas')
   ) {
     this.service = roleService
+    this.events = roleEvents
     this.schemas = schemas
     this.RolePermission = RolePermission
     this.Error = error
@@ -31,6 +35,8 @@ export class Role {
   }
 }
 
+const events = new RoleEvents()
+
 export async function initRole() {
-  return new Role(new RoleService(new RoleRepository(RoleModel)), schemas)
+  return new Role(new RoleService(new RoleRepository(RoleModel), events), events, schemas)
 }

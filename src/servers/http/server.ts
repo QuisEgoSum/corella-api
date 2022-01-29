@@ -10,7 +10,7 @@ import {errorHandler} from './modules/error-handler'
 import {notFoundHandler} from './modules/not-found-handler'
 import {schemaErrorFormatter, ajv} from 'core/validation'
 import {createSecurityHook, CreateSecurityHookOptions} from './modules/security'
-import {docsHook} from './modules/docs'
+import {createDocsHook, CreateDocsHookOptions} from './modules/docs'
 import type {FastifyInstance} from 'fastify'
 
 
@@ -18,7 +18,8 @@ export interface CreateHttpServerOptions {
   routers: Array<(fastify: FastifyInstance) => Promise<any>>,
   server?: FastifyInstance,
   swagger: any,
-  securityOptions: CreateSecurityHookOptions
+  securityOptions: CreateSecurityHookOptions,
+  docsOptions: CreateDocsHookOptions
 }
 
 export async function createHttpServer(options: CreateHttpServerOptions) {
@@ -28,7 +29,7 @@ export async function createHttpServer(options: CreateHttpServerOptions) {
     bodyLimit: 10737418240
   })
     .addHook('onRoute', await createSecurityHook(options.securityOptions))
-    .addHook('onRoute', docsHook)
+    .addHook('onRoute', createDocsHook(options.docsOptions))
     .setErrorHandler(errorHandler)
     .setNotFoundHandler(notFoundHandler)
     // @ts-ignore

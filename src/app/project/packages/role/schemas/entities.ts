@@ -6,16 +6,22 @@ export const BaseRole = {
   title: 'BaseRole',
   type: 'object',
   properties: {
-    _id: _id,
-    name: name,
+    _id,
+    name,
     permissions,
-    projectId,
     allowedEdit,
     createdAt,
     updatedAt
   },
   additionalProperties: false,
-  required: ['_id', 'name', 'permissions', 'projectId', 'allowedEdit', 'createdAt', 'updatedAt']
+  required: [
+    '_id',
+    'name',
+    'permissions',
+    'allowedEdit',
+    'createdAt',
+    'updatedAt'
+  ]
 }
 
 export interface CreateRole {
@@ -38,4 +44,19 @@ export const CreateRole = {
       permissions: 'Select role permissions'
     }
   }
+}
+
+export interface UpdateRole {
+  name?: string,
+  permissions?: RolePermission[]
+}
+
+export const UpdateRole = {
+  title: 'UpdateRole',
+  type: 'object',
+  properties: {
+    name,
+    permissions
+  },
+  additionalProperties: false
 }

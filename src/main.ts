@@ -26,6 +26,9 @@ import {logger} from '@logger'
       swagger: Docs.swagger,
       securityOptions: {
         User
+      },
+      docsOptions: {
+        Project
       }
     }
   )

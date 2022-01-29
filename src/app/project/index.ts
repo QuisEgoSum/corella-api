@@ -8,6 +8,7 @@ import {initMember, Member as MemberPkg} from './packages/member'
 import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
 import * as schemas from './schemas'
+import * as errors from './project-error'
 import type {User as UserPkg} from 'app/user'
 import {addEventsListeners} from './project-events-listeners'
 
@@ -32,6 +33,10 @@ export class Project {
     this.router = this.router.bind(this)
   }
 
+  getErrors(): typeof import('./project-error') {
+    return errors
+  }
+
   async router(fastify: FastifyInstance) {
     await routes(fastify, {projectService: this.service, projectSchemas: schemas})
     await this.Role.router(fastify)
@@ -52,7 +57,7 @@ export async function initProject(User: UserPkg) {
     Member.service
   )
 
-  await addEventsListeners(service, Member.events)
+  await addEventsListeners(service, Member.service, Member.events, Role.events)
 
   return new Project(
     service,

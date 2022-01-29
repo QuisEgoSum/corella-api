@@ -1,47 +1,64 @@
 import type {RouteOptions} from 'fastify'
-import {ErrorResponse, UserForbidden, Unauthorized} from 'common/schemas/response'
+import type {Project} from 'app/project'
+import {ErrorResponse, UserForbidden, Unauthorized, BadRequest, NotFound} from 'common/schemas/response'
 import {RequestHandlingError} from '@error'
 
 
 declare module 'fastify' {
   interface RouteOptions {
     schema?: {
-      response?: Record<number, any>,
+      response?: {
+        [200]?: any,
+        [201]?: any,
+        [400]?: ErrorResponse,
+        [401]?: ErrorResponse,
+        [403]?: ErrorResponse,
+        [404]?: ErrorResponse,
+        [key: string]: any
+      },
       security?: Array<{[key: string]: []}>,
+      params?: Record<string, any>,
       [key: string]: any
     }
   }
 }
 
 
-export function docsHook(routeOptions: RouteOptions) {
-  if (!routeOptions.schema) {
-    routeOptions.schema = {}
-  }
-  if (!routeOptions.schema.security) {
-    routeOptions.schema.security = []
-  }
-  if (!routeOptions.schema.response) {
-    routeOptions.schema.response = {}
-  }
-  if (!routeOptions.schema.response[400]) {
-    routeOptions.schema.response[400] = {
-      description: 'Bad request',
-      type: 'object',
-      additionalProperties: true,
-      oneOf: []
+export interface CreateDocsHookOptions {
+  Project: Project
+}
+
+
+export function createDocsHook({Project}: CreateDocsHookOptions) {
+  const projectErrors = Project.getErrors()
+  return function docsHook(routeOptions: RouteOptions) {
+    if (!routeOptions.schema) {
+      routeOptions.schema = {}
     }
-  } else if (!routeOptions.schema.response[400].oneOf) {
-    routeOptions.schema.response[400].oneOf = []
-  }
+    if (!routeOptions.schema.security) {
+      routeOptions.schema.security = []
+    }
+    if (!routeOptions.schema.response) {
+      routeOptions.schema.response = {}
+    }
+    if (!routeOptions.schema.response[400]) {
+      routeOptions.schema.response[400] = new BadRequest()
+    }
 
-  routeOptions.schema.response[400].oneOf.push(new ErrorResponse.ErrorResponseOne(new RequestHandlingError().schema()))
+    routeOptions.schema.response[400].addSchema(new RequestHandlingError().schema())
 
-  if (routeOptions.security?.auth) {
-    routeOptions.schema.security.push({UserSession: []})
-    routeOptions.schema.response[401] = new Unauthorized()
-  }
-  if (routeOptions.security?.admin) {
-    routeOptions.schema.response[403] = new UserForbidden()
+    if (routeOptions.security?.auth) {
+      routeOptions.schema.security.push({UserSession: []})
+      routeOptions.schema.response[401] = new Unauthorized()
+    }
+    if (routeOptions.security?.admin) {
+      routeOptions.schema.response[403] = new UserForbidden()
+    }
+    if (routeOptions.schema.params && 'projectId' in routeOptions.schema.params) {
+      if (!routeOptions.schema.response[404]) {
+        routeOptions.schema.response[404] = new NotFound()
+      }
+      routeOptions.schema.response[404].addSchema(projectErrors.ProjectNotExists.schema())
+    }
   }
 }

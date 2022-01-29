@@ -3,6 +3,30 @@ import {Schema} from 'openapi-error'
 import {UserAuthorizationError, UserRightsError} from 'app/user/user-error'
 
 
+export class MessageResponse {
+  private type: string
+  private properties: Record<any, any>
+  private additionalProperties: boolean
+  private required: string[]
+  constructor(...messages: string[]) {
+    this.type = 'object'
+    this.properties = {
+      message: {
+        type: 'string'
+      }
+    }
+    this.additionalProperties = false
+    this.required = ['message']
+    if (messages.length > 1) {
+      this.properties.message.enum = messages
+      this.properties.message.example = messages[0]
+    } else {
+      this.properties.message.default = messages[0]
+      this.properties.message.example = messages[0]
+    }
+  }
+}
+
 export class ErrorResponse {
   private description: string
   private type: string
@@ -43,6 +67,9 @@ export class ErrorResponse {
   }
 }
 
+/**
+ * @deprecated
+ */
 export class BadRequestNoBody extends ErrorResponse {
   constructor(...oneOfSchemas: Schema[]) {
     super(
@@ -59,9 +86,15 @@ export class Unauthorized extends ErrorResponse {
   }
 }
 
-export class UserForbidden extends ErrorResponse {
+export class Forbidden extends ErrorResponse {
   constructor(...oneOfSchemas: Schema[]) {
-    super('Forbidden', UserRightsError.schema(), ...oneOfSchemas)
+    super('Forbidden', ...oneOfSchemas)
+  }
+}
+
+export class UserForbidden extends Forbidden {
+  constructor(...oneOfSchemas: Schema[]) {
+    super(UserRightsError.schema(), ...oneOfSchemas)
   }
 }
 

@@ -99,4 +99,17 @@ export class MemberRepository extends BaseRepository<IMember> {
       }
     ) as unknown as Promise<DataList<PopulatedMember>>
   }
+
+  async fromToChangeMembersRole(projectId: Types.ObjectId | string, fromRoleId: Types.ObjectId | string, toRoleId: Types.ObjectId | string) {
+    return this.Model
+      .updateMany(
+        {
+          projectId: new Types.ObjectId(projectId),
+          roleId: new Types.ObjectId(fromRoleId)
+        },
+        {
+          roleId: new Types.ObjectId(toRoleId)
+        }
+      )
+  }
 }
