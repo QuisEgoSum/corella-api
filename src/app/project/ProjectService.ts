@@ -49,25 +49,6 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
     return project
   }
 
-  async setMember(projectId: Types.ObjectId, memberId: Types.ObjectId) {
-    await this.findOneAndUpdate(
-      {
-        _id: projectId
-      },
-      {
-        $addToSet: {
-          members: memberId
-        }
-      },
-      {
-        projection: {
-          _id: 1
-        },
-        new: true
-      }
-    )
-  }
-
   async findUserProjects(userId: Types.ObjectId | string, query: PageOptions) {
     return this.repository.findUserProjects(new Types.ObjectId(userId), query)
   }
@@ -76,7 +57,7 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
     return this.repository.pullMemberId(projectId, userId)
   }
 
-  pushMemberId(projectId: Types.ObjectId, userId: Types.ObjectId) {
+  async pushMemberId(projectId: Types.ObjectId, userId: Types.ObjectId) {
     return this.repository.pushMemberId(projectId, userId)
   }
 }
