@@ -83,7 +83,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
       }
     )
 
-    this.events.emit('INVITE_MEMBER', new Types.ObjectId(projectId), member.userId._id)
+    // this.events.emit('INVITE_MEMBER', new Types.ObjectId(projectId), member.userId._id)
 
     return new MemberDto(member)
   }
