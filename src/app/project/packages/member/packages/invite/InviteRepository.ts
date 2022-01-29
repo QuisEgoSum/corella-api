@@ -68,4 +68,17 @@ export class InviteRepository extends BaseRepository<IInvite> {
       }
     )
   }
+
+  async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string) {
+    return this.findOneAndUpdate(
+        {
+          _id: new Types.ObjectId(inviteId),
+          projectId: new Types.ObjectId(projectId),
+          status: InviteStatus.NEW
+        },
+        {
+          status: InviteStatus.CANCELLED
+        }
+      )
+  }
 }

@@ -116,11 +116,19 @@ export class ProjectRepository extends BaseRepository<IProject> {
       dataPromise,
       this.count(
         {
-          memberId: userId
+          members: userId
         }
       )
     ])
 
     return new DataList<ExpandProjectPreview>(total, Math.ceil(total / query.limit), data)
+  }
+
+  pullMember(projectId: Types.ObjectId | string, userId: Types.ObjectId | string) {
+    return this.updateById(new Types.ObjectId(projectId), {
+        $pull: {
+          members: new Types.ObjectId(userId)
+        }
+      })
   }
 }

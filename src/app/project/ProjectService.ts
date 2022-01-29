@@ -7,7 +7,7 @@ import type {CreateProject} from './schemas/entities'
 import type {RoleService} from './packages/role/RoleService'
 import type {CounterService} from './packages/task/packages/counter/CounterService'
 import {MemberService} from './packages/member/MemberService'
-import {PageOptions} from '../../core/repository/IBaseRepository'
+import {PageOptions} from 'core/repository/IBaseRepository'
 
 
 export class ProjectService extends BaseService<IProject, ProjectRepository> {
@@ -70,5 +70,9 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
 
   async findUserProjects(userId: Types.ObjectId | string, query: PageOptions) {
     return this.repository.findUserProjects(new Types.ObjectId(userId), query)
+  }
+
+  async pullMember(projectId: Types.ObjectId | string, userId: Types.ObjectId | string) {
+    return this.repository.pullMember(projectId, userId)
   }
 }

@@ -11,7 +11,6 @@ import {MemberEvents} from './MemberEvents'
 import {PageOptions} from 'core/repository/IBaseRepository'
 import {DataList} from 'common/data'
 import {MemberDto} from './member-dto'
-import {InternalError} from '@error'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {
@@ -95,6 +94,12 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     if (!result.modifiedCount) {
       throw new FailedAcceptInvite()
     }
+  }
+
+  async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string) {
+    const invite = await this.inviteService.cancelInvite(projectId, inviteId)
+    await this.repository.blockMemberByUserId(projectId, invite.userId)
+    this.events.emit('CANCEL_INVITE', invite.projectId, invite.userId)
   }
 
   // async blockMember(
