@@ -26,7 +26,8 @@ export async function rejectInvite(fastify: FastifyInstance, {memberService, inv
         method: 'DELETE',
         schema: {
           summary: 'Reject invite to the project',
-          tags: ['Project Member'],
+          description: 'The user reject the invitation to the project',
+          tags: ['Project Invite'],
           params: {
             inviteId: inviteSchemas.properties._id
           },

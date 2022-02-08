@@ -25,7 +25,8 @@ export async function cancelInvite(fastify: FastifyInstance, {memberService, mem
         url: '/project/:projectId/member/invite/:inviteId',
         schema: {
           summary: 'Cancel invite',
-          tags: ['Project Member'],
+          description: 'The project participant will cancel the user\'s invitation',
+          tags: ['Project Invite'],
           params: {
             projectId: memberSchemas.properties.projectId,
             inviteId: inviteSchemas.properties._id

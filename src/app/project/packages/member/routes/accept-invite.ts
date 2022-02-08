@@ -24,7 +24,8 @@ export async function acceptInvite(fastify: FastifyInstance, {memberService, inv
         url: '/project/invite/:inviteId',
         schema: {
           summary: 'Accept invite',
-          tags: ['Project Member'],
+          description: 'The user accepts the invitation to the project',
+          tags: ['Project Invite'],
           params: {
             inviteId: inviteSchemas.properties._id
           },
