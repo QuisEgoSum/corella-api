@@ -55,4 +55,6 @@ export interface IBaseService<T, R extends BaseRepository<T>> {
    * @throws {UniqueKeyError}
    */
   updateById(id: string | Types.ObjectId, update?: UpdateQuery<T> | UpdateWithAggregationPipeline, options?: QueryOptions | null): Promise<void>
+  
+  existsById(id: string | Types.ObjectId): Promise<void>
 }
