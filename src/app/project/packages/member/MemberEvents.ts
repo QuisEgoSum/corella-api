@@ -9,6 +9,8 @@ export declare interface MemberEvents extends Events {
   safeOn(event: 'CANCEL_INVITE', listener: (projectId: Types.ObjectId, userId: Types.ObjectId) => any): this
   emit(event: 'ACCEPT_INVITE', projectId: Types.ObjectId, userId: Types.ObjectId): boolean
   safeOn(event: 'ACCEPT_INVITE', listener: (projectId: Types.ObjectId, userId: Types.ObjectId) => any): this
+  emit(event: 'BLOCK_MEMBER', projectId: Types.ObjectId, userId: Types.ObjectId): boolean
+  safeOn(event: 'BLOCK_MEMBER', listener: (projectId: Types.ObjectId, userId: Types.ObjectId) => any): this
 }
 
 

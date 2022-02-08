@@ -1,4 +1,4 @@
-import {EntityExistsError, EntityNotExistsError, InternalError} from '@error'
+import {EntityExistsError, EntityNotExistsError, InternalError, InvalidDataError} from '@error'
 
 
 export const MemberExistsError = EntityExistsError.extends(
@@ -33,5 +33,14 @@ export const FailedAcceptInviteError = InternalError.extends(
   {},
   {
     code: 3102
+  }
+)
+
+export const BlockingNonParticipantError = InvalidDataError.extends(
+  {},
+  {
+    error: 'BlockingNonParticipantError',
+    code: 3103,
+    message: 'You can only block an active participant of the project'
   }
 )

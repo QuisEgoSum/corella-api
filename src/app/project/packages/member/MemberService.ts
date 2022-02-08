@@ -2,7 +2,12 @@ import {BaseService} from 'core/service'
 import {IMember} from './MemberModel'
 import {MemberRepository} from './MemberRepository'
 import {Types} from 'mongoose'
-import {FailedAcceptInviteError, MemberExistsError, MemberNotExistsError} from './member-error'
+import {
+  BlockingNonParticipantError,
+  FailedAcceptInviteError,
+  MemberExistsError,
+  MemberNotExistsError
+} from './member-error'
 import {InviteService} from './packages/invite/InviteService'
 import {MemberStatus} from './MemberStatus'
 import {RoleService} from '../role/RoleService'
@@ -94,6 +99,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     if (!result.modifiedCount) {
       throw new FailedAcceptInviteError()
     }
+    this.events.emit('ACCEPT_INVITE', invite.projectId, invite.userId)
   }
 
   async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string) {
@@ -122,5 +128,12 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
   }
 
   async blockMember(projectId: string, memberId: string) {
+    let member = await this.repository.blockMember(memberId)
+    if (member) {
+      this.events.emit('BLOCK_MEMBER', new Types.ObjectId(projectId), member.userId)
+      return
+    }
+    await this.existsById(memberId)
+    throw new BlockingNonParticipantError()
   }
 }
