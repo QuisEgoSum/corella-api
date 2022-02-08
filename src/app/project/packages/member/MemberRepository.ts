@@ -139,4 +139,17 @@ export class MemberRepository extends BaseRepository<IMember> {
         }
       )
   }
+
+  async blockMember(memberId: string | Types.ObjectId) {
+    return this
+      .findOneAndUpdate(
+        {
+          _id: new Types.ObjectId(memberId),
+          status: MemberStatus.PARTICIPANT
+        },
+        {
+          status: MemberStatus.BLOCKED
+        }
+      )
+  }
 }
