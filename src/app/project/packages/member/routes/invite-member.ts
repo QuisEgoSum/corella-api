@@ -20,8 +20,9 @@ export async function inviteMember(fastify: FastifyInstance, {memberService, mem
         url: '/project/:projectId/member/invite',
         method: 'POST',
         schema: {
-          summary: 'Invite member to project',
-          tags: ['Project Member'],
+          summary: 'Create invite',
+          description: 'The project participant creates an invitation to the user',
+          tags: ['Project Invite'],
           params: {
             projectId: memberSchemas.properties.projectId
           },
