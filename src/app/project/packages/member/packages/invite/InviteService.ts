@@ -6,10 +6,13 @@ import {RoleService} from 'app/project/packages/role/RoleService'
 import {
   InviteAcceptedError,
   InviteCancelledError,
-  InviteRejectedError,
   InviteNotExistsError,
-  SomeoneElseInvitationError, SomeoneElseProjectInvitationError,
-  UnknownFailedAcceptInviteError, UnknownFailedCancelInviteError, UnknownFailedRejectInviteError
+  InviteRejectedError,
+  SomeoneElseInvitationError,
+  SomeoneElseProjectInvitationError,
+  UnknownFailedAcceptInviteError,
+  UnknownFailedCancelInviteError,
+  UnknownFailedRejectInviteError
 } from './invite-error'
 import {InviteStatus} from './InviteStatus'
 import {PageOptions} from '../../../../../../core/repository/IBaseRepository'
@@ -35,18 +38,16 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
       await this.roleService.existsRole(projectId, roleId)
     }
 
-    const invite = await this.create(
+    return await this.create(
       {
         projectId: new Types.ObjectId(projectId),
         userId: new Types.ObjectId(userId),
         roleId: roleId ? new Types.ObjectId(roleId) : null
       }
     )
-
-    return invite
   }
 
-  private getInviteStatusError(invite: IInvite, DefaultError: typeof BaseError) {
+  private static getInviteStatusError(invite: IInvite, DefaultError: typeof BaseError) {
     switch (invite.status) {
       case InviteStatus.ACCEPTED:
         return new InviteAcceptedError()
@@ -68,7 +69,7 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     if (invite.userId.toHexString() !== String(userId)) {
       throw new SomeoneElseInvitationError()
     }
-    throw this.getInviteStatusError(invite, UnknownFailedAcceptInviteError)
+    throw InviteService.getInviteStatusError(invite, UnknownFailedAcceptInviteError)
   }
 
   async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string): Promise<IInvite> {
@@ -80,7 +81,7 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     if (invite.projectId.toHexString() !== String(projectId)) {
       throw new SomeoneElseProjectInvitationError()
     }
-    throw this.getInviteStatusError(invite, UnknownFailedCancelInviteError)
+    throw InviteService.getInviteStatusError(invite, UnknownFailedCancelInviteError)
   }
 
   async findProjectsByUserInvites(userId: Types.ObjectId | string, page: PageOptions) {
@@ -96,6 +97,6 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     if (invite.userId.toHexString() !== String(userId)) {
       throw new SomeoneElseInvitationError({message: 'You can\'t reject someone else\'s invitation'})
     }
-    throw this.getInviteStatusError(invite, UnknownFailedRejectInviteError)
+    throw InviteService.getInviteStatusError(invite, UnknownFailedRejectInviteError)
   }
 }
