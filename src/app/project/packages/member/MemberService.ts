@@ -120,4 +120,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     const invite = await this.inviteService.rejectInvite(inviteId, userId)
     await this.repository.changeMemberStatus(invite.projectId, userId, MemberStatus.REJECTED)
   }
+
+  async blockMember(projectId: string, memberId: string) {
+  }
 }
