@@ -221,4 +221,20 @@ export class InviteRepository extends BaseRepository<IInvite> {
 
     return new DataList<ExpandProjectPreview>(total, Math.ceil(total / page.limit), data)
   }
+
+  async rejectInvite(inviteId: string, userId: string | Types.ObjectId) {
+    return this.findOneAndUpdate(
+      {
+        _id: new Types.ObjectId(inviteId),
+        userId: new Types.ObjectId(userId),
+        status: InviteStatus.NEW
+      },
+      {
+        status: InviteStatus.REJECTED
+      },
+      {
+        new: true
+      }
+    )
+  }
 }

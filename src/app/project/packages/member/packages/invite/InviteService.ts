@@ -6,13 +6,14 @@ import {RoleService} from 'app/project/packages/role/RoleService'
 import {
   InviteAcceptedError,
   InviteCancelledError,
-  InviteDeclinedError,
+  InviteRejectedError,
   InviteNotExistsError,
   SomeoneElseInvitationError, SomeoneElseProjectInvitationError,
-  UnknownFailedAcceptInviteError, UnknownFailedCancelInviteError
+  UnknownFailedAcceptInviteError, UnknownFailedCancelInviteError, UnknownFailedRejectInviteError
 } from './invite-error'
 import {InviteStatus} from './InviteStatus'
 import {PageOptions} from '../../../../../../core/repository/IBaseRepository'
+import {BaseError} from 'openapi-error'
 
 
 export class InviteService extends BaseService<IInvite, InviteRepository> {
@@ -45,6 +46,19 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     return invite
   }
 
+  private getInviteStatusError(invite: IInvite, DefaultError: typeof BaseError) {
+    switch (invite.status) {
+      case InviteStatus.ACCEPTED:
+        return new InviteAcceptedError()
+      case InviteStatus.REJECTED:
+        return new InviteRejectedError()
+      case InviteStatus.CANCELLED:
+        return new InviteCancelledError()
+      default:
+        return new DefaultError()
+    }
+  }
+
   async acceptInvite(inviteId: Types.ObjectId | string, userId: Types.ObjectId | string): Promise<IInvite> {
     let invite = await this.repository.acceptInvite(inviteId, userId)
     if (invite !== null) {
@@ -53,15 +67,8 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     invite = await this.findById(inviteId)
     if (invite.userId.toHexString() !== String(userId)) {
       throw new SomeoneElseInvitationError()
-    } else if (invite.status === InviteStatus.ACCEPTED) {
-      throw new InviteAcceptedError()
-    } else if (invite.status === InviteStatus.DECLINED) {
-      throw new InviteDeclinedError()
-    } else if (invite.status === InviteStatus.CANCELLED) {
-      throw new InviteCancelledError()
-    } else {
-      throw new UnknownFailedAcceptInviteError()
     }
+    throw this.getInviteStatusError(invite, UnknownFailedAcceptInviteError)
   }
 
   async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string): Promise<IInvite> {
@@ -72,18 +79,23 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     invite = await this.findById(inviteId)
     if (invite.projectId.toHexString() !== String(projectId)) {
       throw new SomeoneElseProjectInvitationError()
-    } else if (invite.status === InviteStatus.CANCELLED) {
-      throw new InviteCancelledError()
-    } else if (invite.status === InviteStatus.DECLINED) {
-      throw new InviteDeclinedError()
-    } else if (invite.status === InviteStatus.ACCEPTED) {
-      throw new InviteAcceptedError()
-    } else {
-      throw new UnknownFailedCancelInviteError()
     }
+    throw this.getInviteStatusError(invite, UnknownFailedCancelInviteError)
   }
 
   async findProjectsByUserInvites(userId: Types.ObjectId | string, page: PageOptions) {
     return this.repository.findProjectsByUserInvites(userId, page)
+  }
+
+  async rejectInvite(inviteId: string, userId: string | Types.ObjectId) {
+    let invite = await this.repository.rejectInvite(inviteId, userId)
+    if (invite !== null) {
+      return invite
+    }
+    invite = await this.findById(inviteId)
+    if (invite.userId.toHexString() !== String(userId)) {
+      throw new SomeoneElseInvitationError({message: 'You can\'t reject someone else\'s invitation'})
+    }
+    throw this.getInviteStatusError(invite, UnknownFailedRejectInviteError)
   }
 }

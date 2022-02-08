@@ -4,7 +4,7 @@ import {BadRequest, MessageResponse} from 'common/schemas/response'
 import {
   InviteAcceptedError,
   InviteCancelledError,
-  InviteDeclinedError,
+  InviteRejectedError,
   SomeoneElseProjectInvitationError
 } from '../packages/invite/invite-error'
 
@@ -35,7 +35,7 @@ export async function cancelInvite(fastify: FastifyInstance, {memberService, mem
             [400]: new BadRequest(
               SomeoneElseProjectInvitationError.schema(),
               InviteCancelledError.schema(),
-              InviteDeclinedError.schema(),
+              InviteRejectedError.schema(),
               InviteAcceptedError.schema()
             ).paramsErrors()
           }

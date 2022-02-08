@@ -29,7 +29,7 @@ export const MemberNotExistsError = EntityNotExistsError.extends(
   }
 )
 
-export const FailedAcceptInvite = InternalError.extends(
+export const FailedAcceptInviteError = InternalError.extends(
   {},
   {
     code: 3102

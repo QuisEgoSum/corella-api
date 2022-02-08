@@ -100,7 +100,7 @@ export class MemberRepository extends BaseRepository<IMember> {
     ) as unknown as Promise<DataList<PopulatedMember>>
   }
 
-  async fromToChangeMembersRole(projectId: Types.ObjectId | string, fromRoleId: Types.ObjectId | string, toRoleId: Types.ObjectId | string) {
+  async changeMembersRoleFrom(projectId: Types.ObjectId | string, fromRoleId: Types.ObjectId | string, toRoleId: Types.ObjectId | string) {
     return this.Model
       .updateMany(
         {
@@ -127,20 +127,7 @@ export class MemberRepository extends BaseRepository<IMember> {
       .then(member => member ? member.status : null)
   }
 
-  async invitedMemberToParticipant(projectId: Types.ObjectId, userId: Types.ObjectId) {
-    return this.Model
-      .updateOne(
-        {
-          projectId: projectId,
-          userId: userId
-        },
-        {
-          status: MemberStatus.PARTICIPANT
-        }
-      )
-  }
-
-  async blockMemberByUserId(projectId: Types.ObjectId | string, userId: Types.ObjectId) {
+  async changeMemberStatus(projectId: string | Types.ObjectId, userId: string | Types.ObjectId, status: MemberStatus) {
     return this.Model
       .updateOne(
         {
@@ -148,7 +135,7 @@ export class MemberRepository extends BaseRepository<IMember> {
           userId: new Types.ObjectId(userId)
         },
         {
-          status: MemberStatus.BLOCKED
+          status: status
         }
       )
   }
