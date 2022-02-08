@@ -139,4 +139,8 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
       throw new this.Error.EntityNotExistsError()
     }
   }
+
+  async existsById(id: string | Types.ObjectId): Promise<void> {
+    await this.findById(id, {_id: 1})
+  }
 }
