@@ -19,11 +19,11 @@ export const InviteAcceptedError = InvalidDataError.extends(
   }
 )
 
-export const InviteDeclinedError = InvalidDataError.extends(
+export const InviteRejectedError = InvalidDataError.extends(
   {},
   {
-    error: 'InviteDeclinedError',
-    message: 'This invitation has already been declined',
+    error: 'InviteRejectedError',
+    message: 'This invitation has already been rejected',
     code: 3302
   }
 )
@@ -45,10 +45,20 @@ export const UnknownFailedAcceptInviteError = InternalError.extends(
 )
 
 export const SomeoneElseInvitationError = AccessError.extends(
-  {},
+  {
+    properties: {
+      message: {
+        type: 'string',
+        default: 'You can\'t accept someone else\'s invitation',
+        enum: [
+          'You can\'t accept someone else\'s invitation',
+          'You can\'t reject someone else\'s invitation'
+        ]
+      }
+    }
+  },
   {
     error: 'SomeoneElseInvitationError',
-    message: 'You can\'t accept someone else\'s invitation',
     code: 3305
   }
 )
@@ -66,5 +76,12 @@ export const SomeoneElseProjectInvitationError = InvalidDataError.extends(
     error: 'SomeoneElseProjectInvitationError',
     message: 'The invitation belongs to another project',
     code: 3307
+  }
+)
+
+export const UnknownFailedRejectInviteError = InternalError.extends(
+  {},
+  {
+    code: 3308
   }
 )

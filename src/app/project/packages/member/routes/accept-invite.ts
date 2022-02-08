@@ -1,10 +1,10 @@
 import {FastifyInstance} from 'fastify'
 import {MemberRouteOptions} from './index'
-import {BadRequest, MessageResponse} from 'common/schemas/response'
+import {BadRequest, Forbidden, MessageResponse} from 'common/schemas/response'
 import {
   InviteAcceptedError,
   InviteCancelledError,
-  InviteDeclinedError,
+  InviteRejectedError,
   SomeoneElseInvitationError
 } from '../packages/invite/invite-error'
 
@@ -31,11 +31,11 @@ export async function acceptInvite(fastify: FastifyInstance, {memberService, inv
           response: {
             [200]: new MessageResponse('The invitation was successfully accepted'),
             [400]: new BadRequest(
-              SomeoneElseInvitationError.schema(),
               InviteAcceptedError.schema(),
-              InviteDeclinedError.schema(),
+              InviteRejectedError.schema(),
               InviteCancelledError.schema()
-            )
+            ),
+            [403]: new Forbidden(SomeoneElseInvitationError.schema())
           }
         },
         security: {

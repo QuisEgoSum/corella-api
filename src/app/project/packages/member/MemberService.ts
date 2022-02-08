@@ -2,7 +2,7 @@ import {BaseService} from 'core/service'
 import {IMember} from './MemberModel'
 import {MemberRepository} from './MemberRepository'
 import {Types} from 'mongoose'
-import {FailedAcceptInvite, MemberExistsError, MemberNotExistsError} from './member-error'
+import {FailedAcceptInviteError, MemberExistsError, MemberNotExistsError} from './member-error'
 import {InviteService} from './packages/invite/InviteService'
 import {MemberStatus} from './MemberStatus'
 import {RoleService} from '../role/RoleService'
@@ -90,15 +90,15 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
 
   async acceptInvite(inviteId: Types.ObjectId | string, userId: Types.ObjectId | string) {
     const invite = await this.inviteService.acceptInvite(inviteId, userId)
-    const result = await this.repository.invitedMemberToParticipant(invite.projectId, invite.userId)
+    const result = await this.repository.changeMemberStatus(invite.projectId, invite.userId, MemberStatus.PARTICIPANT)
     if (!result.modifiedCount) {
-      throw new FailedAcceptInvite()
+      throw new FailedAcceptInviteError()
     }
   }
 
   async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string) {
     const invite = await this.inviteService.cancelInvite(projectId, inviteId)
-    await this.repository.blockMemberByUserId(projectId, invite.userId)
+    await this.repository.changeMemberStatus(invite.projectId, invite.userId, MemberStatus.BLOCKED)
     this.events.emit('CANCEL_INVITE', invite.projectId, invite.userId)
   }
 
@@ -106,51 +106,18 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     return this.inviteService.findProjectsByUserInvites(userId, page)
   }
 
-  // async blockMember(
-  //   projectId: Types.ObjectId | string,
-  //   userId: Types.ObjectId | string
-  // ) {
-  //   return this.findOneAndUpdate(
-  //     {
-  //       projectId: new Types.ObjectId(projectId),
-  //       userId: new Types.ObjectId(userId)
-  //     },
-  //     {
-  //       status: MemberStatus.BLOCKED
-  //     },
-  //     {
-  //       new: true
-  //     }
-  //   )
-  // }
-
-  // async changeMemberRole(
-  //   projectId: Types.ObjectId | string,
-  //   userId: Types.ObjectId | string,
-  //   roleId: Types.ObjectId | string
-  // ) {
-  //   await this.roleService.existsRole(projectId, roleId)
-  //   return this.findOneAndUpdate(
-  //     {
-  //       projectId: new Types.ObjectId(projectId),
-  //       userId: new Types.ObjectId(userId)
-  //     },
-  //     {
-  //       roleId: new Types.ObjectId(roleId)
-  //     },
-  //     {
-  //       new: true
-  //     }
-  //   )
-  // }
-
   async findProjectMembers(projectId: string | Types.ObjectId, query: PageOptions): Promise<DataList<MemberDto>> {
     const list = await this.repository.findProjectMembers(new Types.ObjectId(projectId), query)
     const members = list.data.map(member => new MemberDto(member))
     return new DataList(list.total, list.pages, members)
   }
 
-  async fromToChangeMembersRole(projectId: Types.ObjectId | string, fromRoleId: Types.ObjectId | string, toRoleId: Types.ObjectId | string) {
-    await this.repository.fromToChangeMembersRole(projectId, fromRoleId, toRoleId)
+  async changeMembersRoleFrom(projectId: Types.ObjectId | string, fromRoleId: Types.ObjectId | string, toRoleId: Types.ObjectId | string) {
+    await this.repository.changeMembersRoleFrom(projectId, fromRoleId, toRoleId)
+  }
+
+  async rejectInvite(inviteId: string, userId: string | Types.ObjectId) {
+    const invite = await this.inviteService.rejectInvite(inviteId, userId)
+    await this.repository.changeMemberStatus(invite.projectId, userId, MemberStatus.REJECTED)
   }
 }
