@@ -48,7 +48,7 @@ export class Member {
 export const events = new MemberEvents()
 
 export async function initMember(User: UserPkg, Role: RolePkg) {
-  const Invite = await initInvite(Role)
+  const Invite = await initInvite()
   const service = new MemberService(new MemberRepository(MemberModel), events, Invite.service, Role.service, User)
 
   return new Member(service, events, Invite, User, Role)

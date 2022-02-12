@@ -15,34 +15,24 @@ import {
   UnknownFailedRejectInviteError
 } from './invite-error'
 import {InviteStatus} from './InviteStatus'
-import {PageOptions} from '../../../../../../core/repository/IBaseRepository'
+import {PageOptions} from 'core/repository/IBaseRepository'
 import {BaseError} from 'openapi-error'
 
 
 export class InviteService extends BaseService<IInvite, InviteRepository> {
-  private roleService: RoleService
-
   constructor(
-    inviteRepository: InviteRepository,
-    roleService: RoleService,
+    inviteRepository: InviteRepository
   ) {
     super(inviteRepository)
-
-    this.roleService = roleService
 
     this.Error.EntityNotExistsError = InviteNotExistsError
   }
 
   async createInvite(projectId: Types.ObjectId | string, userId: Types.ObjectId | string, roleId?: Types.ObjectId | string) {
-    if (roleId) {
-      await this.roleService.existsRole(projectId, roleId)
-    }
-
     return await this.create(
       {
         projectId: new Types.ObjectId(projectId),
-        userId: new Types.ObjectId(userId),
-        roleId: roleId ? new Types.ObjectId(roleId) : null
+        userId: new Types.ObjectId(userId)
       }
     )
   }

@@ -77,18 +77,15 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
       }
     }
 
-    await this.inviteService.createInvite(projectId, userId, roleId)
+    await this.inviteService.createInvite(projectId, userId)
 
     const member = await this.repository.upsertMember(
       {
         projectId: new Types.ObjectId(projectId),
         userId: new Types.ObjectId(userId),
-        roleId: new Types.ObjectId(roleId),
         status: MemberStatus.INVITED
       }
     )
-
-    // this.events.emit('INVITE_MEMBER', new Types.ObjectId(projectId), member.userId._id)
 
     return new MemberDto(member)
   }
@@ -120,6 +117,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
 
   async changeMembersRoleFrom(projectId: Types.ObjectId | string, fromRoleId: Types.ObjectId | string, toRoleId: Types.ObjectId | string) {
     await this.repository.changeMembersRoleFrom(projectId, fromRoleId, toRoleId)
+    //TODO: Change invite role if invite status NEW
   }
 
   async rejectInvite(inviteId: string, userId: string | Types.ObjectId) {
@@ -135,5 +133,14 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     }
     await this.existsById(memberId)
     throw new BlockingNonParticipantError()
+  }
+
+  async changeMemberRole(projectId: string, memberId: string, roleId: string) {
+    await this.roleService.existsRole(projectId, roleId)
+    // const member = await this.repository.updateMemberRole(projectId, memberId, roleId)
+    // if (member === null) {
+    //   throw new this.Error.EntityNotExistsError()
+    // }
+
   }
 }

@@ -6,7 +6,6 @@ export interface IInvite {
   _id: Types.ObjectId,
   userId: Types.ObjectId,
   projectId: Types.ObjectId,
-  roleId: Types.ObjectId | null,
   status: InviteStatus,
   expiresAt?: number,
   createdAt: number
@@ -22,10 +21,6 @@ const InviteSchema = new Schema<IInvite>(
     projectId: {
       type: Schema.Types.ObjectId,
       ref: 'Project'
-    },
-    roleId: {
-      type: Schema.Types.ObjectId,
-      ref: 'ProjectRole'
     },
     status: {
       type: String,

@@ -15,6 +15,6 @@ export class Invite {
 }
 
 
-export async function initInvite(Role: RolePkg) {
-  return new Invite(new InviteService(new InviteRepository(InviteModel), Role.service))
+export async function initInvite() {
+  return new Invite(new InviteService(new InviteRepository(InviteModel)))
 }
