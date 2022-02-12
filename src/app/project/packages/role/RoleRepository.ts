@@ -1,6 +1,6 @@
-import {BaseRepository} from 'core/repository'
+import {BaseRepository} from '@core/repository'
 import {IRole, RoleModel} from './RoleModel'
-import {PageOptions} from 'core/repository/IBaseRepository'
+import {PageOptions} from '@core/repository/IBaseRepository'
 import {Types} from 'mongoose'
 import {UpdateRole} from './schemas/entities'
 

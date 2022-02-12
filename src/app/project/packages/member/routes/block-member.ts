@@ -1,6 +1,6 @@
 import {FastifyInstance} from 'fastify'
 import {MemberRouteOptions} from './index'
-import {MessageResponse} from 'common/schemas/response'
+import {MessageResponse} from '@common/schemas/response'
 
 
 export interface BlockMemberRequest {

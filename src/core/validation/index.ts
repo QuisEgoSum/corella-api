@@ -1,7 +1,7 @@
 import Ajv from 'ajv'
 import ajvErrors from 'ajv-errors'
 import ajvKeywords from 'ajv-keywords'
-import {JsonSchemaValidationErrors, JsonSchemaValidationError} from 'core/error'
+import {JsonSchemaValidationErrors, JsonSchemaValidationError} from '@core/error'
 import emailValidator from 'email-validator'
 
 

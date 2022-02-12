@@ -1,9 +1,9 @@
-import {BaseRepository} from 'core/repository'
+import {BaseRepository} from '@core/repository'
 import type {ISession, SessionModel} from './SessionModel'
 import {Types} from 'mongoose'
 import {config} from '@config'
-import type {UserRole} from 'app/user/UserRole'
-import type {IUser} from 'app/user/UserModel'
+import type {UserRole} from '@app/user/UserRole'
+import type {IUser} from '@app/user/UserModel'
 
 
 export class SessionRepository extends BaseRepository<ISession> {

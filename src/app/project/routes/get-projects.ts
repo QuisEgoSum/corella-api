@@ -1,7 +1,7 @@
 import {FastifyInstance} from 'fastify'
 import {ProjectRouteOptions} from './index'
-import {BadRequestNoBody, DataList} from 'common/schemas/response'
-import {QueryPageLimit, QueryPageNumber} from 'common/schemas/query'
+import {BadRequestNoBody, DataList} from '@common/schemas/response'
+import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
 
 
 interface GetProjectsRequest {

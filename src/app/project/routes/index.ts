@@ -1,11 +1,11 @@
-import {loadRoutes} from 'utils/loader'
+import {loadRoutes} from '@utils/loader'
 import type {FastifyInstance} from 'fastify'
 import type {ProjectService} from '../ProjectService'
 
 
 export interface ProjectRouteOptions {
   projectService: ProjectService,
-  projectSchemas: typeof import('app/project/schemas')
+  projectSchemas: typeof import('@app/project/schemas')
 }
 
 

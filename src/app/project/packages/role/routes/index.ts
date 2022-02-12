@@ -1,11 +1,11 @@
-import {loadRoutes} from 'utils/loader'
+import {loadRoutes} from '@utils/loader'
 import type {FastifyInstance} from 'fastify'
 import type {RoleService} from '../RoleService'
 
 
 export interface RoleRouteOptions {
   roleService: RoleService,
-  roleSchemas: typeof import('app/project/packages/role/schemas')
+  roleSchemas: typeof import('@app/project/packages/role/schemas')
 }
 
 

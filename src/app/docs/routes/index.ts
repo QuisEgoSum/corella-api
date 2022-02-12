@@ -1,4 +1,4 @@
-import {loadRoutes} from 'utils/loader'
+import {loadRoutes} from '@utils/loader'
 import type {FastifyInstance} from 'fastify'
 
 

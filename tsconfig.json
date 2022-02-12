@@ -99,11 +99,11 @@
     "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
     "baseUrl": "src",
     "paths": {
-      "common": ["common"],
-      "core": ["core"],
-      "app": ["app"],
-      "utils": ["utils"],
-      "libs": ["libs"],
+      "@common/*": ["common/*"],
+      "@core/*": ["core/*"],
+      "@app/*": ["app/*"],
+      "@utils/*": ["utils/*"],
+      "@libs/*": ["libs/*"],
       "@config": ["core/config"],
       "@logger": ["core/logger"],
       "@error": ["core/error"]

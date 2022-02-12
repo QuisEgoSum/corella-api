@@ -1,6 +1,6 @@
 import {_id, avatar, createdAt, email, mEmail, fEmail, mUsername, password, role, updatedAt, username} from './properties'
 import {UserRole} from '../UserRole'
-import {QueryPageLimit, QueryPageNumber, QuerySortDirection} from 'common/schemas/query'
+import {QueryPageLimit, QueryPageNumber, QuerySortDirection} from '@common/schemas/query'
 import type {SortDirection} from 'mongodb'
 import {Types} from 'mongoose'
 

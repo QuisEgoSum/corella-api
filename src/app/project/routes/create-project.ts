@@ -1,4 +1,4 @@
-import {BadRequest} from 'common/schemas/response'
+import {BadRequest} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
 import type {CreateProject} from '../schemas/entities'
 import type {ProjectRouteOptions} from './index'

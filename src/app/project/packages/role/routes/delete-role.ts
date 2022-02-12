@@ -1,6 +1,6 @@
 import {FastifyInstance} from 'fastify'
 import {RoleRouteOptions} from './index'
-import {Forbidden, MessageResponse, NotFound} from 'common/schemas/response'
+import {Forbidden, MessageResponse, NotFound} from '@common/schemas/response'
 import {RoleNotExistsError, UnableDeleteRoleError} from '../role-error'
 
 

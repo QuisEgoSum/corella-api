@@ -2,7 +2,7 @@ import {ConfigEntity} from './ConfigEntity'
 import YAML from 'yaml'
 import fs from 'fs'
 import path from 'path'
-import {object} from 'libs/alg'
+import {object} from '@libs/alg'
 import {validation} from './validation'
 import {assignEnvValues, createEnvListBySchema} from './env'
 

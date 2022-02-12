@@ -1,5 +1,5 @@
 import {BaseError} from 'openapi-error'
-import {InternalError, InvalidJsonStructureError, RequestHandlingError} from 'core/error'
+import {InternalError, InvalidJsonStructureError, RequestHandlingError} from '@core/error'
 import type {FastifyError, FastifyReply, FastifyRequest} from 'fastify'
 
 

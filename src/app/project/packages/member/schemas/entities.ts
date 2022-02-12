@@ -1,6 +1,6 @@
-import {_id, projectId, roleId, userId, status, createdAt, updatedAt} from './properties'
-import * as user from 'app/user/schemas/properties'
-import * as role from 'app/project/packages/role/schemas/properties'
+import {_id, roleId, userId, status, createdAt} from './properties'
+import * as user from '@app/user/schemas/properties'
+import * as role from '@app/project/packages/role/schemas/properties'
 import {Types} from 'mongoose'
 import {MemberStatus} from '../MemberStatus'
 

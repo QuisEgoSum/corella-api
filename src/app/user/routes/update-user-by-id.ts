@@ -1,5 +1,5 @@
 import {UserNotExistsError} from '../user-error'
-import {BadRequest, NotFound} from 'common/schemas/response'
+import {BadRequest, NotFound} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
 import type {UpdateUserById} from '../schemas/entities'
 import type {UserRoutesOptions} from './index'

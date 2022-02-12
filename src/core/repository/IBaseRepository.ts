@@ -6,7 +6,7 @@ import type {
   UpdateWithAggregationPipeline,
   UpdateWriteOpResult
 } from 'mongoose'
-import type {DataList} from 'common/data'
+import type {DataList} from '@common/data'
 import type mongoose from 'mongoose'
 import type {ReturnsNewDoc} from 'mongoose'
 import type {BulkWriteOptions, BulkWriteResult, AnyBulkWriteOperation} from 'mongodb'

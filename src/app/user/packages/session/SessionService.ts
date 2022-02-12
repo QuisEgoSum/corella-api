@@ -1,4 +1,4 @@
-import {BaseService} from 'core/service'
+import {BaseService} from '@core/service'
 import {ISession} from './SessionModel'
 import {SessionRepository} from './SessionRepository'
 import {Types} from 'mongoose'

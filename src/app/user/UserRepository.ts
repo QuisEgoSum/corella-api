@@ -1,4 +1,4 @@
-import {BaseRepository} from 'core/repository/BaseRepository'
+import {BaseRepository} from '@core/repository/BaseRepository'
 import type {UserModel} from './UserModel'
 import type {IUser} from './UserModel'
 

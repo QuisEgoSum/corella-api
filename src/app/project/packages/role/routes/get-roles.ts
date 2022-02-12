@@ -1,7 +1,7 @@
 import type {FastifyInstance} from 'fastify'
 import type {RoleRouteOptions} from './index'
-import {BadRequestNoBody, DataList} from 'common/schemas/response'
-import {QueryPageLimit, QueryPageNumber} from 'common/schemas/query'
+import {BadRequestNoBody, DataList} from '@common/schemas/response'
+import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
 
 
 interface GetRolesRequest {

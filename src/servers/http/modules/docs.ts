@@ -1,6 +1,6 @@
 import type {RouteOptions} from 'fastify'
-import type {Project} from 'app/project'
-import {ErrorResponse, UserForbidden, Unauthorized, BadRequest, NotFound} from 'common/schemas/response'
+import type {Project} from '@app/project'
+import {ErrorResponse, UserForbidden, Unauthorized, BadRequest, NotFound} from '@common/schemas/response'
 import {RequestHandlingError} from '@error'
 
 

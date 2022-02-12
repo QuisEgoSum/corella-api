@@ -1,7 +1,6 @@
 import {ProjectModel} from './ProjectModel'
 import {ProjectRepository} from './ProjectRepository'
 import {ProjectService} from './ProjectService'
-import {RolePermission} from './packages/role/RolePermission'
 import {initRole, Role as RolePkg} from './packages/role'
 import {initTask, Task as TaskPkg} from './packages/task'
 import {initMember, Member as MemberPkg} from './packages/member'
@@ -9,7 +8,7 @@ import {FastifyInstance} from 'fastify'
 import {routes} from './routes'
 import * as schemas from './schemas'
 import * as errors from './project-error'
-import type {User as UserPkg} from 'app/user'
+import type {User as UserPkg} from '@app/user'
 import {addEventsListeners} from './project-events-listeners'
 
 
@@ -65,9 +64,4 @@ export async function initProject(User: UserPkg) {
     Role,
     Member
   )
-}
-
-
-export {
-  RolePermission
 }

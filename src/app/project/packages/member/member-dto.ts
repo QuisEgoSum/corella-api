@@ -5,7 +5,7 @@ import {MemberStatus} from './MemberStatus'
 
 export class MemberDto {
   private _id: Types.ObjectId
-  private status: MemberStatus
+  private readonly status: MemberStatus
   private user: {_id: Types.ObjectId; username: string; email: string | null; avatar: string}
   private role: {_id: Types.ObjectId; name: string}
   private createdAt: number

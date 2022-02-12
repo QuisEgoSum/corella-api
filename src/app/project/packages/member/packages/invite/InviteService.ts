@@ -1,8 +1,7 @@
-import {BaseService} from 'core/service'
+import {BaseService} from '@core/service'
 import {IInvite} from './InviteModel'
 import {InviteRepository} from './InviteRepository'
 import {Types} from 'mongoose'
-import {RoleService} from 'app/project/packages/role/RoleService'
 import {
   InviteAcceptedError,
   InviteCancelledError,
@@ -15,7 +14,7 @@ import {
   UnknownFailedRejectInviteError
 } from './invite-error'
 import {InviteStatus} from './InviteStatus'
-import {PageOptions} from 'core/repository/IBaseRepository'
+import {PageOptions} from '@core/repository/IBaseRepository'
 import {BaseError} from 'openapi-error'
 
 
@@ -28,7 +27,7 @@ export class InviteService extends BaseService<IInvite, InviteRepository> {
     this.Error.EntityNotExistsError = InviteNotExistsError
   }
 
-  async createInvite(projectId: Types.ObjectId | string, userId: Types.ObjectId | string, roleId?: Types.ObjectId | string) {
+  async createInvite(projectId: Types.ObjectId | string, userId: Types.ObjectId | string) {
     return await this.create(
       {
         projectId: new Types.ObjectId(projectId),

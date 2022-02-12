@@ -1,14 +1,14 @@
-import {loadRoutes} from 'utils/loader'
+import {loadRoutes} from '@utils/loader'
 import type {FastifyInstance} from 'fastify'
 import type {MemberService} from '../MemberService'
 
 
 export interface MemberRouteOptions {
   memberService: MemberService,
-  memberSchemas: typeof import('app/project/packages/member/schemas'),
-  roleError: typeof import('app/project/packages/role/role-error'),
-  userError: typeof import('app/user/user-error'),
-  inviteSchemas: typeof import('app/project/packages/member/packages/invite/schemas')
+  memberSchemas: typeof import('@app/project/packages/member/schemas'),
+  roleError: typeof import('@app/project/packages/role/role-error'),
+  userError: typeof import('@app/user/user-error'),
+  inviteSchemas: typeof import('@app/project/packages/member/packages/invite/schemas')
 }
 
 

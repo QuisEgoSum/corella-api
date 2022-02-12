@@ -1,4 +1,4 @@
-import {ObjectId, Timestamp} from 'common/schemas/helpers'
+import {ObjectId, Timestamp} from '@common/schemas/helpers'
 import {UserRole} from '../UserRole'
 import {v4} from 'uuid'
 
