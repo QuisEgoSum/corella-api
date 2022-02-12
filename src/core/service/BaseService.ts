@@ -1,5 +1,5 @@
-import {BaseRepository, BaseRepositoryError} from 'core/repository'
-import {EntityExistsError, EntityNotExistsError, NoDataForUpdatingError} from 'core/error'
+import {BaseRepository, BaseRepositoryError} from '@core/repository'
+import {EntityExistsError, EntityNotExistsError, NoDataForUpdatingError} from '@core/error'
 import type {IBaseService} from './IBaseService'
 import type {
   Types,

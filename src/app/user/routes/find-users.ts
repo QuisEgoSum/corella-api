@@ -1,4 +1,4 @@
-import {BadRequestNoBody, DataList} from 'common/schemas/response'
+import {BadRequestNoBody, DataList} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
 import type {FindUsersQuery} from '../schemas/entities'
 import type {UserRoutesOptions} from './index'

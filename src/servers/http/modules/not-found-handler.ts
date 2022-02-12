@@ -1,4 +1,4 @@
-import {RouteNotFoundError} from 'core/error'
+import {RouteNotFoundError} from '@core/error'
 import {FastifyReply, FastifyRequest} from 'fastify'
 
 

@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import {BaseRepositoryError} from './BaseRepositoryError'
-import {DataList} from 'common/data'
+import {DataList} from '@common/data'
 import type {IBaseRepository} from './IBaseRepository'
 import type {
   FilterQuery,

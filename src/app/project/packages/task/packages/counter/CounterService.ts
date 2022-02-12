@@ -1,4 +1,4 @@
-import {BaseService} from 'core/service'
+import {BaseService} from '@core/service'
 import {ICounter} from './CounterModel'
 import {CounterRepository} from './CounterRepository'
 import {Types} from 'mongoose'

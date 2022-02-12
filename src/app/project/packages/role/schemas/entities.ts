@@ -1,4 +1,4 @@
-import {_id, name, permissions, projectId, allowedEdit, createdAt, updatedAt} from './properties'
+import {_id, name, permissions, allowedEdit, createdAt, updatedAt} from './properties'
 import {RolePermission} from '../RolePermission'
 
 

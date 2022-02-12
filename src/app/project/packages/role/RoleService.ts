@@ -1,4 +1,4 @@
-import {BaseService} from 'core/service'
+import {BaseService} from '@core/service'
 import {IRole} from './RoleModel'
 import {RoleRepository} from './RoleRepository'
 import {Types} from 'mongoose'
@@ -10,7 +10,7 @@ import {
   UnableDeleteRoleError,
   UnableUpdateRoleError
 } from './role-error'
-import {PageOptions} from 'core/repository/IBaseRepository'
+import {PageOptions} from '@core/repository/IBaseRepository'
 import {RoleEvents} from './RoleEvents'
 
 

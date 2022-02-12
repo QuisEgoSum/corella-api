@@ -1,9 +1,9 @@
-import {BaseRepository} from 'core/repository'
+import {BaseRepository} from '@core/repository'
 import {IMember, MemberModel} from './MemberModel'
 import {PopulateOptions, Types} from 'mongoose'
 import {MemberStatus} from './MemberStatus'
-import {PageOptions} from 'core/repository/IBaseRepository'
-import {DataList} from 'common/data'
+import {PageOptions} from '@core/repository/IBaseRepository'
+import {DataList} from '@common/data'
 
 
 export interface PopulatedMember {

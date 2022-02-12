@@ -1,10 +1,8 @@
 import {_id, createdAt, description, name, updatedAt} from './properties'
-import * as member from 'app/project/packages/member/schemas/properties'
-import * as invite from 'app/project/packages/member/packages/invite/schemas/properties'
-import * as role from 'app/project/packages/role/schemas/properties'
+import * as member from '@app/project/packages/member/schemas/properties'
+import * as role from '@app/project/packages/role/schemas/properties'
 import {Types} from 'mongoose'
 import {MemberStatus} from '../packages/member/MemberStatus'
-import {InviteStatus} from '../packages/member/packages/invite/InviteStatus'
 
 
 export interface CreateProject {

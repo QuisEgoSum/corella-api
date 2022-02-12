@@ -1,6 +1,6 @@
 import {InvalidJsonStructureError, JsonSchemaValidationErrors, NoDataForUpdatingError} from '@error'
 import {Schema} from 'openapi-error'
-import {UserAuthorizationError, UserRightsError} from 'app/user/user-error'
+import {UserAuthorizationError, UserRightsError} from '@app/user/user-error'
 
 
 export class MessageResponse {

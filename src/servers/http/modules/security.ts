@@ -1,6 +1,6 @@
 import {FastifyRequest, RouteOptions} from 'fastify'
-import type {UserSession} from 'app/user/packages/session/SessionModel'
-import type {User} from 'app/user'
+import type {UserSession} from '@app/user/packages/session/SessionModel'
+import type {User} from '@app/user'
 
 
 declare module 'fastify' {

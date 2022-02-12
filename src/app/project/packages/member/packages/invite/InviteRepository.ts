@@ -1,10 +1,10 @@
-import {BaseRepository} from 'core/repository'
+import {BaseRepository} from '@core/repository'
 import {IInvite, InviteModel} from './InviteModel'
 import {Types} from 'mongoose'
 import {InviteStatus} from './InviteStatus'
-import {PageOptions} from 'core/repository/IBaseRepository'
-import {DataList} from 'common/data'
-import {ExpandProjectPreview} from 'app/project/schemas/entities'
+import {PageOptions} from '@core/repository/IBaseRepository'
+import {DataList} from '@common/data'
+import {ExpandProjectPreview} from '@app/project/schemas/entities'
 
 
 export class InviteRepository extends BaseRepository<IInvite> {

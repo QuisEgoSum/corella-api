@@ -1,4 +1,4 @@
-import {Events} from 'common/events'
+import {Events} from '@common/events'
 import {Types} from 'mongoose'
 
 

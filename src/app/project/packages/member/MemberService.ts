@@ -1,4 +1,4 @@
-import {BaseService} from 'core/service'
+import {BaseService} from '@core/service'
 import {IMember} from './MemberModel'
 import {MemberRepository} from './MemberRepository'
 import {Types} from 'mongoose'
@@ -11,10 +11,10 @@ import {
 import {InviteService} from './packages/invite/InviteService'
 import {MemberStatus} from './MemberStatus'
 import {RoleService} from '../role/RoleService'
-import {User as UserPkg} from 'app/user'
+import {User as UserPkg} from '@app/user'
 import {MemberEvents} from './MemberEvents'
-import {PageOptions} from 'core/repository/IBaseRepository'
-import {DataList} from 'common/data'
+import {PageOptions} from '@core/repository/IBaseRepository'
+import {DataList} from '@common/data'
 import {MemberDto} from './member-dto'
 
 

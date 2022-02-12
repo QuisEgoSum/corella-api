@@ -2,7 +2,6 @@ import {InviteService} from './InviteService'
 import {InviteRepository} from './InviteRepository'
 import {InviteModel} from './InviteModel'
 import * as schemas from './schemas'
-import type {Role as RolePkg} from 'app/project/packages/role'
 
 
 export class Invite {

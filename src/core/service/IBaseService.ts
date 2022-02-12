@@ -5,8 +5,7 @@ import type {
   ReturnsNewDoc,
   Types,
   UpdateQuery,
-  UpdateWithAggregationPipeline,
-  UpdateWriteOpResult
+  UpdateWithAggregationPipeline
 } from 'mongoose'
 
 

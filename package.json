@@ -56,11 +56,11 @@
     "typescript": "^4.5.2"
   },
   "_moduleAliases": {
-    "common": "src/common",
-    "core": "src/core",
-    "app": "src/app",
-    "utils": "src/utils",
-    "libs": "src/libs",
+    "@common": "src/common",
+    "@core": "src/core",
+    "@app": "src/app",
+    "@utils": "src/utils",
+    "@libs": "src/libs",
     "@logger": "src/core/logger",
     "@config": "src/core/config",
     "@error": "src/core/error"

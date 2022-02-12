@@ -1,8 +1,6 @@
 import {MemberRouteOptions} from './index'
 import {FastifyInstance} from 'fastify'
-import {InviteMember} from '../schemas/entities'
-import {BadRequest, Forbidden, MessageResponse, NotFound} from 'common/schemas/response'
-import {MemberExistsError} from '../member-error'
+import {BadRequest, Forbidden, MessageResponse, NotFound} from '@common/schemas/response'
 import {
   InviteAcceptedError,
   InviteCancelledError,

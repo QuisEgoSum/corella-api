@@ -1,4 +1,4 @@
-import {AccessError, AuthorizationError, EntityExistsError, EntityNotExistsError, InvalidDataError} from 'core/error'
+import {AccessError, AuthorizationError, EntityExistsError, EntityNotExistsError, InvalidDataError} from '@core/error'
 
 
 export const UserAuthorizationError = AuthorizationError.extends(

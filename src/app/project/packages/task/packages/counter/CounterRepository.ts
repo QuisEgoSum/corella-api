@@ -1,4 +1,4 @@
-import {BaseRepository} from 'core/repository'
+import {BaseRepository} from '@core/repository'
 import {CounterModel, ICounter} from './CounterModel'
 import {Types} from 'mongoose'
 

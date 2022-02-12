@@ -1,7 +1,7 @@
 import {FastifyInstance} from 'fastify'
 import {MemberRouteOptions} from './index'
-import {QueryPageLimit, QueryPageNumber} from 'common/schemas/query'
-import {DataList} from 'common/schemas/response'
+import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
+import {DataList} from '@common/schemas/response'
 
 
 export interface FindInvitedProjectsRequest {

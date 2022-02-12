@@ -1,5 +1,5 @@
 import {Types} from 'mongoose'
-import {ExpandProjectPreview} from 'app/project/schemas/entities'
+import {ExpandProjectPreview} from '@app/project/schemas/entities'
 import {InviteStatus} from '../InviteStatus'
 import {_id, createdAt, status} from './properties'
 

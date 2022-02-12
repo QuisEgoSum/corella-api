@@ -1,11 +1,11 @@
-import {loadRoutes} from 'utils/loader'
-import type {UserService} from 'app/user/UserService'
+import {loadRoutes} from '@utils/loader'
+import type {UserService} from '@app/user/UserService'
 import type {FastifyInstance} from 'fastify'
 
 
 export interface UserRoutesOptions {
   userService: UserService,
-  userSchemas: typeof import('app/user/schemas')
+  userSchemas: typeof import('@app/user/schemas')
 }
 
 export async function routes(

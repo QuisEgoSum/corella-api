@@ -1,6 +1,6 @@
 import {FastifyInstance} from 'fastify'
 import {MemberRouteOptions} from './index'
-import {BadRequest, MessageResponse} from 'common/schemas/response'
+import {BadRequest, MessageResponse} from '@common/schemas/response'
 import {
   InviteAcceptedError,
   InviteCancelledError,
