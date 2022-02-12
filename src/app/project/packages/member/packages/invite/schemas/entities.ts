@@ -4,18 +4,6 @@ import {InviteStatus} from '../InviteStatus'
 import {_id, createdAt, status} from './properties'
 
 
-export interface InviteExpand {
-  _id: Types.ObjectId | string,
-  project: {
-    _id: Types.ObjectId | string,
-    name: string
-  },
-  role: null | {
-    _id: Types.ObjectId,
-    name: string
-  }
-}
-
 export interface InviteExpandProject {
   _id: Types.ObjectId,
   status: InviteStatus,

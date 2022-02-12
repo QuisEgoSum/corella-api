@@ -8,7 +8,9 @@ export class MessageResponse {
   private properties: Record<any, any>
   private additionalProperties: boolean
   private required: string[]
+  private description: string
   constructor(...messages: string[]) {
+    this.description = 'Response message'
     this.type = 'object'
     this.properties = {
       message: {
