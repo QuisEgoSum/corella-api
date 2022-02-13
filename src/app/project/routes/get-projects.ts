@@ -1,5 +1,5 @@
 import {FastifyInstance} from 'fastify'
-import {ProjectRouteOptions} from './index'
+import {ProjectRouteOptions} from '.'
 import {BadRequestNoBody, DataList} from '@common/schemas/response'
 import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
 

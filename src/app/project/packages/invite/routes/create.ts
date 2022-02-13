@@ -1,21 +1,23 @@
-import {MemberRouteOptions} from './index'
-import {FastifyInstance} from 'fastify'
-import {InviteMember} from '../schemas/entities'
+import {schemas as inviteSchemas} from '..'
+import {error as userError} from '@app/user'
+import {error as memberError, schemas as memberSchemas} from '@app/project/packages/member'
+import {error as roleError} from '@app/project/packages/role'
 import {BadRequest, NotFound} from '@common/schemas/response'
-import {MemberExistsError} from '../member-error'
+import type {FastifyInstance} from 'fastify'
+import type {InviteRouteOptions} from '@app/project/packages/invite/routes/index'
 
 
-export interface InviteMemberRequest {
+export interface CreateRequest {
   Params: {
     projectId: string
   },
-  Body: InviteMember
+  Body: inviteSchemas.entities.InviteMember
 }
 
 
-export async function inviteMember(fastify: FastifyInstance, {memberService, memberSchemas, roleError, userError}: MemberRouteOptions) {
+export async function create(fastify: FastifyInstance, inviteService: InviteRouteOptions) {
   return fastify
-    .route<InviteMemberRequest>(
+    .route<CreateRequest>(
       {
         url: '/project/:projectId/member/invite',
         method: 'POST',
@@ -24,9 +26,9 @@ export async function inviteMember(fastify: FastifyInstance, {memberService, mem
           description: 'The project participant creates an invitation to the user',
           tags: ['Project Invite'],
           params: {
-            projectId: memberSchemas.properties.projectId
+            projectId: inviteSchemas.properties.projectId
           },
-          body: memberSchemas.entities.InviteMember,
+          body: inviteSchemas.entities.InviteMember,
           response: {
             [201]: {
               description: 'Invited member',
@@ -38,7 +40,7 @@ export async function inviteMember(fastify: FastifyInstance, {memberService, mem
               required: ['member']
             },
             [400]: new BadRequest(
-              MemberExistsError.schema()
+              memberError.MemberExistsError.schema()
             ).bodyErrors(),
             [404]: new NotFound(
               userError.UserNotExistsError.schema(),
@@ -50,7 +52,7 @@ export async function inviteMember(fastify: FastifyInstance, {memberService, mem
           auth: true
         },
         handler: async function(request, reply) {
-          const member = await memberService.inviteMember(
+          const member = await inviteService.createInvite(
             request.params.projectId,
             request.body.userId,
             request.body.roleId

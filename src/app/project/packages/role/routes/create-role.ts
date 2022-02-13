@@ -1,5 +1,5 @@
 import type {FastifyInstance} from 'fastify'
-import type {RoleRouteOptions} from './index'
+import type {RoleRouteOptions} from '.'
 import type {CreateRole} from '../schemas/entities'
 import {BadRequest} from '@common/schemas/response'
 

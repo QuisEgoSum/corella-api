@@ -1,7 +1,7 @@
 import {BadRequestNoBody, NotFound} from '@common/schemas/response'
 import {UserNotExistsError} from '../user-error'
 import type {FastifyInstance} from 'fastify'
-import type {UserRoutesOptions} from './index'
+import type {UserRoutesOptions} from '.'
 
 
 interface FindUserRequest {

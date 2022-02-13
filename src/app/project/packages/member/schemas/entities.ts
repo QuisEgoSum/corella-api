@@ -1,4 +1,4 @@
-import {_id, roleId, userId, status, createdAt} from './properties'
+import {_id, status, createdAt} from './properties'
 import * as user from '@app/user/schemas/properties'
 import * as role from '@app/project/packages/role/schemas/properties'
 import {Types} from 'mongoose'
@@ -68,24 +68,5 @@ export const BaseMember = {
     'role',
     'status',
     'createdAt'
-  ]
-}
-
-export interface InviteMember {
-  userId: string,
-  roleId: string
-}
-
-export const InviteMember = {
-  title: 'InviteMember',
-  type: 'object',
-  properties: {
-    userId,
-    roleId
-  },
-  additionalProperties: false,
-  required: [
-    'userId',
-    'roleId'
   ]
 }

@@ -1,7 +1,7 @@
-import {MemberRouteOptions} from './index'
-import {FastifyInstance} from 'fastify'
-import {BadRequest, MessageResponse, NotFound} from '@common/schemas/response'
-import {MemberNotExistsError} from '@app/project/packages/member/member-error'
+import {schemas as memberSchemas} from '..'
+import {BadRequest, MessageResponse} from '@common/schemas/response'
+import type {FastifyInstance} from 'fastify'
+import type {MemberRouteOptions} from '.'
 
 
 export interface LeaveRequest {
@@ -11,7 +11,7 @@ export interface LeaveRequest {
 }
 
 
-export async function leave(fastify: FastifyInstance, {memberService, memberSchemas}: MemberRouteOptions) {
+export async function leave(fastify: FastifyInstance, memberService: MemberRouteOptions) {
   return fastify
     .route<LeaveRequest>(
       {

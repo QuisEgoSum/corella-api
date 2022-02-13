@@ -1,5 +1,5 @@
 import type {FastifyInstance} from 'fastify'
-import type {UserRoutesOptions} from './index'
+import type {UserRoutesOptions} from '.'
 
 
 export async function getUser(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {

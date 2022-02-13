@@ -1,24 +1,19 @@
-import {FastifyInstance} from 'fastify'
-import {MemberRouteOptions} from './index'
+import {schemas as inviteSchemas, error as inviteError} from '..'
 import {BadRequest, Forbidden, MessageResponse} from '@common/schemas/response'
-import {
-  InviteAcceptedError,
-  InviteCancelledError,
-  InviteRejectedError,
-  SomeoneElseInvitationError
-} from '../packages/invite/invite-error'
+import type {FastifyInstance} from 'fastify'
+import type {InviteRouteOptions} from '@app/project/packages/invite/routes/index'
 
 
-export interface AcceptInviteRequest {
+export interface AcceptRequest {
   Params: {
     inviteId: string
   }
 }
 
 
-export async function acceptInvite(fastify: FastifyInstance, {memberService, inviteSchemas}: MemberRouteOptions) {
+export async function accept(fastify: FastifyInstance, inviteService: InviteRouteOptions) {
   return fastify
-    .route<AcceptInviteRequest>(
+    .route<AcceptRequest>(
       {
         method: 'PUT',
         url: '/project/invite/:inviteId',
@@ -32,18 +27,18 @@ export async function acceptInvite(fastify: FastifyInstance, {memberService, inv
           response: {
             [200]: new MessageResponse('The invitation was successfully accepted'),
             [400]: new BadRequest(
-              InviteAcceptedError.schema(),
-              InviteRejectedError.schema(),
-              InviteCancelledError.schema()
+              inviteError.InviteAcceptedError.schema(),
+              inviteError.InviteRejectedError.schema(),
+              inviteError.InviteCancelledError.schema()
             ),
-            [403]: new Forbidden(SomeoneElseInvitationError.schema())
+            [403]: new Forbidden(inviteError.SomeoneElseInvitationError.schema())
           }
         },
         security: {
           auth: true
         },
         handler: async function(request, reply) {
-          await memberService.acceptInvite(request.params.inviteId, request.session.userId)
+          await inviteService.acceptInvite(request.params.inviteId, request.session.userId)
 
           reply
             .code(200)

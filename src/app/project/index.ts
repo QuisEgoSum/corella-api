@@ -1,67 +1,83 @@
 import {ProjectModel} from './ProjectModel'
 import {ProjectRepository} from './ProjectRepository'
 import {ProjectService} from './ProjectService'
-import {initRole, Role as RolePkg} from './packages/role'
-import {initTask, Task as TaskPkg} from './packages/task'
-import {initMember, Member as MemberPkg} from './packages/member'
-import {FastifyInstance} from 'fastify'
+import type {User} from '@app/user'
+import {initRole, Role} from './packages/role'
+import {initTask, Task} from './packages/task'
+import {initMember, Member} from './packages/member'
+import {initInvite, Invite} from '@app/project/packages/invite'
 import {routes} from './routes'
 import * as schemas from './schemas'
-import * as errors from './project-error'
-import type {User as UserPkg} from '@app/user'
+import * as error from './project-error'
 import {addEventsListeners} from './project-events-listeners'
+import type {FastifyInstance} from 'fastify'
 
 
-export class Project {
+class Project {
   private readonly service: ProjectService
-  private readonly Task: TaskPkg
-  private Role: RolePkg
-  private Member: MemberPkg
+  private readonly task: Task
+  private readonly role: Role
+  private readonly member: Member
+  private readonly invite: Invite
   
   constructor(
     projectService: ProjectService,
-    Task: TaskPkg,
-    Role: RolePkg,
-    Member: MemberPkg
+    task: Task,
+    role: Role,
+    member: Member,
+    invite: Invite
   ) {
     this.service = projectService
-    this.Task = Task
-    this.Role = Role
-    this.Member = Member
+    this.task = task
+    this.role = role
+    this.member = member
+    this.invite = invite
 
     this.router = this.router.bind(this)
   }
 
-  getErrors(): typeof import('./project-error') {
-    return errors
+  getErrors(): typeof error {
+    return error
   }
 
   async router(fastify: FastifyInstance) {
     await routes(fastify, {projectService: this.service, projectSchemas: schemas})
-    await this.Role.router(fastify)
-    await this.Member.router(fastify)
+    await this.role.router(fastify)
+    await this.member.router(fastify)
+    await this.invite.router(fastify)
   }
 }
 
 
-export async function initProject(User: UserPkg) {
-  const Role = await initRole()
-  const Task = await initTask()
-  const Member = await initMember(User, Role)
+export async function initProject(userApp: User) {
+  const role = await initRole()
+  const task = await initTask()
+  const member = await initMember(role)
+  const invite = await initInvite(userApp, member.service, role.service)
 
   const service = new ProjectService(
     new ProjectRepository(ProjectModel),
-    Role.service,
-    Task.Counter.service,
-    Member.service
+    role.service,
+    task.counter.service,
+    member.service
   )
 
-  await addEventsListeners(service, Member.service, Member.events, Role.events)
+  await addEventsListeners(service, member.service, member.events, role.events)
 
   return new Project(
     service,
-    Task,
-    Role,
-    Member
+    task,
+    role,
+    member,
+    invite
   )
+}
+
+export type {
+  Project
+}
+
+export {
+  schemas,
+  error
 }

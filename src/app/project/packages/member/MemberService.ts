@@ -8,7 +8,6 @@ import {
   MemberExistsError,
   MemberNotExistsError
 } from './member-error'
-import {InviteService} from './packages/invite/InviteService'
 import {MemberStatus} from './MemberStatus'
 import {RoleService} from '../role/RoleService'
 import {User as UserPkg} from '@app/user'
@@ -16,20 +15,17 @@ import {MemberEvents} from './MemberEvents'
 import {PageOptions} from '@core/repository/IBaseRepository'
 import {DataList} from '@common/data'
 import {MemberDto} from './member-dto'
+import {IInvite} from '@app/project/packages/invite/InviteModel'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {
-  private readonly inviteService: InviteService
   private readonly roleService: RoleService
-  private readonly User: UserPkg
   private readonly events: MemberEvents
 
   constructor(
     memberRepository: MemberRepository,
     memberEvents: MemberEvents,
-    inviteService: InviteService,
     roleService: RoleService,
-    User: UserPkg
   ) {
     super(memberRepository)
 
@@ -37,9 +33,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     this.Error.EntityNotExistsError = MemberNotExistsError
   
     this.events = memberEvents
-    this.inviteService = inviteService
     this.roleService = roleService
-    this.User = User
   }
 
   async addMember(
@@ -57,14 +51,10 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     )
   }
 
-  async inviteMember(
+  async allowedInvite(
     projectId: Types.ObjectId | string,
     userId: Types.ObjectId | string,
-    roleId: Types.ObjectId | string
-  ): Promise<MemberDto> {
-    await this.User.existsUser(userId)
-    await this.roleService.existsRole(projectId, roleId)
-
+  ) {
     const memberStatus = await this.repository.findMemberStatusByUserId(projectId, userId)
 
     if (memberStatus) {
@@ -76,13 +66,18 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
         )
       }
     }
+  }
 
-    await this.inviteService.createInvite(projectId, userId)
-
+  async upsertInvitedMember(
+    projectId: Types.ObjectId | string,
+    userId: Types.ObjectId | string,
+    roleId: Types.ObjectId | string
+  ) {
     const member = await this.repository.upsertMember(
       {
         projectId: new Types.ObjectId(projectId),
         userId: new Types.ObjectId(userId),
+        roleId: new Types.ObjectId(roleId),
         status: MemberStatus.INVITED
       }
     )
@@ -90,8 +85,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     return new MemberDto(member)
   }
 
-  async acceptInvite(inviteId: Types.ObjectId | string, userId: Types.ObjectId | string) {
-    const invite = await this.inviteService.acceptInvite(inviteId, userId)
+  async acceptInvite(invite: IInvite): Promise<void> {
     const result = await this.repository.changeMemberStatus(invite.projectId, invite.userId, MemberStatus.PARTICIPANT)
     if (!result.modifiedCount) {
       throw new FailedAcceptInviteError()
@@ -99,14 +93,9 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     this.events.emit('ACCEPT_INVITE', invite.projectId, invite.userId)
   }
 
-  async cancelInvite(projectId: Types.ObjectId | string, inviteId: Types.ObjectId | string) {
-    const invite = await this.inviteService.cancelInvite(projectId, inviteId)
+  async cancelInvite(invite: IInvite) {
     await this.repository.changeMemberStatus(invite.projectId, invite.userId, MemberStatus.BLOCKED)
     this.events.emit('CANCEL_INVITE', invite.projectId, invite.userId)
-  }
-
-  async findProjectsByUserInvites(userId: Types.ObjectId | string, page: PageOptions) {
-    return this.inviteService.findProjectsByUserInvites(userId, page)
   }
 
   async findProjectMembers(projectId: string | Types.ObjectId, query: PageOptions): Promise<DataList<MemberDto>> {
@@ -119,9 +108,8 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
     await this.repository.changeMembersRoleFrom(projectId, fromRoleId, toRoleId)
   }
 
-  async rejectInvite(inviteId: string, userId: string | Types.ObjectId) {
-    const invite = await this.inviteService.rejectInvite(inviteId, userId)
-    await this.repository.changeMemberStatus(invite.projectId, userId, MemberStatus.REJECTED)
+  async rejectInvite(invite: IInvite) {
+    await this.repository.changeMemberStatus(invite.projectId, invite.userId, MemberStatus.REJECTED)
   }
 
   async blockMember(projectId: string, memberId: string) {

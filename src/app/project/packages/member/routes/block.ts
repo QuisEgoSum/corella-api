@@ -1,9 +1,10 @@
-import {FastifyInstance} from 'fastify'
-import {MemberRouteOptions} from './index'
+import {schemas as memberSchemas} from '..'
 import {MessageResponse} from '@common/schemas/response'
+import type {FastifyInstance} from 'fastify'
+import type {MemberRouteOptions} from '.'
 
 
-export interface BlockMemberRequest {
+export interface BlockRequest {
   Params: {
     memberId: string,
     projectId: string
@@ -11,9 +12,9 @@ export interface BlockMemberRequest {
 }
 
 
-export async function blockMember(fastify: FastifyInstance, {memberService, memberSchemas}: MemberRouteOptions) {
+export async function block(fastify: FastifyInstance, memberService: MemberRouteOptions) {
   return fastify
-    .route<BlockMemberRequest>(
+    .route<BlockRequest>(
       {
         method: 'DELETE',
         url: '/project/:projectId/member/:memberId',
@@ -25,7 +26,7 @@ export async function blockMember(fastify: FastifyInstance, {memberService, memb
             projectId: memberSchemas.properties.projectId
           },
           response: {
-            [200]: new MessageResponse('The participant was blocked'),
+            [200]: new MessageResponse('The participant was blocked')
           }
         },
         security: {
