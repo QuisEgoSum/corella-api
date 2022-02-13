@@ -1,19 +1,19 @@
 import {initCounter} from './packages/counter'
-import type {Counter as CounterPkg} from './packages/counter'
+import type {Counter} from './packages/counter'
 
 
 export class Task {
-  public readonly Counter: CounterPkg
+  public readonly counter: Counter
 
   constructor(
-    Counter: CounterPkg
+    counter: Counter
   ) {
-    this.Counter = Counter
+    this.counter = counter
   }
 }
 
 export async function initTask() {
-  const Counter = await initCounter()
+  const counter = await initCounter()
 
-  return new Task(Counter)
+  return new Task(counter)
 }

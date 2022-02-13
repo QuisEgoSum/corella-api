@@ -1,5 +1,5 @@
 import type {FastifyInstance} from 'fastify'
-import type {RoleRouteOptions} from './index'
+import type {RoleRouteOptions} from '.'
 import {BadRequestNoBody, DataList} from '@common/schemas/response'
 import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
 

@@ -1,6 +1,6 @@
 import {config} from '@config'
 import type {FastifyInstance} from 'fastify'
-import type{UserRoutesOptions} from './index'
+import type{UserRoutesOptions} from '.'
 
 
 interface SignoutUser {

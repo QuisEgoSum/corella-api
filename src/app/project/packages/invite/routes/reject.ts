@@ -1,24 +1,19 @@
-import {MemberRouteOptions} from './index'
-import {FastifyInstance} from 'fastify'
+import {schemas as inviteSchemas, error as inviteError} from '..'
 import {BadRequest, Forbidden, MessageResponse, NotFound} from '@common/schemas/response'
-import {
-  InviteAcceptedError,
-  InviteCancelledError,
-  InviteNotExistsError,
-  InviteRejectedError, SomeoneElseInvitationError
-} from '../packages/invite/invite-error'
+import type {FastifyInstance} from 'fastify'
+import type {InviteRouteOptions} from '@app/project/packages/invite/routes/index'
 
 
-export interface RejectInviteRequest {
+export interface RejectRequest {
   Params: {
     inviteId: string
   }
 }
 
 
-export async function rejectInvite(fastify: FastifyInstance, {memberService, inviteSchemas}: MemberRouteOptions) {
+export async function reject(fastify: FastifyInstance, inviteService: InviteRouteOptions) {
   return fastify
-    .route<RejectInviteRequest>(
+    .route<RejectRequest>(
       {
         url: '/project/invite/:inviteId',
         method: 'DELETE',
@@ -32,15 +27,15 @@ export async function rejectInvite(fastify: FastifyInstance, {memberService, inv
           response: {
             [200]: new MessageResponse('Invitation successfully rejected'),
             [400]: new BadRequest(
-              InviteCancelledError.schema(),
-              InviteRejectedError.schema(),
-              InviteAcceptedError.schema()
+              inviteError.InviteCancelledError.schema(),
+              inviteError.InviteRejectedError.schema(),
+              inviteError.InviteAcceptedError.schema()
             ).bodyErrors(),
             [403]: new Forbidden(
-              SomeoneElseInvitationError.schema(),
+              inviteError.SomeoneElseInvitationError.schema(),
             ),
             [404]: new NotFound(
-              InviteNotExistsError.schema()
+              inviteError.InviteNotExistsError.schema()
             )
           }
         },
@@ -48,7 +43,7 @@ export async function rejectInvite(fastify: FastifyInstance, {memberService, inv
           auth: true
         },
         handler: async function(request, reply) {
-          await memberService.rejectInvite(request.params.inviteId, request.session.userId)
+          await inviteService.rejectInvite(request.params.inviteId, request.session.userId)
 
           reply
             .code(200)

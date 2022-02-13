@@ -57,7 +57,7 @@ export class MemberRepository extends BaseRepository<IMember> {
     ]
   }
 
-  async upsertMember(member: {/**roleId: Types.ObjectId,*/ projectId: Types.ObjectId, userId: Types.ObjectId, status: MemberStatus}): Promise<PopulatedMember> {
+  async upsertMember(member: {roleId: Types.ObjectId, projectId: Types.ObjectId, userId: Types.ObjectId, status: MemberStatus}): Promise<PopulatedMember> {
     return this.Model
       .findOneAndUpdate(
         {
@@ -70,7 +70,7 @@ export class MemberRepository extends BaseRepository<IMember> {
             userId: member.userId
           },
           $set: {
-            // roleId: member.roleId,
+            roleId: member.roleId,
             status: member.status
           }
         },

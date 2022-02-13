@@ -1,10 +1,11 @@
-import {FastifyInstance} from 'fastify'
-import {MemberRouteOptions} from './index'
-import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
+import {schemas as memberSchemas} from '..'
 import {DataList} from '@common/schemas/response'
+import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
+import type {FastifyInstance} from 'fastify'
+import type {MemberRouteOptions} from '.'
 
 
-interface GetMembersRequest {
+interface FindRequest {
   Params: {
     projectId: string
   },
@@ -15,9 +16,9 @@ interface GetMembersRequest {
 }
 
 
-export async function getMembers(fastify: FastifyInstance, {memberService, memberSchemas}: MemberRouteOptions) {
+export async function find(fastify: FastifyInstance, memberService: MemberRouteOptions) {
   return fastify
-    .route<GetMembersRequest>(
+    .route<FindRequest>(
       {
         url: '/project/:projectId/members',
         method: 'GET',

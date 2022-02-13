@@ -1,7 +1,7 @@
 import type {FastifyInstance} from 'fastify'
 import {BadRequest} from '@common/schemas/response'
 import {UserExistsError} from '../user-error'
-import {UserRoutesOptions} from './index'
+import {UserRoutesOptions} from '.'
 import type {CreateUser} from '../schemas/entities'
 
 

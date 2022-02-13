@@ -1,7 +1,7 @@
 import {BadRequest} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
 import type {UpdateUserPassword} from '../schemas/entities'
-import type {UserRoutesOptions} from './index'
+import type {UserRoutesOptions} from '.'
 
 
 interface UpdateUserRequest {

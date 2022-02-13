@@ -1,10 +1,11 @@
-import {FastifyInstance} from 'fastify'
-import {MemberRouteOptions} from './index'
 import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
 import {DataList} from '@common/schemas/response'
+import {schemas as inviteSchemas} from '..'
+import type {FastifyInstance} from 'fastify'
+import type {InviteRouteOptions} from '@app/project/packages/invite/routes/index'
 
 
-export interface FindInvitedProjectsRequest {
+export interface FindRequest {
   Querystring: {
     page: number,
     limit: number
@@ -12,9 +13,9 @@ export interface FindInvitedProjectsRequest {
 }
 
 
-export async function findInvitedProjects(fastify: FastifyInstance, {memberService, inviteSchemas}: MemberRouteOptions) {
+export async function find(fastify: FastifyInstance, inviteService: InviteRouteOptions) {
   return fastify
-    .route<FindInvitedProjectsRequest>(
+    .route<FindRequest>(
       {
         method: 'GET',
         url: '/invite/projects',
@@ -34,7 +35,7 @@ export async function findInvitedProjects(fastify: FastifyInstance, {memberServi
           auth: true
         },
         handler: async function(request, reply) {
-          const list = await memberService.findProjectsByUserInvites(request.session.userId, request.query)
+          const list = await inviteService.findProjectsByUserInvites(request.session.userId, request.query)
 
           reply
             .code(200)

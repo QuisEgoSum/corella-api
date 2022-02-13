@@ -1,15 +1,11 @@
-import {FastifyInstance} from 'fastify'
-import {MemberRouteOptions} from './index'
+import {schemas as inviteSchemas, error as inviteError} from '..'
 import {BadRequest, MessageResponse} from '@common/schemas/response'
-import {
-  InviteAcceptedError,
-  InviteCancelledError,
-  InviteRejectedError,
-  SomeoneElseProjectInvitationError
-} from '../packages/invite/invite-error'
+import {schemas as memberSchemas} from '@app/project/packages/member'
+import type {FastifyInstance} from 'fastify'
+import type {InviteRouteOptions} from '@app/project/packages/invite/routes/index'
 
 
-export interface CancelInviteRequest {
+export interface CancelRequest {
   Params: {
     projectId: string,
     inviteId: string
@@ -17,9 +13,9 @@ export interface CancelInviteRequest {
 }
 
 
-export async function cancelInvite(fastify: FastifyInstance, {memberService, memberSchemas, inviteSchemas}: MemberRouteOptions) {
+export async function cancel(fastify: FastifyInstance, inviteService: InviteRouteOptions) {
   return fastify
-    .route<CancelInviteRequest>(
+    .route<CancelRequest>(
       {
         method: 'DELETE',
         url: '/project/:projectId/member/invite/:inviteId',
@@ -34,10 +30,10 @@ export async function cancelInvite(fastify: FastifyInstance, {memberService, mem
           response: {
             [200]: new MessageResponse('Invitation successfully cancelled'),
             [400]: new BadRequest(
-              SomeoneElseProjectInvitationError.schema(),
-              InviteCancelledError.schema(),
-              InviteRejectedError.schema(),
-              InviteAcceptedError.schema()
+              inviteError.SomeoneElseProjectInvitationError.schema(),
+              inviteError.InviteCancelledError.schema(),
+              inviteError.InviteRejectedError.schema(),
+              inviteError.InviteAcceptedError.schema()
             ).paramsErrors()
           }
         },
@@ -45,7 +41,7 @@ export async function cancelInvite(fastify: FastifyInstance, {memberService, mem
           auth: false
         },
         handler: async function(request, reply) {
-          await memberService.cancelInvite(request.params.projectId, request.params.inviteId)
+          await inviteService.cancelInvite(request.params.projectId, request.params.inviteId)
 
           reply
             .code(200)

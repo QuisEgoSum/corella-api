@@ -1,6 +1,6 @@
 import type {UpdateRole} from '../schemas/entities'
 import type {FastifyInstance} from 'fastify'
-import {RoleRouteOptions} from './index'
+import {RoleRouteOptions} from '.'
 import {BadRequest, Forbidden, NotFound} from '@common/schemas/response'
 import {RoleNotExistsError, UnableUpdateRoleError} from '../role-error'
 
