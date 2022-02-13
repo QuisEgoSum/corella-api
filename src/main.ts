@@ -12,23 +12,23 @@ import {logger} from '@logger'
 (async function main() {
   await createConnection()
 
-  const Docs = await initDocs()
-  const User = await initUser()
-  const Project = await initProject(User)
+  const docs = await initDocs()
+  const user = await initUser()
+  const project = await initProject(user)
 
   const httpServer = await createHttpServer(
     {
       routers: [
-        Docs.router,
-        User.router,
-        Project.router
+        docs.router,
+        user.router,
+        project.router
       ],
-      swagger: Docs.swagger,
+      swagger: docs.swagger,
       securityOptions: {
-        User
+        user: user
       },
       docsOptions: {
-        Project
+        project: project
       }
     }
   )

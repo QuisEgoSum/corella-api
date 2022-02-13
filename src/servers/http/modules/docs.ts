@@ -25,12 +25,11 @@ declare module 'fastify' {
 
 
 export interface CreateDocsHookOptions {
-  Project: Project
+  project: Project
 }
 
 
-export function createDocsHook({Project}: CreateDocsHookOptions) {
-  const projectErrors = Project.getErrors()
+export function createDocsHook({project}: CreateDocsHookOptions) {
   return function docsHook(routeOptions: RouteOptions) {
     if (!routeOptions.schema) {
       routeOptions.schema = {}
@@ -58,7 +57,7 @@ export function createDocsHook({Project}: CreateDocsHookOptions) {
       if (!routeOptions.schema.response[404]) {
         routeOptions.schema.response[404] = new NotFound()
       }
-      routeOptions.schema.response[404].addSchema(projectErrors.ProjectNotExists.schema())
+      routeOptions.schema.response[404].addSchema(project.error.ProjectNotExists.schema())
     }
   }
 }

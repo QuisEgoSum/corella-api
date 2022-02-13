@@ -16,21 +16,18 @@ declare module 'fastify' {
 }
 
 export interface CreateSecurityHookOptions {
-  User: User
+  user: User
 }
 
 
-export async function createSecurityHook({User}: CreateSecurityHookOptions) {
-  const userError = User.getUserErrors()
-  const UserRole = User.getUserRole()
-
+export async function createSecurityHook({user}: CreateSecurityHookOptions) {
   async function auth(request: FastifyRequest) {
-    request.session = await User.authorization(request.cookies.sessionId)
+    request.session = await user.authorization(request.cookies.sessionId)
   }
 
   async function isAdmin(request: FastifyRequest) {
-    if (request.session?.userRole !== UserRole.ADMIN) {
-      throw new userError.UserRightsError()
+    if (request.session?.userRole !== user.UserRole.ADMIN) {
+      throw new user.error.UserRightsError()
     }
   }
 

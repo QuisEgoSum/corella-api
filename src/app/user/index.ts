@@ -5,31 +5,31 @@ import {routes} from './routes'
 import {initSession} from './packages/session'
 import * as error from './user-error'
 import * as schemas from './schemas'
-import {UserRole, UserRole as Role} from './UserRole'
+import {UserRole, UserRole as UserRoleEnum} from './UserRole'
+import {Types} from 'mongoose'
 import type {FastifyInstance} from 'fastify'
 import type {Session} from './packages/session'
-import {Types} from 'mongoose'
 
 
 export class User {
   private readonly service: UserService
-  private readonly UserRole: typeof Role
-  private readonly error: typeof import('./user-error')
-  private readonly schemas: typeof import('./schemas')
-  private readonly Session: Session
+  private readonly session: Session
+  public readonly UserRole: typeof UserRoleEnum
+  public readonly error: typeof import('./user-error')
+  public readonly schemas: typeof import('./schemas')
 
   constructor(
     service: UserService,
-    UserRole: typeof Role,
+    UserRole: typeof UserRoleEnum,
     error: typeof import('./user-error'),
     schemas: typeof import('./schemas'),
-    Session: Session
+    session: Session
   ) {
     this.service = service
     this.UserRole = UserRole
     this.error = error
     this.schemas = schemas
-    this.Session = Session
+    this.session = session
 
     this.router = this.router.bind(this)
   }
@@ -40,14 +40,6 @@ export class User {
 
   async authorization(sessionId: string) {
     return this.service.authorization(sessionId)
-  }
-
-  getUserRole() {
-    return this.UserRole
-  }
-
-  getUserErrors() {
-    return this.error
   }
 
   async existsUser(userId: Types.ObjectId | string) {
@@ -71,5 +63,6 @@ export async function initUser(): Promise<User> {
 
 export {
   error,
-  schemas
+  schemas,
+  UserRole
 }
