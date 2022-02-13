@@ -29,7 +29,8 @@ export async function leave(fastify: FastifyInstance, memberService: MemberRoute
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: 'MEMBER'
         },
         handler: async function(request, reply) {
           await memberService.leave(request.params.projectId, request.session.userId)

@@ -2,6 +2,7 @@ import type {FastifyInstance} from 'fastify'
 import type {RoleRouteOptions} from '.'
 import {BadRequestNoBody, DataList} from '@common/schemas/response'
 import {QueryPageLimit, QueryPageNumber} from '@common/schemas/query'
+import {RolePermission} from '@app/project/packages/role'
 
 
 interface GetRolesRequest {
@@ -37,7 +38,8 @@ export async function getRoles(fastify: FastifyInstance, {roleService, roleSchem
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: 'MEMBER'
         },
         handler: async function(request, reply) {
           const response = await roleService.findRoles(request.params.projectId, request.query)

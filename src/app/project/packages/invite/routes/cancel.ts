@@ -3,6 +3,7 @@ import {BadRequest, MessageResponse} from '@common/schemas/response'
 import {schemas as memberSchemas} from '@app/project/packages/member'
 import type {FastifyInstance} from 'fastify'
 import type {InviteRouteOptions} from '@app/project/packages/invite/routes/index'
+import {RolePermission} from '@app/project/packages/role'
 
 
 export interface CancelRequest {
@@ -38,7 +39,8 @@ export async function cancel(fastify: FastifyInstance, inviteService: InviteRout
           }
         },
         security: {
-          auth: false
+          auth: false,
+          project: RolePermission.MANAGING_PARTICIPANTS
         },
         handler: async function(request, reply) {
           await inviteService.cancelInvite(request.params.projectId, request.params.inviteId)

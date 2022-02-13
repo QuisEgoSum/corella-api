@@ -1,7 +1,7 @@
 import {schemas as inviteSchemas} from '..'
 import {error as userError} from '@app/user'
 import {error as memberError, schemas as memberSchemas} from '@app/project/packages/member'
-import {error as roleError} from '@app/project/packages/role'
+import {error as roleError, RolePermission} from '@app/project/packages/role'
 import {BadRequest, NotFound} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
 import type {InviteRouteOptions} from '@app/project/packages/invite/routes/index'
@@ -49,7 +49,8 @@ export async function create(fastify: FastifyInstance, inviteService: InviteRout
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: RolePermission.MANAGING_PARTICIPANTS
         },
         handler: async function(request, reply) {
           const member = await inviteService.createInvite(

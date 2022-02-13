@@ -8,6 +8,7 @@ import type {RoleService} from './packages/role/RoleService'
 import type {CounterService} from './packages/task/packages/counter/CounterService'
 import {MemberService} from './packages/member/MemberService'
 import {PageOptions} from '@core/repository/IBaseRepository'
+import {ProjectMember} from '@app/project/dto'
 
 
 export class ProjectService extends BaseService<IProject, ProjectRepository> {
@@ -59,5 +60,13 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
 
   async pushMemberId(projectId: Types.ObjectId, userId: Types.ObjectId) {
     return this.repository.pushMemberId(projectId, userId)
+  }
+
+  async findProjectMember(projectId: string | Types.ObjectId, userId: string | Types.ObjectId): Promise<ProjectMember> {
+    const projects = await this.repository.findProjectMember(projectId, userId)
+    if (projects.length) {
+      return new ProjectMember(projects[0])
+    }
+    throw new this.Error.EntityNotExistsError()
   }
 }

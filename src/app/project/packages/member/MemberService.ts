@@ -94,7 +94,7 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
 
   async cancelInvite(invite: IInvite) {
     await this.repository.changeMemberStatus(invite.projectId, invite.userId, MemberStatus.BLOCKED)
-    this.events.emit('CANCEL_INVITE', invite.projectId, invite.userId)
+    // this.events.emit('CANCEL_INVITE', invite.projectId, invite.userId)
   }
 
   async findProjectMembers(projectId: string | Types.ObjectId, query: PageOptions): Promise<DataList<MemberDto>> {
@@ -130,6 +130,11 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
   }
 
   async leave(projectId: string, userId: string | Types.ObjectId) {
-    await this.repository.leave(projectId, userId)
+    const member = await this.repository.leave(projectId, userId)
+    if (member) {
+      this.events.emit('LEAVE_MEMBER', member.projectId, member.userId)
+      return
+    }
+    throw new MemberNotExistsError({message: 'There was no such participant in the project'})
   }
 }

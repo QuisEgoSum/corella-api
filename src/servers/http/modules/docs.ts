@@ -1,6 +1,6 @@
 import type {RouteOptions} from 'fastify'
 import type {Project} from '@app/project'
-import {ErrorResponse, UserForbidden, Unauthorized, BadRequest, NotFound} from '@common/schemas/response'
+import {ErrorResponse, Unauthorized, BadRequest, NotFound, Forbidden} from '@common/schemas/response'
 import {RequestHandlingError} from '@error'
 
 
@@ -12,7 +12,7 @@ declare module 'fastify' {
         [201]?: any,
         [400]?: ErrorResponse,
         [401]?: ErrorResponse,
-        [403]?: ErrorResponse,
+        [403]?: Forbidden,
         [404]?: ErrorResponse,
         [key: string]: any
       },
@@ -43,6 +43,9 @@ export function createDocsHook({project}: CreateDocsHookOptions) {
     if (!routeOptions.schema.response[400]) {
       routeOptions.schema.response[400] = new BadRequest()
     }
+    if (!routeOptions.schema.response[403]) {
+      routeOptions.schema.response[403] = new Forbidden()
+    }
 
     routeOptions.schema.response[400].addSchema(new RequestHandlingError().schema())
 
@@ -51,13 +54,22 @@ export function createDocsHook({project}: CreateDocsHookOptions) {
       routeOptions.schema.response[401] = new Unauthorized()
     }
     if (routeOptions.security?.admin) {
-      routeOptions.schema.response[403] = new UserForbidden()
+      routeOptions.schema.response[403].userForbidden()
     }
     if (routeOptions.schema.params && 'projectId' in routeOptions.schema.params) {
       if (!routeOptions.schema.response[404]) {
         routeOptions.schema.response[404] = new NotFound()
       }
       routeOptions.schema.response[404].addSchema(project.error.ProjectNotExists.schema())
+    }
+    if (routeOptions.security?.project) {
+      routeOptions.schema.description = (routeOptions.schema.description || '')
+        + `\n\n\n# Protected by project permission: ${routeOptions.security.project}`
+      routeOptions.schema.response[403].projectForbidden()
+    }
+
+    if (!routeOptions.schema.response[403].size) {
+      delete routeOptions.schema.response[403]
     }
   }
 }

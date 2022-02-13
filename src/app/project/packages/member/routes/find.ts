@@ -37,7 +37,8 @@ export async function find(fastify: FastifyInstance, memberService: MemberRouteO
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: 'MEMBER'
         },
         handler: async function(request, reply) {
           const list = await memberService.findProjectMembers(request.params.projectId, request.query)

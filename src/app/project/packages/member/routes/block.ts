@@ -2,6 +2,7 @@ import {schemas as memberSchemas} from '..'
 import {MessageResponse} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
 import type {MemberRouteOptions} from '.'
+import {RolePermission} from '@app/project/packages/role'
 
 
 export interface BlockRequest {
@@ -30,7 +31,8 @@ export async function block(fastify: FastifyInstance, memberService: MemberRoute
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: RolePermission.MANAGING_PARTICIPANTS
         },
         handler: async function(request, reply) {
           await memberService.blockMember(request.params.projectId, request.params.memberId)

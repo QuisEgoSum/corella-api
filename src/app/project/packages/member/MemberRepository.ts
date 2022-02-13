@@ -166,13 +166,17 @@ export class MemberRepository extends BaseRepository<IMember> {
   }
 
   async leave(projectId: string, userId: string | Types.ObjectId) {
-    return this.updateOne(
+    return this.findOneAndUpdate(
       {
         projectId: new Types.ObjectId(projectId),
-        userId: new Types.ObjectId(userId)
+        userId: new Types.ObjectId(userId),
+        status: MemberStatus.PARTICIPANT
       },
       {
         status: MemberStatus.LEAVE
+      },
+      {
+        new: true
       }
     )
   }
