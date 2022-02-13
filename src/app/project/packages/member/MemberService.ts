@@ -10,12 +10,11 @@ import {
 } from './member-error'
 import {MemberStatus} from './MemberStatus'
 import {RoleService} from '../role/RoleService'
-import {User as UserPkg} from '@app/user'
 import {MemberEvents} from './MemberEvents'
 import {PageOptions} from '@core/repository/IBaseRepository'
 import {DataList} from '@common/data'
 import {MemberDto} from './member-dto'
-import {IInvite} from '@app/project/packages/invite/InviteModel'
+import type {IInvite} from '@app/project/packages/invite/InviteModel'
 
 
 export class MemberService extends BaseService<IMember, MemberRepository> {

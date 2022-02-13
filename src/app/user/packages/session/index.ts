@@ -3,8 +3,7 @@ import {SessionRepository} from './SessionRepository'
 import {SessionService} from './SessionService'
 
 
-
-export class Session {
+class Session {
   public service: SessionService
 
   constructor(sessionService: SessionService) {
@@ -14,4 +13,8 @@ export class Session {
 
 export async function initSession(): Promise<Session> {
   return new Session(new SessionService(new SessionRepository(SessionModel)))
+}
+
+export type {
+  Session
 }

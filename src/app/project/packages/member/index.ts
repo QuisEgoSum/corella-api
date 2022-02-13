@@ -33,8 +33,8 @@ class Member {
   }
 }
 
-export async function initMember(rolePkg: Role) {
-  const service = new MemberService(new MemberRepository(MemberModel), events, rolePkg.service)
+export async function initMember(role: Role) {
+  const service = new MemberService(new MemberRepository(MemberModel), events, role.service)
   return new Member(service, events)
 }
 

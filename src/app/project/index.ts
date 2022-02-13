@@ -19,6 +19,7 @@ class Project {
   private readonly role: Role
   private readonly member: Member
   private readonly invite: Invite
+  public readonly error: typeof error
   
   constructor(
     projectService: ProjectService,
@@ -32,12 +33,9 @@ class Project {
     this.role = role
     this.member = member
     this.invite = invite
+    this.error = error
 
     this.router = this.router.bind(this)
-  }
-
-  getErrors(): typeof error {
-    return error
   }
 
   async router(fastify: FastifyInstance) {
