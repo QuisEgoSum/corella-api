@@ -41,6 +41,9 @@ export async function cancelInvite(fastify: FastifyInstance, {memberService, mem
             ).paramsErrors()
           }
         },
+        security: {
+          auth: false
+        },
         handler: async function(request, reply) {
           await memberService.cancelInvite(request.params.projectId, request.params.inviteId)
 

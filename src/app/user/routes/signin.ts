@@ -37,6 +37,9 @@ export async function signin(fastify: FastifyInstance, {userService, userSchemas
             }
           }
         },
+        security: {
+          auth: false
+        },
         handler: async function(request, reply) {
           const {user, sessionId} = await userService.signin(request.body)
 

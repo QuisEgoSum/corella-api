@@ -46,6 +46,9 @@ export async function inviteMember(fastify: FastifyInstance, {memberService, mem
             )
           }
         },
+        security: {
+          auth: true
+        },
         handler: async function(request, reply) {
           const member = await memberService.inviteMember(
             request.params.projectId,

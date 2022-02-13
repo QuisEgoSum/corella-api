@@ -14,6 +14,9 @@ export async function getDocs(fastify: FastifyInstance) {
       {
         url: '/docs',
         method: 'GET',
+        security: {
+          auth: false
+        },
         handler: async function(request, reply) {
           reply
             .code(200)
