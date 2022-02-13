@@ -1,6 +1,8 @@
 import {InvalidJsonStructureError, JsonSchemaValidationErrors, NoDataForUpdatingError} from '@error'
 import {Schema} from 'openapi-error'
-import {UserAuthorizationError, UserRightsError} from '@app/user/user-error'
+import {error as userError} from '@app/user'
+//TODO: Import all project errors from @app/project?
+import {error as projectSecurityError} from '@app/project/packages/security'
 
 
 export class MessageResponse {
@@ -54,6 +56,10 @@ export class ErrorResponse {
     }
   }
 
+  get size() {
+    return this.oneOf.length
+  }
+
   constructor(description: string, ...oneOfSchemas: Schema[]) {
     this.type = 'object'
     this.description = description
@@ -84,7 +90,7 @@ export class BadRequestNoBody extends ErrorResponse {
 
 export class Unauthorized extends ErrorResponse {
   constructor() {
-    super('Unauthorized', UserAuthorizationError.schema())
+    super('Unauthorized', userError.UserAuthorizationError.schema())
   }
 }
 
@@ -92,11 +98,16 @@ export class Forbidden extends ErrorResponse {
   constructor(...oneOfSchemas: Schema[]) {
     super('Forbidden', ...oneOfSchemas)
   }
-}
 
-export class UserForbidden extends Forbidden {
-  constructor(...oneOfSchemas: Schema[]) {
-    super(UserRightsError.schema(), ...oneOfSchemas)
+  userForbidden() {
+    this.addSchema(userError.UserRightsError.schema())
+    return
+  }
+
+  projectForbidden() {
+    this.addSchema(projectSecurityError.NotMemberOfProjectError.schema())
+    this.addSchema(projectSecurityError.InsufficientPermissionsInProjectError.schema())
+    return
   }
 }
 

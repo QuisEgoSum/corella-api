@@ -5,6 +5,20 @@ import {Types} from 'mongoose'
 import {PageOptions} from '@core/repository/IBaseRepository'
 import {DataList} from '@common/data'
 import {ExpandProjectPreview} from './schemas/entities'
+import type {MemberStatus} from '@app/project/packages/member/MemberStatus'
+import type {RolePermission} from '@app/project/packages/role'
+
+export interface AggregatedProjectMemberResult {
+  _id: Types.ObjectId,
+  member: {
+    _id: Types.ObjectId,
+    projectId: Types.ObjectId,
+    status: MemberStatus,
+    role: {
+      permissions: RolePermission
+    }[]
+  }[]
+}
 
 
 export class ProjectRepository extends BaseRepository<IProject> {
@@ -106,5 +120,75 @@ export class ProjectRepository extends BaseRepository<IProject> {
         members: userId
       }
     })
+  }
+
+  async findProjectMember(projectId: string | Types.ObjectId, userId: string | Types.ObjectId) {
+    return this.Model
+      .aggregate<AggregatedProjectMemberResult>(
+        [
+          {
+            $match: {_id: new Types.ObjectId(projectId)}
+          },
+          {
+            $lookup: {
+              from: 'project_members',
+              let: {
+                projectId: '$_id',
+                userId: new Types.ObjectId(userId)
+              },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $and: [
+                        {$eq: ['$projectId', '$$projectId']},
+                        {$eq: ['$userId', '$$userId']}
+                      ]
+                    }
+                  }
+                },
+                {
+                  $lookup: {
+                    from: 'project_roles',
+                    let: {
+                      projectId: '$projectId',
+                      roleId: '$roleId'
+                    },
+                    pipeline: [
+                      {
+                        $match: {
+                          $expr: {
+                            $and: [
+                              {$eq: ['$projectId', '$$projectId']},
+                              {$eq: ['$_id', '$$roleId']}
+                            ]
+                          }
+                        }
+                      }
+                    ],
+                    as: 'role'
+                  }
+                },
+                {
+                  $project: {
+                    projectId: 1,
+                    status: 1,
+                    role: {
+                      permissions: 1
+                    }
+                  }
+                }
+              ],
+              as: 'member'
+            }
+          },
+          {
+            $project: {
+              member: 1
+            }
+          }
+        ]
+      )
+      .exec()
   }
 }

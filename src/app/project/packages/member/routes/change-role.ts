@@ -2,6 +2,7 @@ import {schemas as memberSchemas, error as memberError} from '..'
 import {BadRequest, MessageResponse, NotFound} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
 import type {MemberRouteOptions} from '.'
+import {RolePermission} from '@app/project/packages/role'
 
 
 export interface ChangeRoleRequest {
@@ -48,7 +49,8 @@ export async function changeRole(fastify: FastifyInstance, memberService: Member
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: RolePermission.MANAGING_PARTICIPANTS
         },
         handler: async function(request, reply) {
           await memberService.changeMemberRole(request.params.projectId, request.params.memberId, request.body.roleId)

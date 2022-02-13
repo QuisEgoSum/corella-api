@@ -2,6 +2,7 @@ import type {FastifyInstance} from 'fastify'
 import type {RoleRouteOptions} from '.'
 import type {CreateRole} from '../schemas/entities'
 import {BadRequest} from '@common/schemas/response'
+import {RolePermission} from '@app/project/packages/role'
 
 
 interface CreateRoleRequest {
@@ -39,7 +40,8 @@ export async function createRole(fastify: FastifyInstance, {roleService, roleSch
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: RolePermission.MANAGING_PARTICIPANTS
         },
         handler: async function(request, reply) {
           const role = await roleService.createRole(request.params.projectId, request.body)

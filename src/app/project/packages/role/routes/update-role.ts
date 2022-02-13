@@ -3,6 +3,7 @@ import type {FastifyInstance} from 'fastify'
 import {RoleRouteOptions} from '.'
 import {BadRequest, Forbidden, NotFound} from '@common/schemas/response'
 import {RoleNotExistsError, UnableUpdateRoleError} from '../role-error'
+import {RolePermission} from '@app/project/packages/role'
 
 
 export interface UpdateRoleRequest {
@@ -44,7 +45,8 @@ export async function updateRole(fastify: FastifyInstance, {roleSchemas, roleSer
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: RolePermission.MANAGING_PARTICIPANTS
         },
         handler: async function(request, reply) {
           const role = await roleService.updateRole(request.params.projectId, request.params.roleId, request.body)

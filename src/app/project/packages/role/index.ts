@@ -43,5 +43,6 @@ export async function initRole() {
 
 export {
   schemas,
-  error
+  error,
+  RolePermission
 }

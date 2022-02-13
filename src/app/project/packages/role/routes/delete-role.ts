@@ -2,6 +2,7 @@ import {FastifyInstance} from 'fastify'
 import {RoleRouteOptions} from '.'
 import {Forbidden, MessageResponse, NotFound} from '@common/schemas/response'
 import {RoleNotExistsError, UnableDeleteRoleError} from '../role-error'
+import {RolePermission} from '@app/project/packages/role'
 
 
 export interface DeleteRoleRequest {
@@ -32,7 +33,8 @@ export async function deleteRole(fastify: FastifyInstance, {roleService, roleSch
           }
         },
         security: {
-          auth: true
+          auth: true,
+          project: RolePermission.MANAGING_PARTICIPANTS
         },
         handler: async function(request, reply) {
           await roleService.deleteRole(request.params.projectId, request.params.roleId)
