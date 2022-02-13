@@ -164,4 +164,16 @@ export class MemberRepository extends BaseRepository<IMember> {
       }
     )
   }
+
+  async leave(projectId: string, userId: string | Types.ObjectId) {
+    return this.updateOne(
+      {
+        projectId: new Types.ObjectId(projectId),
+        userId: new Types.ObjectId(userId)
+      },
+      {
+        status: MemberStatus.LEAVE
+      }
+    )
+  }
 }
