@@ -64,7 +64,7 @@ export function createDocsHook({project}: CreateDocsHookOptions) {
     }
     if (routeOptions.security?.project) {
       routeOptions.schema.description = (routeOptions.schema.description || '')
-        + `\n\n\n# Protected by project permission: ${routeOptions.security.project}`
+        + `\n\n\n**Protected by project permission: \`${routeOptions.security.project}\`**`
       routeOptions.schema.response[403].projectForbidden()
     }
 
