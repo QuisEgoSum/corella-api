@@ -141,4 +141,8 @@ export class MemberService extends BaseService<IMember, MemberRepository> {
       throw new this.Error.EntityNotExistsError({message: 'There was no such participant in the project'})
     }
   }
+
+  async leave(projectId: string, userId: string | Types.ObjectId) {
+    await this.repository.leave(projectId, userId)
+  }
 }
