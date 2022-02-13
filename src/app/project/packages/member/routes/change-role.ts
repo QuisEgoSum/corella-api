@@ -1,5 +1,7 @@
 import {MemberRouteOptions} from './index'
 import {FastifyInstance} from 'fastify'
+import {BadRequest, MessageResponse, NotFound} from '@common/schemas/response'
+import {MemberNotExistsError} from '@app/project/packages/member/member-error'
 
 
 export interface ChangeRoleRequest {
@@ -40,18 +42,23 @@ export async function changeRole(fastify: FastifyInstance, {memberService, membe
             }
           },
           response: {
+            [200]: new MessageResponse('The participant\'s role has been successfully updated'),
+            [400]: new BadRequest().bodyErrors(),
+            [404]: new NotFound(
+              MemberNotExistsError.schema()
+            )
           }
         },
         security: {
           auth: true
         },
         handler: async function(request, reply) {
-          const member = await memberService.changeMemberRole(request.params.projectId, request.params.memberId, request.body.roleId)
+          await memberService.changeMemberRole(request.params.projectId, request.params.memberId, request.body.roleId)
 
           reply
             .code(200)
             .type('application/json')
-            .send({member})
+            .send({message: 'The participant\'s role has been successfully updated'})
         }
       }
     )
