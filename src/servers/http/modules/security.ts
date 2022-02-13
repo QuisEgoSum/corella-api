@@ -8,8 +8,8 @@ declare module 'fastify' {
     session: UserSession
   }
   interface RouteOptions {
-    security?: {
-      auth?: boolean,
+    security: {
+      auth: boolean,
       admin?: boolean
     }
   }
