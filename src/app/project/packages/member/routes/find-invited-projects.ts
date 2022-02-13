@@ -21,7 +21,7 @@ export async function findInvitedProjects(fastify: FastifyInstance, {memberServi
         schema: {
           summary: 'Get invited projects',
           description: 'The user receives a list of projects to which he was invited',
-          tags: ['Project Invite'],
+          tags: ['Project'],
           query: {
             page: new QueryPageNumber().setDefault(1),
             limit: new QueryPageLimit().setDefault(10)

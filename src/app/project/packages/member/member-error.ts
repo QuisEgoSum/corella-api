@@ -21,11 +21,20 @@ export const MemberExistsError = EntityExistsError.extends(
 )
 
 export const MemberNotExistsError = EntityNotExistsError.extends(
-  {},
+  {
+    properties: {
+      message: {
+        type: 'string',
+        enum: [
+          'This user is not a member of the project',
+          'There was no such participant in the project'
+        ]
+      }
+    }
+  },
   {
     error: 'MemberNotExistsError',
-    code: 3101,
-    message: 'This user is not a member of the project'
+    code: 3101
   }
 )
 

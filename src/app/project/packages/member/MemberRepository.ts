@@ -152,4 +152,16 @@ export class MemberRepository extends BaseRepository<IMember> {
         }
       )
   }
+
+  async updateMemberRole(projectId: string, memberId: string, roleId: string) {
+    return this.updateOne(
+      {
+        _id: new Types.ObjectId(memberId),
+        projectId: new Types.ObjectId(projectId)
+      },
+      {
+        roleId: new Types.ObjectId(roleId)
+      }
+    )
+  }
 }
