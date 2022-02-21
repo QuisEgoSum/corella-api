@@ -1,12 +1,15 @@
 import {model, Schema, Types} from 'mongoose'
-import {TaskAssignedStatus} from '@app/project/packages/task/TaskAssignedStatus'
 
+export enum AssignedStatus {
+  NEW = 'NEW',
+  DONE = 'DONE'
+}
 
 export interface ITaskAssigned {
   _id: Types.ObjectId,
   userId: Types.ObjectId,
   roleId: Types.ObjectId,
-  status: TaskAssignedStatus
+  status: AssignedStatus
 }
 
 export interface ITask {
@@ -50,7 +53,7 @@ const TaskSchema = new Schema<ITask>(
         },
         status: {
           type: String,
-          enum: Object.values(TaskAssignedStatus)
+          enum: Object.values(AssignedStatus)
         }
       }
     ],
