@@ -2,18 +2,19 @@ import {StatusModel} from './StatusModel'
 import {StatusRepository} from './StatusRepository'
 import {StatusService} from './StatusService'
 import {FastifyInstance} from 'fastify'
+import {routes} from './router'
 
 
 class Status {
-  private service: StatusService
+  private readonly service: StatusService
   constructor(
     service: StatusService
   ) {
     this.service = service
   }
 
-  router(fastify: FastifyInstance) {
-
+  async router(fastify: FastifyInstance) {
+    return await routes(fastify, this.service)
   }
 }
 
