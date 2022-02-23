@@ -21,7 +21,7 @@ const StatusSchema = new Schema<IStatus>(
     timestamps: true
   }
 )
-  .index({projectId: 1, order: 1}, {unique: true})
+  .index({projectId: 1, name: 1}, {unique: true})
   .index({projectId: 1})
 
 

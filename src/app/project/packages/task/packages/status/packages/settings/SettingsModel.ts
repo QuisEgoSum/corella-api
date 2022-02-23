@@ -36,7 +36,12 @@ const SettingsSchema = new Schema(
           enum: Object.values(StatusModifier)
         }
       }
-    ]
+    ],
+    __version: {
+      type: Number,
+      default: 1,
+      select: false
+    }
   },
   {
     versionKey: false,
