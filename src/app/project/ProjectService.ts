@@ -9,17 +9,20 @@ import type {CounterService} from './packages/task/packages/counter/CounterServi
 import {MemberService} from './packages/member/MemberService'
 import {PageOptions} from '@core/repository/IBaseRepository'
 import {ProjectMember} from '@app/project/dto'
+import {StatusService} from '@app/project/packages/task/packages/status/StatusService'
 
 
 export class ProjectService extends BaseService<IProject, ProjectRepository> {
   private roleService: RoleService
   private counterService: CounterService
   private memberService: MemberService
+  private taskStatusService: StatusService
 
   constructor(
     projectRepository: ProjectRepository,
     roleService: RoleService,
     counterService: CounterService,
+    taskStatusService: StatusService,
     memberService: MemberService
   ) {
     super(projectRepository)
@@ -28,6 +31,7 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
 
     this.roleService = roleService
     this.counterService = counterService
+    this.taskStatusService = taskStatusService
     this.memberService = memberService
   }
 
@@ -42,7 +46,8 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
     const [maintainerRole] = await Promise.all([
       this.roleService.createMaintainer(project._id),
       this.roleService.createGuest(project._id),
-      this.counterService.createCounter(project._id)
+      this.counterService.createCounter(project._id),
+      this.taskStatusService.createDefault(project._id)
     ])
 
     await this.memberService.addMember(project._id, ownerId, maintainerRole._id)
