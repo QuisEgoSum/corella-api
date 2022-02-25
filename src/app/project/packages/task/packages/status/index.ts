@@ -3,14 +3,22 @@ import {StatusRepository} from './StatusRepository'
 import {StatusService} from './StatusService'
 import {FastifyInstance} from 'fastify'
 import {routes} from './router'
+import {initOrder, Order} from '@app/project/packages/task/packages/status/packages/order'
+import {initModifier, Modifier} from '@app/project/packages/task/packages/status/packages/modifier'
 
 
 class Status {
-  private readonly service: StatusService
+  public readonly service: StatusService
+  public readonly order: Order
+  public readonly modifier: Modifier
   constructor(
-    service: StatusService
+    service: StatusService,
+    order: Order,
+    modifier: Modifier
   ) {
     this.service = service
+    this.order = order
+    this.modifier = modifier
   }
 
   async router(fastify: FastifyInstance) {
@@ -20,9 +28,12 @@ class Status {
 
 
 export async function initStatus(): Promise<Status> {
-  const service = new StatusService(new StatusRepository(StatusModel))
+  const order = await initOrder()
+  const modifier = await initModifier()
 
-  return new Status(service)
+  const service = new StatusService(new StatusRepository(StatusModel), order.service, modifier.service)
+
+  return new Status(service, order, modifier)
 }
 
 

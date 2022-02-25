@@ -68,6 +68,7 @@ export async function initProject(userApp: User) {
     new ProjectRepository(ProjectModel),
     role.service,
     task.counter.service,
+    task.status.service,
     member.service
   )
 
