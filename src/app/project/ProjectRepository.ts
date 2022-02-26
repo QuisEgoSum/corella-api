@@ -10,6 +10,7 @@ import type {RolePermission} from '@app/project/packages/role'
 
 export interface AggregatedProjectMemberResult {
   _id: Types.ObjectId,
+  title: string,
   member: {
     _id: Types.ObjectId,
     projectId: Types.ObjectId,
@@ -79,6 +80,7 @@ export class ProjectRepository extends BaseRepository<IProject> {
           },
           {
             $project: {
+              title: 1,
               name: 1,
               description: 1,
               'member._id': 1,
@@ -184,6 +186,7 @@ export class ProjectRepository extends BaseRepository<IProject> {
           },
           {
             $project: {
+              title: 1,
               member: 1
             }
           }

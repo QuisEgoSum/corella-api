@@ -102,6 +102,7 @@ export class InviteRepository extends BaseRepository<IInvite> {
             createdAt: 1,
             project: {
               _id: 1,
+              title: 1,
               name: 1,
               createdAt: 1,
               member: {
