@@ -8,10 +8,13 @@ export const username = {
   type: 'string',
   minLength: 1,
   maxLength: 24,
+  pattern: "^[a-z0-9_-]+$",
   example: 'user',
   errorMessage: {
     minLength: 'Username cannot be shorter than 1 character',
-    maxLength: 'Username cannot be longer than 24 characters'
+    maxLength: 'Username cannot be longer than 24 characters',
+    pattern: 'Username consists of alphanumeric characters (a-zA-Z0-9), lowercase, or uppercase\n'
+      + 'Username allowed of the underscore (_), and hyphen (-)'
   }
 }
 export const mUsername = {
