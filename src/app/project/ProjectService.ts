@@ -38,6 +38,7 @@ export class ProjectService extends BaseService<IProject, ProjectRepository> {
   async createProject(ownerId: Types.ObjectId | string, createProject: CreateProject) {
     const project = await this.create(
       {
+        title: createProject.title,
         name: createProject.name,
         members: [new Types.ObjectId(ownerId)]
       }

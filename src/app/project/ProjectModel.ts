@@ -3,6 +3,7 @@ import {Schema, model, Types} from 'mongoose'
 
 export interface IProject {
   _id: Types.ObjectId,
+  title: string,
   name: string,
   description: string,
   members: Types.ObjectId[],
@@ -13,10 +14,15 @@ export interface IProject {
 
 const ProjectSchema = new Schema<IProject>(
   {
+    title: {
+      type: String,
+      minlength: 1,
+      maxLength: 128
+    },
     name: {
       type: String,
       minlength: 1,
-      maxlength: 128
+      maxlength: 24
     },
     description: {
       type: String,
@@ -39,7 +45,7 @@ const ProjectSchema = new Schema<IProject>(
     timestamps: true
   }
 )
-  .index({name: 1})
+  .index({name: 1}, {unique: true})
   .index({name: 1, createdAt: 1})
   .index({members: 1})
 

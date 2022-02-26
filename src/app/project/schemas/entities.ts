@@ -1,4 +1,4 @@
-import {_id, createdAt, description, name, updatedAt} from './properties'
+import {_id, createdAt, description, name, title, updatedAt} from './properties'
 import * as member from '@app/project/packages/member/schemas/properties'
 import * as role from '@app/project/packages/role/schemas/properties'
 import {Types} from 'mongoose'
@@ -7,19 +7,22 @@ import {MemberStatus} from '../packages/member/MemberStatus'
 
 export interface CreateProject {
   name: string
+  title: string
 }
 
 export const CreateProject = {
   title: 'CreateProject',
   type: 'object',
   properties: {
+    title,
     name,
     description
   },
-  required: ['name'],
+  required: ['title', 'name'],
   additionalProperties: false,
   errorMessage: {
     required: {
+      title: 'Specify the project title',
       name: 'Specify the project name'
     }
   }
@@ -30,17 +33,19 @@ export const BaseProject = {
   type: 'object',
   properties: {
     _id,
+    title,
     name,
     description,
     createdAt,
     updatedAt
   },
   additionalProperties: false,
-  required: ['_id', 'name', 'createdAt', 'updatedAt']
+  required: ['_id', 'title', 'name', 'createdAt', 'updatedAt']
 }
 
 export interface ExpandProjectPreview {
   _id: Types.ObjectId,
+  title: string,
   name: string,
   description?: string,
   member: {
@@ -61,6 +66,7 @@ export const ExpandProjectPreview = {
   type: 'object',
   properties: {
     _id,
+    title,
     name,
     description,
     member: {
@@ -97,6 +103,7 @@ export const ExpandProjectPreview = {
   additionalProperties: false,
   required: [
     '_id',
+    'title',
     'name',
     'member',
     'createdAt'
@@ -104,6 +111,7 @@ export const ExpandProjectPreview = {
   examples: [
     {
       "_id": "61e446bf93fbc9a737fb6ec0",
+      "title": "test",
       "name": "test",
       "member": {
         "_id": "61e446bf93fbc9a737fb6ec8",
