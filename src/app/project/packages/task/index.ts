@@ -5,6 +5,7 @@ import {initCounter, Counter} from './packages/counter'
 import {initStatus, Status} from '@app/project/packages/task/packages/status'
 import {FastifyInstance} from 'fastify'
 import {routes} from '@app/project/packages/task/routes'
+import {initHistory} from '@app/project/packages/task/packages/history'
 
 
 export class Task {
@@ -29,10 +30,13 @@ export class Task {
 
 
 export async function initTask() {
-  const counter = await initCounter()
-  const status = await initStatus()
+  const [counter, status, history] = await Promise.all([
+    initCounter(),
+    initStatus(),
+    initHistory()
+  ])
 
-  const service = new TaskService(new TaskRepository(TaskModel), status.service, counter.service)
+  const service = new TaskService(new TaskRepository(TaskModel), status.service, counter.service, history.service)
 
   return new Task(service, counter, status)
 }
