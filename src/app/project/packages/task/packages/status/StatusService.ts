@@ -6,6 +6,7 @@ import {OrderService} from '@app/project/packages/task/packages/status/packages/
 import {ModifierService} from '@app/project/packages/task/packages/status/packages/modifier/ModifierService'
 import {Types} from 'mongoose'
 import {StatusModifier} from '@app/project/packages/task/packages/status/packages/modifier'
+import {TaskStatusNotExistsError} from '@app/project/packages/task/packages/status/status-error'
 
 
 export class StatusService extends BaseService<IStatus, StatusRepository> {
@@ -19,6 +20,8 @@ export class StatusService extends BaseService<IStatus, StatusRepository> {
     super(repository)
     this.orderService = orderService
     this.modifierService = modifierService
+
+    this.Error.EntityNotExistsError = TaskStatusNotExistsError
   }
 
   async createDefault(projectId: string | Types.ObjectId) {
@@ -52,4 +55,15 @@ export class StatusService extends BaseService<IStatus, StatusRepository> {
       })
     ])
   }
+
+  async existsInProject(projectId: Types.ObjectId, id: Types.ObjectId) {
+    await this.findOne(
+      {
+        projectId,
+        _id: id
+      },
+      {_id: 1}
+    )
+  }
+
 }

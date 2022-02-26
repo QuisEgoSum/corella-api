@@ -35,7 +35,7 @@ const TaskSchema = new Schema<ITask>(
     description: String,
     status: {
       type: Schema.Types.ObjectId,
-      // ref: 'ProjectTaskStatus'
+      ref: 'ProjectTaskStatus'
     },
     projectId: {
       type: Schema.Types.ObjectId,
@@ -61,6 +61,10 @@ const TaskSchema = new Schema<ITask>(
     version: {
       type: Number,
       default: 1
+    },
+    creatorId: {
+      type: Schema.Types.ObjectId,
+      ref: 'User'
     },
     editorId: {
       type: Schema.Types.ObjectId,
