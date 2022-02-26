@@ -66,7 +66,7 @@ export class Timestamp extends SchemaHelper {
   static type = 'integer'
   static description = 'Timestamp'
 
-  constructor(params: SchemaHelperParams) {
+  constructor(params: SchemaHelperParams = {}) {
     params.example = params.example || Date.now()
     super(params, Timestamp)
   }

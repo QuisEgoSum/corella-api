@@ -46,10 +46,13 @@ class Project {
   }
 
   async router(fastify: FastifyInstance) {
-    await routes(fastify, {projectService: this.service, projectSchemas: schemas})
-    await this.role.router(fastify)
-    await this.member.router(fastify)
-    await this.invite.router(fastify)
+    await Promise.all([
+      routes(fastify, {projectService: this.service, projectSchemas: schemas}),
+      this.role.router(fastify),
+      this.member.router(fastify),
+      this.invite.router(fastify),
+      this.task.router(fastify)
+    ])
   }
 
   async verifyAccess(projectId: string | Types.ObjectId, userId: string | Types.ObjectId, permission: SecurityPermission) {

@@ -5,6 +5,7 @@ import {FastifyInstance} from 'fastify'
 import {routes} from './router'
 import {initOrder, Order} from '@app/project/packages/task/packages/status/packages/order'
 import {initModifier, Modifier} from '@app/project/packages/task/packages/status/packages/modifier'
+import * as schemas from './schemas'
 
 
 class Status {
@@ -36,6 +37,9 @@ export async function initStatus(): Promise<Status> {
   return new Status(service, order, modifier)
 }
 
+export {
+  schemas
+}
 
 export type {
   Status
