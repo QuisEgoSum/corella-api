@@ -6,6 +6,6 @@ export const ProjectNotExists = EntityNotExistsError.extends(
   {
     error: 'ProjectNotExists',
     message: 'Project not exists',
-    code: 3000
+    code: 10000
   }
 )

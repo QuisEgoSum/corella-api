@@ -6,7 +6,7 @@ export const InviteNotExistsError = EntityNotExistsError.extends(
   {
     message: 'Invite not exists',
     error: 'InviteNotExistsError',
-    code: 3300
+    code: 10300
   }
 )
 
@@ -15,7 +15,7 @@ export const InviteAcceptedError = InvalidDataError.extends(
   {
     error: 'InviteAcceptedError',
     message: 'This invitation has already been accepted',
-    code: 3301
+    code: 10301
   }
 )
 
@@ -24,7 +24,7 @@ export const InviteRejectedError = InvalidDataError.extends(
   {
     error: 'InviteRejectedError',
     message: 'This invitation has already been rejected',
-    code: 3302
+    code: 10302
   }
 )
 
@@ -33,14 +33,14 @@ export const InviteCancelledError = InvalidDataError.extends(
   {
     error: 'InviteCancelledError',
     message: 'This invitation has been cancelled',
-    code: 3303
+    code: 10303
   }
 )
 
 export const UnknownFailedAcceptInviteError = InternalError.extends(
   {},
   {
-    code: 3304
+    code: 10304
   }
 )
 

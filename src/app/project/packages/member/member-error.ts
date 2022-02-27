@@ -16,7 +16,7 @@ export const MemberExistsError = EntityExistsError.extends(
   },
   {
     error: 'MemberExistsError',
-    code: 3100
+    code: 10100
   }
 )
 
@@ -35,14 +35,14 @@ export const MemberNotExistsError = EntityNotExistsError.extends(
   },
   {
     error: 'MemberNotExistsError',
-    code: 3101
+    code: 10101
   }
 )
 
 export const FailedAcceptInviteError = InternalError.extends(
   {},
   {
-    code: 3102
+    code: 10102
   }
 )
 
@@ -50,7 +50,7 @@ export const BlockingNonParticipantError = InvalidDataError.extends(
   {},
   {
     error: 'BlockingNonParticipantError',
-    code: 3103,
+    code: 10103,
     message: 'You can only block an active participant of the project'
   }
 )

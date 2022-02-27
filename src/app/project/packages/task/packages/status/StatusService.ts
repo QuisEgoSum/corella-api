@@ -66,4 +66,7 @@ export class StatusService extends BaseService<IStatus, StatusRepository> {
     )
   }
 
+  async findDefaultStatusId(projectObjectId: Types.ObjectId) {
+    return await this.modifierService.findDefaultStatusId(projectObjectId)
+  }
 }

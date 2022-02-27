@@ -5,7 +5,7 @@ export const TaskNotExistsError = EntityNotExistsError.extends(
   {},
   {
     error: 'TaskNotExistsError',
-    code: 3500,
+    code: 10500,
     message: 'Task does not exist'
   }
 )
