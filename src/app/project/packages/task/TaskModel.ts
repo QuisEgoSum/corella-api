@@ -89,6 +89,9 @@ const TaskSchema = new Schema<ITask>(
   }
 )
   .index({number: 1, projectId: 1}, {unique: true})
+  .index({number: 1})
+  .index({createdAt: -1})
+  .index({status: 1, projectId: 1})
 
 
 export const TaskModel = model<ITask>('ProjectTask', TaskSchema, 'project_tasks')
