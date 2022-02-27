@@ -39,7 +39,8 @@ const TaskSchema = new Schema<ITask>(
     },
     projectId: {
       type: Schema.Types.ObjectId,
-      ref: 'Project'
+      ref: 'Project',
+      select: false
     },
     assigned: [
       {

@@ -35,7 +35,7 @@ export class BaseService<T, R extends BaseRepository<T>> implements IBaseService
     }
   }
 
-  private checkUpdateData(data: {[key: string]: any}) {
+  public checkUpdateData(data: {[key: string]: any}) {
     if (!Object.keys(data).length) {
       throw new NoDataForUpdatingError()
     }

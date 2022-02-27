@@ -36,7 +36,6 @@ export const BaseTask = {
     title,
     description,
     status,
-    projectId,
     version,
     creatorId,
     editorId,
@@ -51,7 +50,6 @@ export const BaseTask = {
     'title',
     'description',
     'status',
-    'projectId',
     'version',
     'creatorId',
     'editorId',
@@ -93,4 +91,19 @@ export const TaskPreview = {
     'status',
     'createdAt'
   ]
+}
+
+export interface UpdateTask {
+  title: string,
+  description: string
+}
+
+export const UpdateTask = {
+  title: 'UpdateTask',
+  type: 'object',
+  properties: {
+    title,
+    description
+  },
+  additionalProperties: false
 }

@@ -1,8 +1,8 @@
 import {BaseRepository} from '@core/repository'
 import {ITask, TaskModel} from '@app/project/packages/task/TaskModel'
-import {FilterQuery, Types} from 'mongoose'
+import {FilterQuery, Types, UpdateQuery} from 'mongoose'
 import {DataList} from '@common/data'
-import {TaskPreview} from '@app/project/packages/task/schemas/entities'
+import {TaskPreview, UpdateTask} from '@app/project/packages/task/schemas/entities'
 
 
 export interface FindPreviewPageOptions {
@@ -41,5 +41,32 @@ export class TaskRepository extends BaseRepository<ITask> {
         }
       }
     )
+  }
+
+  async updateTask(projectId: string, number: number, updateTask: UpdateTask, userId: Types.ObjectId): Promise<ITask | null> {
+    const update: UpdateQuery<ITask> & {$set: Partial<ITask>} = {
+      $set: {editorId: userId},
+      $inc: {version: 1},
+      $addToSet: {editors: userId}
+    }
+    if ('title' in updateTask) {
+      update.$set.title = updateTask.title
+    }
+    if ('description' in updateTask) {
+      update.$set.description = updateTask.description
+    }
+    return this.Model.findOneAndUpdate(
+      {
+        projectId: new Types.ObjectId(projectId),
+        number: number
+      },
+      update,
+      {
+        new: true
+      }
+    )
+      .select('+projectId')
+      .lean()
+      .exec()
   }
 }
