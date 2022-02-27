@@ -2,11 +2,12 @@ import {BaseService} from '@core/service'
 import {ITask} from '@app/project/packages/task/TaskModel'
 import {TaskRepository} from '@app/project/packages/task/TaskRepository'
 import {Types} from 'mongoose'
-import {CreateTask} from '@app/project/packages/task/schemas/entities'
+import {CreateTask, FindTasksQuery, TaskPreview} from '@app/project/packages/task/schemas/entities'
 import {StatusService} from '@app/project/packages/task/packages/status/StatusService'
 import {CounterService} from '@app/project/packages/task/packages/counter/CounterService'
 import {HistoryService} from '@app/project/packages/task/packages/history/HistoryService'
 import {IHistory} from '@app/project/packages/task/packages/history/HistoryModel'
+import {DataList} from '@common/data'
 
 
 export class TaskService extends BaseService<ITask, TaskRepository> {
@@ -51,5 +52,20 @@ export class TaskService extends BaseService<ITask, TaskRepository> {
     await this.historyService.create(history)
 
     return task
+  }
+
+  async find(projectId: string, query: FindTasksQuery): Promise<DataList<TaskPreview>> {
+    const projectObjectId = new Types.ObjectId(projectId)
+    let statusObjectId
+    if (query.status) {
+      statusObjectId = new Types.ObjectId(query.status)
+      await this.statusService.existsInProject(projectObjectId, statusObjectId)
+    }
+    return await this.repository.findPreviewPage({
+      projectId: projectObjectId,
+      status: statusObjectId,
+      page: query.page,
+      limit: query.limit
+    })
   }
 }

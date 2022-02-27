@@ -4,6 +4,7 @@ import {
   version, creatorId, editorId,
   editors, createdAt, updatedAt
 } from '@app/project/packages/task/schemas/properties'
+import {Types} from 'mongoose'
 
 
 export interface CreateTask {
@@ -60,5 +61,39 @@ export const BaseTask = {
     'editors',
     'createdAt',
     'updatedAt'
+  ]
+}
+
+export interface FindTasksQuery {
+  status?: string,
+  page: number,
+  limit: number
+}
+
+export interface TaskPreview {
+  _id: string | Types.ObjectId,
+  number: number,
+  title: string,
+  status: string | Types.ObjectId,
+  createdAt: number
+}
+
+export const TaskPreview = {
+  title: 'TaskPreview',
+  type: 'object',
+  properties: {
+    _id,
+    number,
+    title,
+    status,
+    createdAt
+  },
+  additionalProperties: false,
+  required: [
+    '_id',
+    'number',
+    'title',
+    'status',
+    'createdAt'
   ]
 }
