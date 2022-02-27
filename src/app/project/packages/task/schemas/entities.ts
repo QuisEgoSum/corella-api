@@ -9,8 +9,7 @@ import {Types} from 'mongoose'
 
 export interface CreateTask {
   title: string,
-  description: string,
-  status: string
+  description: string
 }
 
 export const CreateTask = {
@@ -18,15 +17,13 @@ export const CreateTask = {
   type: 'object',
   properties: {
     title,
-    description,
-    status
+    description
   },
   additionalProperties: false,
-  required: ['title', 'description', 'status'],
+  required: ['title', 'description'],
   errorMessage: {
     title: 'Specify the task title',
-    description: 'Specify the task description',
-    status: 'Specify the task status'
+    description: 'Specify the task description'
   }
 }
 

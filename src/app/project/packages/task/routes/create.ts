@@ -3,7 +3,8 @@ import {CreateTask} from '@app/project/packages/task/schemas/entities'
 import {RolePermission} from '@app/project/packages/role'
 import {TaskService} from '@app/project/packages/task/TaskService'
 import * as schemas from '../schemas'
-import {BadRequest} from '@common/schemas/response'
+import {BadRequest, NotFound} from '@common/schemas/response'
+import {DefaultStatusNotExistError} from '@app/project/packages/task/packages/status/packages/modifier/modifier-error'
 
 
 interface CreateRequest {
@@ -37,7 +38,8 @@ export async function create(fastify: FastifyInstance, service: TaskService) {
               additionalProperties: false,
               required: ['task']
             },
-            [400]: new BadRequest().bodyErrors()
+            [400]: new BadRequest().bodyErrors(),
+            [404]: new NotFound(DefaultStatusNotExistError.schema())
           }
         },
         security: {

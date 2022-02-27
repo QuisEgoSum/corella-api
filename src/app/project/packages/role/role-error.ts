@@ -5,7 +5,7 @@ export const RoleNotExistsError = EntityNotExistsError.extends(
   {},
   {
     error: 'RoleNotExistsError',
-    code: 3200,
+    code: 10200,
     message: 'Role not exists'
   }
 )
@@ -15,7 +15,7 @@ export const UnableUpdateRoleError = AccessError.extends(
   {
     error: 'UnableUpdateRoleError',
     message: 'Unable to update this role',
-    code: 3201
+    code: 10201
   }
 )
 
@@ -24,13 +24,13 @@ export const UnableDeleteRoleError = AccessError.extends(
   {
     error: 'UnableDeleteRoleError',
     message: 'Unable to delete this role',
-    code: 3202
+    code: 10202
   }
 )
 
 export const DefaultProjectRoleNotExists = InternalError.extends(
   {},
   {
-    code: 3203
+    code: 10203
   }
 )

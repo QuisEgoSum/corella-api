@@ -28,8 +28,7 @@ export class TaskService extends BaseService<ITask, TaskRepository> {
 
   async createTask(projectId: string | Types.ObjectId, createTask: CreateTask, userId: Types.ObjectId): Promise<ITask> {
     const projectObjectId = new Types.ObjectId(projectId)
-    const statusObjectId = new Types.ObjectId(createTask.status)
-    await this.statusService.existsInProject(projectObjectId, statusObjectId)
+    const statusObjectId = await this.statusService.findDefaultStatusId(projectObjectId)
 
     const number = await this.counterService.inc(projectObjectId)
 
