@@ -2,7 +2,7 @@ import {BaseService} from '@core/service'
 import {ITask} from '@app/project/packages/task/TaskModel'
 import {TaskRepository} from '@app/project/packages/task/TaskRepository'
 import {Types} from 'mongoose'
-import {CreateTask, FindTasksQuery, TaskPreview} from '@app/project/packages/task/schemas/entities'
+import {CreateTask, FindTasksQuery, TaskPreview, UpdateTask} from '@app/project/packages/task/schemas/entities'
 import {StatusService} from '@app/project/packages/task/packages/status/StatusService'
 import {CounterService} from '@app/project/packages/task/packages/counter/CounterService'
 import {HistoryService} from '@app/project/packages/task/packages/history/HistoryService'
@@ -29,9 +29,7 @@ export class TaskService extends BaseService<ITask, TaskRepository> {
   async createTask(projectId: string | Types.ObjectId, createTask: CreateTask, userId: Types.ObjectId): Promise<ITask> {
     const projectObjectId = new Types.ObjectId(projectId)
     const statusObjectId = await this.statusService.findDefaultStatusId(projectObjectId)
-
     const number = await this.counterService.inc(projectObjectId)
-
     const task = await this.create({
       number: number,
       title: createTask.title,
@@ -43,13 +41,9 @@ export class TaskService extends BaseService<ITask, TaskRepository> {
       editorId: userId,
       editors: [userId]
     })
-
     const history: Partial<IHistory> = {taskId: task._id, ...task}
-
     delete history._id
-
     await this.historyService.create(history)
-
     return task
   }
 
@@ -66,5 +60,17 @@ export class TaskService extends BaseService<ITask, TaskRepository> {
       page: query.page,
       limit: query.limit
     })
+  }
+
+  async updateTask(projectId: string, number: number, updateTask: UpdateTask, userId: Types.ObjectId) {
+    this.checkUpdateData(updateTask)
+    const task = await this.repository.updateTask(projectId, number, updateTask, userId)
+    if (!task) {
+      throw new this.Error.EntityNotExistsError()
+    }
+    const history: Partial<IHistory> = {taskId: task._id, ...task}
+    delete history._id
+    await this.historyService.create(history)
+    return task
   }
 }
