@@ -1,19 +1,19 @@
 import {UserNotExistsError} from '../user-error'
 import {BadRequest, NotFound} from '@common/schemas/response'
+import * as schemas from '../schemas'
 import type {FastifyInstance} from 'fastify'
-import type {UpdateUserById} from '../schemas/entities'
-import type {UserRoutesOptions} from '.'
+import type {UserService} from '@app/user/UserService'
 
 
 interface UpdateUserByIdRequest {
   Params: {
     userId: string
   },
-  Body: UpdateUserById
+  Body: schemas.entities.UpdateUserById
 }
 
 
-export async function updateUserById(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
+export async function updateUserById(fastify: FastifyInstance, service: UserService) {
   return fastify
     .route<UpdateUserByIdRequest>(
       {
@@ -23,15 +23,15 @@ export async function updateUserById(fastify: FastifyInstance, {userService, use
           summary: 'Update user by id',
           tags: ['User - Admin'],
           params: {
-            userId: userSchemas.properties._id
+            userId: schemas.properties._id
           },
-          body: userSchemas.entities.UpdateUserById,
+          body: schemas.entities.UpdateUserById,
           response: {
             [200]: {
               description: 'User',
               type: 'object',
               properties: {
-                user: userSchemas.entities.UserBase
+                user: schemas.entities.UserBase
               },
               additionalProperties: false,
               required: ['user']
@@ -45,7 +45,7 @@ export async function updateUserById(fastify: FastifyInstance, {userService, use
           admin: true
         },
         handler: async function(request, reply) {
-          const user = await userService.findByIdAndUpdate(request.params.userId, request.body)
+          const user = await service.findByIdAndUpdate(request.params.userId, request.body)
 
           reply
             .code(200)

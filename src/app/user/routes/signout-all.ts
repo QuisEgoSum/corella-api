@@ -1,8 +1,9 @@
+import {MessageResponse} from '@common/schemas/response'
 import type {FastifyInstance} from 'fastify'
-import type {UserRoutesOptions} from '.'
+import type {UserService} from '@app/user/UserService'
 
 
-export async function signoutAll(fastify: FastifyInstance, {userService}: UserRoutesOptions) {
+export async function signoutAll(fastify: FastifyInstance, service: UserService) {
   return fastify
     .route(
       {
@@ -12,25 +13,14 @@ export async function signoutAll(fastify: FastifyInstance, {userService}: UserRo
           summary: 'User sign out of all sessions except current one',
           tags: ['User - Me'],
           response: {
-            [200]: {
-              description: 'Success message',
-              type: 'object',
-              properties: {
-                message: {
-                  type: 'string',
-                  default: 'You have logged out of {N} sessions'
-                }
-              },
-              additionalProperties: false,
-              required: ['message']
-            }
+            [200]: new MessageResponse('You have logged out of {N} sessions')
           }
         },
         security: {
           auth: true
         },
         handler: async function(request, reply) {
-          const numberOfSessions = await userService.logoutAllExpect(request.session.userId, request.session.sessionId)
+          const numberOfSessions = await service.logoutAllExpect(request.session.userId, request.session.sessionId)
 
           reply
             .code(200)

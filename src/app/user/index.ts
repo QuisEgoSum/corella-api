@@ -11,7 +11,7 @@ import type {FastifyInstance} from 'fastify'
 import type {Session} from './packages/session'
 
 
-export class User {
+class User {
   private readonly service: UserService
   private readonly session: Session
   public readonly UserRole: typeof UserRoleEnum
@@ -35,7 +35,7 @@ export class User {
   }
 
   async router(fastify: FastifyInstance) {
-    await routes(fastify, {userService: this.service, userSchemas: this.schemas})
+    await routes(fastify, this.service)
   }
 
   async authorization(sessionId: string) {
@@ -65,4 +65,8 @@ export {
   error,
   schemas,
   UserRole
+}
+
+export type {
+  User
 }
