@@ -4,13 +4,16 @@ function stringToEnvName(string: string) {
   const stringPart = string.split('')
   for (let i = 0; i < stringPart.length; i++) {
     const s = stringPart[i]
-    if (s === s.toUpperCase()) {
+    if (s === '-' || s === '.') {
+      stringPart[i] = '_'
+      stringPart[i + 1] = stringPart[i + 1].toLocaleLowerCase()
+    } else if (s === '_') {
+      stringPart[i + 1] = stringPart[i + 1].toLocaleLowerCase()
+    } else if (s === s.toUpperCase()) {
       stringPart[i] = '_' + s
     }
   }
   return stringPart.join('')
-    .replaceAll(/-/g, '_')
-    .replaceAll(/\./g, '_')
     .toUpperCase()
 }
 
