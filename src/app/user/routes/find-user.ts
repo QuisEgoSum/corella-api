@@ -1,7 +1,8 @@
-import {BadRequestNoBody, NotFound} from '@common/schemas/response'
+import {BadRequest, NotFound} from '@common/schemas/response'
 import {UserNotExistsError} from '../user-error'
+import * as schemas from '../schemas'
 import type {FastifyInstance} from 'fastify'
-import type {UserRoutesOptions} from '.'
+import type {UserService} from '@app/user/UserService'
 
 
 interface FindUserRequest {
@@ -11,7 +12,7 @@ interface FindUserRequest {
 }
 
 
-export async function findUser(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
+export async function findUser(fastify: FastifyInstance, service: UserService) {
   return fastify
     .route<FindUserRequest>(
       {
@@ -21,19 +22,19 @@ export async function findUser(fastify: FastifyInstance, {userService, userSchem
           summary: 'Get user by id',
           tags: ['User - Admin'],
           params: {
-            userId: userSchemas.properties._id
+            userId: schemas.properties._id
           },
           response: {
             [200]: {
               description: 'User',
               type: 'object',
               properties: {
-                user: userSchemas.entities.UserBase
+                user: schemas.entities.UserBase
               },
               additionalProperties: false,
               required: ['user']
             },
-            [400]: new BadRequestNoBody(),
+            [400]: new BadRequest().paramsErrors(),
             [404]: new NotFound(UserNotExistsError.schema())
           }
         },
@@ -42,7 +43,7 @@ export async function findUser(fastify: FastifyInstance, {userService, userSchem
           admin: true
         },
         handler: async function(request, reply) {
-          const user = await userService.findById(request.params.userId)
+          const user = await service.findById(request.params.userId)
 
           reply
             .code(200)

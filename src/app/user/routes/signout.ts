@@ -1,6 +1,7 @@
 import {config} from '@config'
 import type {FastifyInstance} from 'fastify'
-import type{UserRoutesOptions} from '.'
+import type {UserService} from '@app/user/UserService'
+import {MessageResponse} from '@common/schemas/response'
 
 
 interface SignoutUser {
@@ -9,7 +10,7 @@ interface SignoutUser {
   }
 }
 
-export async function signout(fastify: FastifyInstance, {userService}: UserRoutesOptions) {
+export async function signout(fastify: FastifyInstance, service: UserService) {
   return fastify
     .route<SignoutUser>(
       {
@@ -25,25 +26,14 @@ export async function signout(fastify: FastifyInstance, {userService}: UserRoute
             }
           },
           response: {
-            [200]: {
-              description: 'Success message',
-              type: 'object',
-              properties: {
-                message: {
-                  type: 'string',
-                  default: 'You have logged out of your account'
-                }
-              },
-              additionalProperties: false,
-              required: ['message']
-            }
+            [200]: new MessageResponse('You have logged out of your account')
           }
         },
         security: {
           auth: true
         },
         handler: async function(request, reply) {
-          await userService.logout(request.session.userId, request.session.sessionId)
+          await service.logout(request.session.userId, request.session.sessionId)
 
           let cookieOptions = config.user.session.cookie
 

@@ -1,15 +1,15 @@
-import {BadRequestNoBody, DataList} from '@common/schemas/response'
+import {BadRequest, DataList} from '@common/schemas/response'
+import * as schemas from '../schemas'
 import type {FastifyInstance} from 'fastify'
-import type {FindUsersQueryAdmin} from '../schemas/entities'
-import type {UserRoutesOptions} from '.'
+import type {UserService} from '@app/user/UserService'
 
 
 interface FindUsersRequest {
-  Querystring: FindUsersQueryAdmin
+  Querystring: schemas.entities.FindUsersQueryAdmin
 }
 
 
-export async function findUsersAdmin(fastify: FastifyInstance, {userService, userSchemas}: UserRoutesOptions) {
+export async function findUsersAdmin(fastify: FastifyInstance, service: UserService) {
   return fastify
     .route<FindUsersRequest>(
       {
@@ -18,10 +18,10 @@ export async function findUsersAdmin(fastify: FastifyInstance, {userService, use
         schema: {
           summary: 'Get users list for admin',
           tags: ['User - Admin'],
-          querystring: userSchemas.entities.FindUsersQueryAdmin,
+          querystring: schemas.entities.FindUsersQueryAdmin,
           response: {
-            [200]: new DataList(userSchemas.entities.UserBase),
-            [400]: new BadRequestNoBody()
+            [200]: new DataList(schemas.entities.UserBase),
+            [400]: new BadRequest().paramsErrors()
           }
         },
         security: {
@@ -29,7 +29,7 @@ export async function findUsersAdmin(fastify: FastifyInstance, {userService, use
           admin: true
         },
         handler: async function(request, reply) {
-          const dataList = await userService.findPage(request.query)
+          const dataList = await service.findPage(request.query)
 
           reply
             .code(200)
