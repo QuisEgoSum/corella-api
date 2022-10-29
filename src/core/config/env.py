@@ -21,7 +21,6 @@ class EnvOption:
 def _fill_env_list(schema: dict, result: typing.List[EnvOption], parts: typing.List[str]) -> None:
     """
     Рекурсивно заполняет массив result сгенерированными из схемы конфигурации элементами.
-    :param parts: str -
     """
     if 'allOf' in schema:
         for next_schema in schema['allOf']:
