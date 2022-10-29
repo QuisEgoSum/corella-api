@@ -9,8 +9,8 @@ from src.core.validator.enums import TargetNameEnum
 from src.core.validator.exception import SchemaValidationException
 from src.lib import openapi
 from .schema import Schema
-from ...common.schemas import ValidationErrorSchema
-from ...utils import resolve_openapi_spec
+from src.common.schemas import ValidationErrorSchema
+from src.utils.openapi import resolve_openapi_spec
 
 validation_error_schema = resolve_openapi_spec(ValidationErrorSchema.schema_json())
 

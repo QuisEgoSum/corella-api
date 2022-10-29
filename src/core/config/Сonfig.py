@@ -1,46 +1,43 @@
-from dataclasses import dataclass
+from pydantic import Field
+
+from src.core.config.project import root_dir, project_metadata
+from src.core.validator import Schema
 
 
-@dataclass(frozen=True)
-class Config:
-    @dataclass(frozen=True)
-    class Paths:
-        root: str
+class Config(Schema, frozen=True):
+    class Paths(Schema, frozen=True):
+        root: str = root_dir
 
-    @dataclass(frozen=True)
-    class Server:
-        @dataclass(frozen=True)
-        class HttpServer:
-            host: str
-            port: int
-            workers: int
+    class Server(Schema, frozen=True):
+
+        class HttpServer(Schema, frozen=True):
+            host: str = Field(min_length=1)
+            port: int = Field(ge=1, le=65353)
+            workers: int = Field(ge=1, le=124)
 
         http: HttpServer
 
-    @dataclass(frozen=True)
-    class Database:
-        user: str
-        password: str
-        host: str
-        port: int
-        name: str
+    class Database(Schema, frozen=True):
+        user: str = Field(min_length=1)
+        password: str = Field(min_length=1)
+        host: str = Field(min_length=1)
+        port: int = Field(ge=1, le=65353)
+        name: str = Field(min_length=1)
 
         @property
         def uri(self):
             return f'postgresql://{self.user}:{self.password}@{self.host}:{self.port}/{self.name}'
 
-    @dataclass(frozen=True)
-    class Logger:
-        destination: str
+    class Logger(Schema, frozen=True):
+        destination: str = root_dir + '/logs'
 
-    @dataclass(frozen=True)
-    class Project:
-        name: str
-        version: str
+    class Project(Schema, frozen=True):
+        name: str = project_metadata.get('name')
+        version: str = project_metadata.get('version')
 
     debug: bool
-    paths: Paths
+    paths: Paths = Paths()
     server: Server
     database: Database
-    logger: Logger
-    project: Project
+    project: Project = Project()
+    logger: Logger = Logger()

@@ -39,3 +39,4 @@ pytablewriter==0.64.2
 dacite~=1.6.0
 pydantic==1.10.2
 jsonref==0.2
+argparse==1.4.0

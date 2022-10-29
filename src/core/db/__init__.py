@@ -1,22 +1,11 @@
-import typing
 from datetime import datetime
 
 from gino import Gino
-from sqlalchemy import Column, Integer, Boolean, Numeric, String, Text
 
 from src.core.config import config
 
 
-class TypedGino(Gino):
-    Column: typing.Type[Column]
-    Integer: typing.Type[Integer]
-    Boolean: typing.Type[Boolean]
-    Numeric: typing.Type[Numeric]
-    String: typing.Type[String]
-    Text: typing.Type[Text]
-
-
-db: TypedGino = TypedGino()
+db = Gino()
 
 
 class DefaultModel(db.Model):

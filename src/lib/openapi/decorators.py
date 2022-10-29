@@ -4,7 +4,7 @@ from src.core.validator.schema import Schema
 from src.lib.openapi.spec import OpenapiRouteContent, OpenapiRouteParameterEnum
 from src.lib.openapi.utils import upsert, override_handlers, object_schema_to_parameters, path as openapi_path
 from src.lib.openapi.enum import STATUS_TO_DESCRIPTION
-from src.utils import resolve_openapi_spec
+from src.utils.openapi import resolve_openapi_spec
 
 
 def body(schema: Schema or dict, content_type='application/json'):

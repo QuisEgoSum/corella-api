@@ -10,7 +10,7 @@ def main():
     readme_filepath = root_dir + '/config/README.md'
     env_list = create_env_list_from_schema()
     header = ['name', 'type']
-    payload = [[env['name'], env['type']] for env in env_list]
+    payload = [[env.name, env.type] for env in env_list]
     writer = MarkdownTableWriter(
         headers=header,
         value_matrix=payload,

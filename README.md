@@ -1,20 +1,20 @@
 # Corella API
 
-# To build a project, you need to use Python 3.9
+## Для сборки проекта необходимо использовать Python 3.9
 
-# Configuration
+## Конфигурация при запуске
 
-[See here](config/README.md)
+[Смотреть здесь](config/README.md)
 -
 
-# Migration
+# Миграции
 
 [See here](migrations/README.md)
 -
 
-# Launch
+# Запуск
 
-- Manual
+- Ручной
 
 
     source ./venv/bin/activate
@@ -24,7 +24,12 @@
     python3 main.py # or python3.9 main.py
 
 
+- Docker
+
+> В процессе
+
+
 # Changelog
 
-[See here](CHANGELOG.md)
+[Смотреть здесь](CHANGELOG.md)
 -
